@@ -1,34 +1,43 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class InventoryManager : MonoBehaviour, IInventory
 {
-    /// <summary>w“ü‚µ‚½ƒAƒCƒeƒ€‚Æ‚»‚ÌŒÂ”‚ğ•Û‚µ‚Ä‚¨‚­ƒfƒBƒNƒVƒ‡ƒiƒŠ</summary>
+    [SerializeField, Tooltip("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ©ã‚¤ãƒ•ã‚’ä¿æŒãƒ»è¨­å®šã™ã‚‹ãŸã‚ã®å¤‰æ•°")]
+    private static int _life;
+
+    /// <summary>ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ©ã‚¤ãƒ•ã‚’å—ã‘å–ã‚‹ãŸã‚ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£</summary>
+    public static int Life { get => _life; set => _life = value; }
+
+    /// <summary>è³¼å…¥ã—ãŸã‚¢ã‚¤ãƒ†ãƒ ã¨ãã®å€‹æ•°ã‚’ä¿æŒã—ã¦ãŠããƒ‡ã‚£ã‚¯ã‚·ãƒ§ãƒŠãƒª</summary>
     private Dictionary<ItemData, int> _inventory = new Dictionary<ItemData, int>();
 
-    /// <summary>ƒCƒ“ƒxƒ“ƒgƒŠ‚ğŠO•”‚©‚ç‘€ì‚·‚é‚½‚ß‚ÌƒvƒƒpƒeƒB</summary>
+    /// <summary>ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã‚’å¤–éƒ¨ã‹ã‚‰æ“ä½œã™ã‚‹ãŸã‚ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£</summary>
     public Dictionary<ItemData, int> Inventory { get => _inventory; set => _inventory = value; }
 
     private void Start()
     {
         SceneManager.sceneLoaded += SceneLoaded;
 
-        Debug.Log(_inventory.Count);
+        foreach (var item in Inventory)
+        {
+            Debug.Log($"{item.Key.Name} {item.Value}");
+        }
     }
 
     /// <summary>
-    /// ‘JˆÚæ‚ÌƒV[ƒ“‚ÉƒCƒ“ƒxƒ“ƒgƒŠ‚ğì¬‚·‚éŠÖ”
+    /// é·ç§»å…ˆã®ã‚·ãƒ¼ãƒ³ã«ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã‚’ä½œæˆã™ã‚‹é–¢æ•°
     /// </summary>
     private void SceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        //  ‘JˆÚæ‚ÉƒCƒ“ƒxƒ“ƒgƒŠ‚ª‘¶İ‚µ‚È‚¢ê‡V‚µ‚­ì¬‚µ‚ÄAƒCƒ“ƒxƒ“ƒgƒŠ‚ğƒRƒs[‚·‚é
+        //  é·ç§»å…ˆã«ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªãŒå­˜åœ¨ã—ãªã„å ´åˆæ–°ã—ãä½œæˆã—ã¦ã€ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
         if (!FindAnyObjectByType<InventoryManager>())
         {
             var obj = new GameObject("Inventory").AddComponent<InventoryManager>();
             obj.GetComponent<InventoryManager>().Inventory = this._inventory;
         }
-        else@// ƒCƒ“ƒxƒ“ƒgƒŠ‚ª‚ ‚éê‡AƒCƒ“ƒxƒ“ƒgƒŠ‚ÌƒRƒs[‚Ì‚İs‚¤
+        elseã€€// ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªãŒã‚ã‚‹å ´åˆã€ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã®ã‚³ãƒ”ãƒ¼ã®ã¿è¡Œã†
         {
             var obj = FindAnyObjectByType<InventoryManager>();
             obj.Inventory = this._inventory;
@@ -38,9 +47,9 @@ public class InventoryManager : MonoBehaviour, IInventory
     }
 
     /// <summary>
-    /// w“ü‚µ‚½ƒAƒCƒeƒ€‚ğƒCƒ“ƒxƒ“ƒgƒŠ‚É’Ç‰Á‚·‚éŠÖ”
+    /// è³¼å…¥ã—ãŸã‚¢ã‚¤ãƒ†ãƒ ã‚’ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã«è¿½åŠ ã™ã‚‹é–¢æ•°
     /// </summary>
-    /// <param name="item">’Ç‰Á‚·‚éƒAƒCƒeƒ€</param>
+    /// <param name="item">è¿½åŠ ã™ã‚‹ã‚¢ã‚¤ãƒ†ãƒ </param>
     public void AddItemToInventory(ItemData item) 
     {
         if (_inventory.ContainsKey(item)) _inventory[item]++;
@@ -48,21 +57,16 @@ public class InventoryManager : MonoBehaviour, IInventory
     }
 
     /// <summary>
-    /// ƒCƒ“ƒxƒ“ƒgƒŠ‚©‚çƒAƒCƒeƒ€‚ğæ‚èœ‚­ŠÖ”
+    /// ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒªã‹ã‚‰ã‚¢ã‚¤ãƒ†ãƒ ã‚’å–ã‚Šé™¤ãé–¢æ•°
     /// </summary>
-    /// <param name="item">æ‚èœ‚­ƒAƒCƒeƒ€</param>
+    /// <param name="item">å–ã‚Šé™¤ãã‚¢ã‚¤ãƒ†ãƒ </param>
     public void RemoveItemFromInventory(ItemData item) 
     {
         if (_inventory[item] > 0) _inventory[item]--;
     }
 
-    /// <summary>
-    /// ƒAƒCƒeƒ€‚ğg—p‚·‚é‚Æ‚«‚ÉŒÄ‚Ño‚·ŠÖ”
-    /// Œ»óŒÄ‚Ño‚·•û–@‚Æ’†g‚ª‚È‚¢
-    /// </summary>
-    /// <param name="item">g—p‚·‚éƒAƒCƒeƒ€‚Ìƒf[ƒ^</param>
-    public void UseItem(ItemData item)
+    public int SetArmourValue(int armourValue)
     {
-        
+        return armourValue;
     }
 }

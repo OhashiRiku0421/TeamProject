@@ -1,29 +1,29 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ItemData", menuName = "ScriptableObjects/CreateItemDataAsset")]
 public class ItemDataAsset : ScriptableObject
 {
-    [SerializeField, Tooltip("ƒAƒCƒeƒ€ì¬—p‚ÌƒŠƒXƒg")]
+    [SerializeField, Tooltip("ã‚¢ã‚¤ãƒ†ãƒ ä½œæˆç”¨ã®ãƒªã‚¹ãƒˆ")]
     private List<ItemData> _itemDatas = new List<ItemData>();
 
-    /// <summary>ƒAƒCƒeƒ€ƒf[ƒ^QÆ—p‚ÌƒvƒƒpƒeƒB</summary>
+    /// <summary>ã‚¢ã‚¤ãƒ†ãƒ ãƒ‡ãƒ¼ã‚¿å‚ç…§ç”¨ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£</summary>
     public List<ItemData> ItemDatas { get => _itemDatas; }
 }
 
 [System.Serializable]
 public class ItemData
 {
-    [SerializeField, Tooltip("ƒAƒCƒeƒ€‚Ì–¼‘O")]
-    private string _name = default;
+    [SerializeField, Tooltip("ã‚¢ã‚¤ãƒ†ãƒ ã®åå‰")]
+    private string _name;
 
-    [SerializeField, Tooltip("ƒAƒCƒeƒ€g—p‚ÌŒø‰Ê—Ê")]
+    [SerializeField, Tooltip("ã‚¢ã‚¤ãƒ†ãƒ ä½¿ç”¨æ™‚ã®åŠ¹æœé‡")]
     private int _effectValue = default;
 
-    [SerializeField, Tooltip("ƒAƒCƒeƒ€w“ü‚Ì’l’i")]
+    [SerializeField, Tooltip("ã‚¢ã‚¤ãƒ†ãƒ è³¼å…¥æ™‚ã®å€¤æ®µ")]
     private int _cost = default;
 
-    [SerializeField, Tooltip("ƒAƒCƒeƒ€Œø‰Ê‚Ì”­“®ƒ^ƒCƒ~ƒ“ƒO")]
+    [SerializeField, Tooltip("ã‚¢ã‚¤ãƒ†ãƒ ã®ç¨®é¡")]
     private EffectType _effect = EffectType.None;
 
     public string Name { get => _name; }
@@ -34,10 +34,10 @@ public class ItemData
 
 public enum EffectType
 {
-    /// <summary>Œø‰Ê‚È‚µ</summary>
+    /// <summary>åŠ¹æœãªã—</summary>
     None,
-    /// <summary>í”­“®</summary>
-    Passive,
-    /// <summary>”CˆÓ”­“®</summary>
-    Active,
+    /// <summary>ã‚¢ãƒ¼ãƒãƒ¼</summary>
+    Armour,
+    /// <summary>ä¿é™º</summary>
+    Insurance,
 }
