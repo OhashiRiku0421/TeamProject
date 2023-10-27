@@ -1,55 +1,64 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class ShopManager : MonoBehaviour
 {
-    [SerializeField,Tooltip("ƒeƒXƒg—p‚Ìƒ‰ƒCƒt")]
-    private int _tempHP = 100;
+    /// <summary>ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ©ã‚¤ãƒ•</summary>
+    private int _playerLife = InventoryManager.Life;
 
-    /// <summary>ƒvƒŒƒCƒ„[‚Ìƒ‰ƒCƒt‚ğó‚¯æ‚é‚½‚ß‚ÌƒvƒƒpƒeƒB</summary>
-    public int PlayerLife { get => _tempHP; set => _tempHP = value; }
-
-    [SerializeField, Tooltip("ItemDataAsset ‚ğƒAƒTƒCƒ“‚·‚é•Ï”")]
+    [SerializeField, Tooltip("ItemDataAsset ã‚’ã‚¢ã‚µã‚¤ãƒ³ã™ã‚‹å¤‰æ•°")]
     private ItemDataAsset _itemDataAsset;
 
-    /// <summary>ItemDataAsset“à‚ÌƒAƒCƒeƒ€ƒf[ƒ^‚ğŠi”[‚·‚é•Ï”</summary>
+    /// <summary>ItemDataAssetå†…ã®ã‚¢ã‚¤ãƒ†ãƒ ãƒ‡ãƒ¼ã‚¿ã‚’æ ¼ç´ã™ã‚‹å¤‰æ•°</summary>
     private List<ItemData> _itemDatas;
 
+    [SerializeField, Tooltip("ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒª")]
     private InventoryManager _inventory;
 
     private void Start()
     {
         _itemDatas = _itemDataAsset.ItemDatas;
-        _inventory = FindAnyObjectByType<InventoryManager>();
     }
 
-    public void BuyItem (string itemname)
+    public void BuyItem (string itemName)
     {
-        var itemParam = _itemDatas.Find(item => item.Name == itemname);
+        var itemParam = _itemDatas.Find(item => item.Name == itemName);
 
-        if (itemParam != null && _tempHP >= itemParam.Cost)
+        if (itemParam != null && _playerLife >= itemParam.Cost)
         {
             _inventory.AddItemToInventory(itemParam);
-            _tempHP -= itemParam.Cost;
+            _playerLife -= itemParam.Cost;
 
-            Debug.Log(_inventory.Inventory[itemParam]);
+            Debug.Log($"{itemParam.Name} {_inventory.Inventory[itemParam]}");
         }
+        else if (itemParam == null)
+        {
+            Debug.Log("ã‚¢ã‚¤ãƒ†ãƒ ã®åå‰ãŒé–“é•ã£ã¦ã„ã‚‹ã‹ã€å­˜åœ¨ã—ã¾ã›ã‚“");
+        }
+
+        CriAudioManager.Instance.SE.Play("UI", "SE_Buy");
     }
 
-    public void SellItem (string itemname)
+    public void SellItem (string itemName)
     {
-        var itemParam = _itemDatas.Find(item => item.Name == itemname);
+        var itemParam = _itemDatas.Find(item => item.Name == itemName);
 
-        if (_inventory.Inventory[itemParam] > 0)
+        if (itemParam != null && _inventory.Inventory[itemParam] > 0)
         {
             _inventory.RemoveItemFromInventory(itemParam);
-            _tempHP += itemParam.Cost;
+            _playerLife += itemParam.Cost;
 
-            Debug.Log(_inventory.Inventory[itemParam]);
+            Debug.Log($"{itemParam.Name} {_inventory.Inventory[itemParam]}");
         }
-        else
+        else if (_inventory.Inventory[itemParam] <= 0)
         {
-            Debug.Log($"ƒAƒCƒeƒ€‚ğ‚Á‚Ä‚¢‚Ü‚¹‚ñ {_inventory.Inventory[itemParam]}");
+            Debug.Log($"ã‚¢ã‚¤ãƒ†ãƒ ã‚’æŒã£ã¦ã„ã¾ã›ã‚“ {_inventory.Inventory[itemParam]}");
         }
+        else if (itemParam == null)
+        {
+            Debug.Log("ã‚¢ã‚¤ãƒ†ãƒ ã®åå‰ãŒé–“é•ã£ã¦ã„ã‚‹ã‹ã€å­˜åœ¨ã—ã¾ã›ã‚“");
+        }
+
+        CriAudioManager.Instance.SE.Play("UI", "SE_Cancel");
     }
 }
