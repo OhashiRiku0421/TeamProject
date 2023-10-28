@@ -29,16 +29,16 @@ public class EnemyMoveState : IState
         _enemy.transform.LookAt(_enemy.PlayerTransform);
         //移動
         _enemy.Rb.velocity = (_enemy.PlayerTransform.position - _enemy.transform.position).normalized * _moveSpeed;
-
         //近くに来たら攻撃ステートに変更する
         if (distance <= _enemy.StopDistance)
         {
-            if(_enemy.EnemyType == EnemyType.Short)
+            if (_enemy.EnemyType == EnemyType.Short)
             {
                 _enemy.StateMachine.ChangeState(_enemy.StateMachine.ShortAttack);
             }
             else
             {
+                Debug.Log(distance);
                 _enemy.StateMachine.ChangeState(_enemy.StateMachine.LongAttack);
             }
             return;
@@ -50,5 +50,8 @@ public class EnemyMoveState : IState
         }
     }
 
-    public void Exit() { }
+    public void Exit() 
+    {
+        _enemy.Rb.velocity = Vector3.zero;
+    }
 }
