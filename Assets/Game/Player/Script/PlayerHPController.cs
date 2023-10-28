@@ -53,7 +53,7 @@ public class PlayerHPController : MonoBehaviour, IDamage
         }
         else
         {
-            _currentHP = InventoryManager.Life;
+            _currentHP = ExternalLifeManager.Life;
         }
     }
 
