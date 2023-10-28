@@ -5117,6 +5117,7 @@ GameObject:
   - component: {fileID: 7998704423129352515}
   - component: {fileID: 6845334570957983706}
   - component: {fileID: 5267612902945683703}
+  - component: {fileID: 1700733977239354160}
   - component: {fileID: 1447412534542269263}
   - component: {fileID: 1713358737245884542}
   m_Layer: 0
@@ -5220,13 +5221,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e43c8c4b4260fa4c9d0c7e9f439718d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _normalAttackDamage: 10
-  _normalAttackEreaCenter: {fileID: 6939875303829868418}
+  _closeRangeAttackDamage: 10
+  _closeAttackEreaCenter: {fileID: 6939875303829868418}
   _closeRangeEffect: {fileID: 4640165555033476973}
-  _normalAttackHalfExtant: {x: 0.5, y: 0.5, z: 0.5}
+  _longRangeDamage: 10
+  _closeRangeAttackHalfExtant: {x: 0.5, y: 0.5, z: 0.5}
   _muzzle: {fileID: 7156530382425053242}
   _longRangePrefab: {fileID: 3660391679168740753, guid: 8f55a71a2a1198240802f1c305cde353,
     type: 3}
+--- !u!114 &1700733977239354160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5848494578800305293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97440f7a030a9b44ab21c5154a1de03d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isGodMode: 0
+  _godModeHP: 10000
 --- !u!54 &1447412534542269263
 Rigidbody:
   m_ObjectHideFlags: 0
