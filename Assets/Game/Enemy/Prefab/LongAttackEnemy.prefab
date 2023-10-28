@@ -256,14 +256,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stateMachine:
     _shortAttack:
-      _awaitAttack: 2
+      _awaitAttack: 3
       _attackPower: 1
+      _effect: {fileID: 0}
     _longAttack:
       _awaitAttack: 2
       _attackPower: 1
-      targetLayer:
+      _targetLayer:
         serializedVersion: 2
         m_Bits: 64
+      _effect: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56,
+        type: 3}
     _move:
       _moveSpeed: 5
   _playerTransform: {fileID: 0}
@@ -274,3 +277,4 @@ MonoBehaviour:
   _enemyType: 1
   _hp: 10
   _attackRange: 8
+  _longAttackCenter: {x: 0, y: 0, z: 0}

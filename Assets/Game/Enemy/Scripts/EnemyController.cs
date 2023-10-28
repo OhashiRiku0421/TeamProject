@@ -78,7 +78,7 @@ public class EnemyController : MonoBehaviour, IDamage
         _hp -= damage;
         if(_hp <= 0)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
 
