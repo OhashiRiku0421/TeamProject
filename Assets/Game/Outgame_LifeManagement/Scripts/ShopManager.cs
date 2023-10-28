@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ShopManager : MonoBehaviour
@@ -7,17 +8,18 @@ public class ShopManager : MonoBehaviour
     private int _playerLife = InventoryManager.Life;
 
     [SerializeField, Tooltip("ItemDataAsset をアサインする変数")]
-    private ItemDataAsset _itemDataAsset;
+    private ItemDataAsset _itemDataAsset = default;
 
     /// <summary>ItemDataAsset内のアイテムデータを格納する変数</summary>
-    private List<ItemData> _itemDatas;
+    private List<ItemData> _itemDatas = default;
 
     [SerializeField, Tooltip("インベントリ")]
-    private InventoryManager _inventory;
+    private InventoryManager _inventory = default;
 
     private void Start()
     {
         _itemDatas = _itemDataAsset.ItemDatas;
+        if (_inventory == default) throw new NullReferenceException("インベントリがアサインされていません");
     }
 
     public void BuyItem (string itemName)
