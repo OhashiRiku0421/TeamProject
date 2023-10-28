@@ -14,6 +14,8 @@ public class EnemyShortAttackState : IState
 
     [SerializeField, Tooltip("攻撃力")]
     private float _attackPower = 1;
+    [SerializeField]
+    private GameObject _effect;
 
     private bool _isAttack = false;
     private bool _isCancel = false;
@@ -28,6 +30,7 @@ public class EnemyShortAttackState : IState
 
     public void Enter()
     {
+        IntervalAsync();
     }
 
     public void Update()
@@ -36,7 +39,7 @@ public class EnemyShortAttackState : IState
         if (!_isAttack)
         {
             _enemy.transform.LookAt(_enemy.PlayerTransform);
-            AsyncAttack();
+            AttackAsync();
         }
         else if (!_isCancel)
         {
@@ -48,6 +51,7 @@ public class EnemyShortAttackState : IState
             {
                 if (collider.gameObject.TryGetComponent<IDamage>(out IDamage damage))
                 {
+                    GameObject.Instantiate(_effect, collider.gameObject.transform.position, Quaternion.identity);
                     damage.SendDamage(_attackPower);
                     _isCancel = true;
                 }
@@ -56,27 +60,33 @@ public class EnemyShortAttackState : IState
         //ちょっと遠くなったら移動のStateに変更
         if (distance >= _enemy.StopDistance + 2)//仮
         {
-            _isAttack = false;
             _enemy.StateMachine.ChangeState(_enemy.StateMachine.Move);
         }
     }
 
     /// <summary>
-    /// 攻撃を待つ
+    /// 攻撃
     /// </summary>
-    private async UniTask AsyncAttack()
+    private async UniTask AttackAsync()
     {
         _isAttack = true;
         _isCancel = false;
         await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _cancell.Token);//攻撃の時間
+        await IntervalAsync();
+    }
 
+    private async UniTask IntervalAsync()
+    {
+        _isAttack = true;
+        _isCancel = true;
         await UniTask.Delay(TimeSpan.FromSeconds(_awaitAttack), cancellationToken: _cancell.Token);//攻撃のインターバル
-
+        _isCancel = false;
         _isAttack = false;
     }
 
     public void Exit()
     {
-        _cancell?.Dispose();
+        _isAttack = false;
+        _isCancel = false;
     }
 }
