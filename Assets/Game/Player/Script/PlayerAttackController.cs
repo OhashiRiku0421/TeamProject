@@ -3,20 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
 public class PlayerAttackController : MonoBehaviour
 {
-    [SerializeField, Tooltip("近距離攻撃の攻撃力")]
-    private float _normalAttackDamage = 10F;
+    [FormerlySerializedAs("_normalAttackDamage")] [SerializeField, Tooltip("近距離攻撃の攻撃力")]
+    private float _closeRangeAttackDamage = 10F;
 
-    [SerializeField, Tooltip("近距離攻撃範囲の中心")]
-    private Transform _normalAttackEreaCenter = default;
+    [FormerlySerializedAs("_normalAttackEreaCenter")] [SerializeField, Tooltip("近距離攻撃範囲の中心")]
+    private Transform _closeAttackEreaCenter = default;
 
     [SerializeField, Tooltip("近距離攻撃")] private VisualEffect _closeRangeEffect = default;
+
+    [SerializeField, Tooltip("遠距離攻撃のダメージ")]
+    private float _longRangeDamage = 10F;
     
-    [SerializeField, Tooltip("近距離攻撃の各軸に対する半径")]
-    private Vector3 _normalAttackHalfExtant = Vector3.zero;
+    [FormerlySerializedAs("_normalAttackHalfExtant")] [SerializeField, Tooltip("近距離攻撃の各軸に対する半径")]
+    private Vector3 _closeRangeAttackHalfExtant = Vector3.zero;
 
     /// <summary>遠距離攻撃を発射する銃口</summary>
     [SerializeField]
@@ -123,7 +127,7 @@ public class PlayerAttackController : MonoBehaviour
         {
             CriAudioManager.Instance.SE.Play("Player", "SE_Player_Attack_Close");
             _closeRangeEffect.SendEvent("OnPlay");
-            var colliders = Physics.OverlapBox(_normalAttackEreaCenter.position, _normalAttackHalfExtant,
+            var colliders = Physics.OverlapBox(_closeAttackEreaCenter.position, _closeRangeAttackHalfExtant,
                 this.transform.rotation);
 
             List<IDamage> targets = new List<IDamage>(colliders.Length);
@@ -138,7 +142,7 @@ public class PlayerAttackController : MonoBehaviour
                 }
             }
 
-            Attack(targets, _normalAttackDamage);
+            Attack(targets, _closeRangeAttackDamage);
         }
         else
         {
@@ -146,6 +150,7 @@ public class PlayerAttackController : MonoBehaviour
             var temp = Instantiate(_longRangePrefab.gameObject);
             temp.transform.position = _muzzle.transform.position;
             temp.transform.rotation = this.transform.rotation;
+            temp.GetComponent<PlayerArrowController>().Damage = _longRangeDamage;
         }
     }
 
@@ -164,7 +169,7 @@ public class PlayerAttackController : MonoBehaviour
     {
         // 通常攻撃の当たり判定を可視化
         Gizmos.color = Color.magenta;
-        Gizmos.matrix = _normalAttackEreaCenter.localToWorldMatrix;
-        Gizmos.DrawWireCube(Vector3.zero, _normalAttackHalfExtant * 2F);
+        Gizmos.matrix = _closeAttackEreaCenter.localToWorldMatrix;
+        Gizmos.DrawWireCube(Vector3.zero, _closeRangeAttackHalfExtant * 2F);
     }
 }
