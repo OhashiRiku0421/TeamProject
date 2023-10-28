@@ -16,7 +16,10 @@ public class EnemyLongAttackState : IState
     private float _attackPower = 1;
 
     [SerializeField]
-    public LayerMask targetLayer;
+    private LayerMask _targetLayer;
+
+    [SerializeField]
+    private GameObject _effect;
 
     private bool _isCancel = false;
     private bool _isAttack = false;
@@ -31,6 +34,7 @@ public class EnemyLongAttackState : IState
 
     public void Enter()
     {
+        IntervalAsync();
     }
 
     public void Update()
@@ -39,16 +43,17 @@ public class EnemyLongAttackState : IState
         if (!_isAttack)
         {
             _enemy.transform.LookAt(_enemy.PlayerTransform);
-            AsyncAttack();
+            AttackAsync();
         }
         else if(!_isCancel)
         {
             RaycastHit hitInfo;
             //光線に当たったら攻撃
-            if (Physics.Raycast(_enemy.transform.position, _enemy.transform.forward, out hitInfo, _enemy.AttackRange, targetLayer))
+            if (Physics.Raycast(_enemy.transform.position + _enemy.LongAttackCenter, _enemy.transform.forward, out hitInfo, _enemy.AttackRange, _targetLayer))
             {
                 if (hitInfo.collider.gameObject.TryGetComponent<IDamage>(out IDamage damage))
                 {
+                    GameObject.Instantiate(_effect, hitInfo.collider.gameObject.transform.position, Quaternion.identity);
                     damage.SendDamage(_attackPower);
                     _isCancel = true;
                 }
@@ -58,7 +63,6 @@ public class EnemyLongAttackState : IState
         //ちょっと遠くなったら移動のStateに変更
         if (distance >= _enemy.StopDistance + 2)//仮
         {
-            _isAttack = false;
             _enemy.StateMachine.ChangeState(_enemy.StateMachine.Move);
         }
     }
@@ -66,20 +70,28 @@ public class EnemyLongAttackState : IState
     /// <summary>
     /// 攻撃を待つ
     /// </summary>
-    private async UniTask AsyncAttack()
+    private async UniTask AttackAsync()
     {
         _isAttack = true;
         _isCancel = false;
         await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _cancell.Token);//攻撃の時間
 
-        await UniTask.Delay(TimeSpan.FromSeconds(_awaitAttack), cancellationToken: _cancell.Token);//攻撃のインターバル
+        await IntervalAsync();
+    }
 
+    private async UniTask IntervalAsync()
+    {
+        _isAttack = true;
+        _isCancel = true;
+        await UniTask.Delay(TimeSpan.FromSeconds(_awaitAttack), cancellationToken: _cancell.Token);//攻撃のインターバル
         _isAttack = false;
+        _isCancel = false;
     }
 
     public void Exit()
     {
-        _cancell?.Dispose();
+        _isAttack = false;
+        _isCancel = false;
     }
 
 

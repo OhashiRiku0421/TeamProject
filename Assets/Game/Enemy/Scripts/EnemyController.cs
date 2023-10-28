@@ -29,6 +29,9 @@ public class EnemyController : MonoBehaviour, IDamage
     [SerializeField, Tooltip("遠距離攻撃の範囲")]
     private float _attackRange = 10f;
 
+    [SerializeField]
+    private Vector3 _longAttackCenter;
+
     private Rigidbody _rb;
 
     public EnemyStateMachine StateMachine => _stateMachine;
@@ -46,6 +49,8 @@ public class EnemyController : MonoBehaviour, IDamage
     public EnemyType EnemyType => _enemyType;
 
     public float AttackRange => _attackRange;
+
+    public Vector3 LongAttackCenter => _longAttackCenter;
 
     public Rigidbody Rb { get => _rb; set => _rb = value; }
 
@@ -89,7 +94,7 @@ public class EnemyController : MonoBehaviour, IDamage
         //遠距離用の攻撃範囲ギズモ
         else
         {
-            Gizmos.DrawRay(transform.position, transform.forward * _attackRange);
+            Gizmos.DrawRay(transform.position + _longAttackCenter, transform.forward * _attackRange);
         }
     }
 }
