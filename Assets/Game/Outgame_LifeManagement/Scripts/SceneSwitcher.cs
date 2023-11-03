@@ -6,16 +6,21 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour
 {
-    [SerializeField]
-    private bool _isAnyPressKeys = false;
+    [SerializeField, Tooltip("任意のキーを入力したらシーンが変わるようにするフラグ")]
+    private bool _isAnyKeyPressed = false;
 
-    public void SceneLoad(SceneAsset sceneAsset)
+    [SerializeField, Tooltip("遷移したいシーンのシーンアセット")]
+    private SceneAsset _sceneAsset;
+
+    private void Update()
     {
-        if (_isAnyPressKeys)
+        if (_isAnyKeyPressed)
         {
-            InputSystem.onAnyButtonPress.CallOnce(ctrl => SceneManager.LoadScene(sceneAsset.name));
+            InputSystem.onAnyButtonPress.CallOnce(ctrl => SceneManager.LoadScene(_sceneAsset.name));
         }
-
-        SceneManager.LoadScene(sceneAsset.name);
+    }
+    public void SceneLoad()
+    {
+        SceneManager.LoadScene(_sceneAsset.name);
     }
 }
