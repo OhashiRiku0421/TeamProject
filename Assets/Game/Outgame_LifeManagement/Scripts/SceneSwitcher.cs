@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.SceneManagement;
 
-public class SceneSwicher : MonoBehaviour
+public class SceneSwitcher : MonoBehaviour
 {
     [SerializeField]
     private bool _isAnyPressKeys = false;
