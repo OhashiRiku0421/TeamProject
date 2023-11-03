@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneSwicher : MonoBehaviour
 {
-    public void SceneLoad(string sceneName)
+    public void SceneLoad(SceneAsset sceneAsset)
     {
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene(sceneAsset.name);
     }
 }
