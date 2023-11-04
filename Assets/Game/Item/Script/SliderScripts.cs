@@ -27,19 +27,15 @@ public class SliderScripts : MonoBehaviour
         {
             Debug.Log("“–‚½‚Á‚½");
 
-           
-            InvokeRepeating(nameof(Slider), 0f, 0.1f);
+            geji.fillAmount -= 1f * Time.deltaTime;
+            //InvokeRepeating(nameof(Slider), 0f, 0.1f);
         }
-        //CriAudioManager.Instance.SE.Play("UI", "SE_Item_Get");
-        //if (geji.fillAmount == 0f)
-        //{
-        //    CriAudioManager.Instance.SE.Play("UI", "SE_Item_Get");
-        //}
+        
     }
     
     public void Slider()
     {
-        geji.fillAmount -= 1f * Time.deltaTime;
+        
         
         
     }
