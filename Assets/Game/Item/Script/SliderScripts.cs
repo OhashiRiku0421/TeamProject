@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class SliderScripts : MonoBehaviour
 {
     public Image geji;
-    public GameObject pcone;
+    
 
     float max = 1f;
     float min = 0.1f;
@@ -28,12 +28,7 @@ public class SliderScripts : MonoBehaviour
             Debug.Log("“–‚½‚Á‚½");
 
             geji.fillAmount -= 1f * Time.deltaTime;
-
-            if(geji.fillAmount == 0f)
-            {
-                Destroy(pcone.gameObject);
-                gameObject.SetActive(false);
-            }
+            //InvokeRepeating(nameof(Slider), 0f, 0.1f);
         }
         
     }
