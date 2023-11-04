@@ -6,7 +6,7 @@ public class PlayerSaisyu : MonoBehaviour
 {
     public GameObject saisyuCanvas;
 
-    public GameObject pcone;
+    
 
 
     // Start is called before the first frame update
@@ -34,15 +34,15 @@ public class PlayerSaisyu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            StartCoroutine(saisyu());
+            //StartCoroutine(saisyu());
         }
     }
-    IEnumerator saisyu()
-    {
-        yield return new WaitForSeconds(2f);
-        // ‚Q•bŒã‚ÉŒ‹»‚ğÁ‚·‚Q•b
-        Destroy(pcone.gameObject);
-        // ‚Q•bŒã‚ÉÌæ‚ÌCanvas‚ğ”ñ•\¦‚É‚·‚é
-        saisyuCanvas.gameObject.SetActive(false);
-    }
+    //IEnumerator saisyu()
+    //{
+    //    yield return new WaitForSeconds(f);
+    //    // ‚Q•bŒã‚ÉŒ‹»‚ğÁ‚·‚Q•b
+    //    Destroy(pcone.gameObject);
+    //    // ‚Q•bŒã‚ÉÌæ‚ÌCanvas‚ğ”ñ•\¦‚É‚·‚é
+    //    saisyuCanvas.gameObject.SetActive(false);
+    //}
 }
