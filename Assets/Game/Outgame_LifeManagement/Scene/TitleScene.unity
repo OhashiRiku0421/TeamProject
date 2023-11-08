@@ -317,7 +317,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 116, y: -30}
+  m_AnchoredPosition: {x: 513, y: -138}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &629800685
@@ -342,11 +342,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
+    m_MinSize: 1
+    m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -391,6 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20bda9be6b892964ea55bfa2fece875b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAnyKeyPressed: 1
   _sceneAsset: {fileID: 102900000, guid: 42fe5815ad6d89142af5336ef365a006, type: 3}
 --- !u!4 &887707520
 Transform:
@@ -839,6 +840,74 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2128575313
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6306310559908785143, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_Name
+      value: CRI
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467379296989068724, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.52157634
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467379296989068724, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.6073855
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467379296989068724, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.5969677
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467379296989068724, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467379296989068724, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467379296989068724, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467379296989068724, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467379296989068724, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467379296989068724, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8467379296989068724, guid: 3be1c74568e003d4bbf835a444a6e60b,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3be1c74568e003d4bbf835a444a6e60b, type: 3}
 --- !u!1 &2130843822
 GameObject:
   m_ObjectHideFlags: 0
@@ -873,7 +942,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 106.88, y: 40}
+  m_AnchoredPosition: {x: 517, y: 228}
   m_SizeDelta: {x: 213.75, y: 85.0903}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2130843824
@@ -898,11 +967,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 49
+    m_FontSize: 200
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 75
+    m_MinSize: 2
+    m_MaxSize: 300
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -927,3 +996,4 @@ SceneRoots:
   - {fileID: 1706282452}
   - {fileID: 627101414}
   - {fileID: 887707520}
+  - {fileID: 2128575313}
