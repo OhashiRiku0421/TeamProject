@@ -3,7 +3,6 @@
 /// <summary>
 /// Idel状態のステート
 /// </summary>
-[System.Serializable]
 public class EnemyIdleState : IState
 {
     private EnemyController _enemy;
@@ -16,14 +15,12 @@ public class EnemyIdleState : IState
     public void Enter()
     {
         Debug.Log("Idle");
+        _enemy.Anim.SetBool("IsPatrol", false);
     }
 
     public void Update()
     {
-        float distance = Vector3.Distance(_enemy.transform.position, _enemy.PlayerTransform.position);
-
-        //移動範囲内に入ったら移動のStateに変更
-        if (distance <= _enemy.MoveDistance)
+        if(_enemy.EnemyMove.IsMove())
         {
             _enemy.StateMachine.ChangeState(_enemy.StateMachine.Move);
         }
