@@ -12,7 +12,7 @@ namespace CustomStateMachine
 
         /// <summary>ステートが変わった際に呼ばれるAction</summary>
         protected Action<AbstractStateBase> _onStateChanged = default;
-        
+
         /// <summary>ステートが変わった際に呼ばれるAction</summary>
         public event Action<AbstractStateBase> OnStateChanged
         {
@@ -26,7 +26,7 @@ namespace CustomStateMachine
             // ステートを初期化する
             CurrentState = StateInit();
             CurrentState.OnEntry();
-            
+
             // スタートした時点でActionを呼ぶ
             _onStateChanged?.Invoke(CurrentState);
         }

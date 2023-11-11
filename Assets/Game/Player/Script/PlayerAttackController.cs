@@ -16,43 +16,49 @@ public class PlayerAttackController : MonoBehaviour
 
     [SerializeField, Tooltip("近距離攻撃")] private VisualEffect _closeRangeEffect = default;
 
-    [SerializeField, Tooltip("遠距離攻撃のダメージ")]
-    private float _longRangeDamage = 10F;
-    
     [FormerlySerializedAs("_normalAttackHalfExtant")] [SerializeField, Tooltip("近距離攻撃の各軸に対する半径")]
     private Vector3 _closeRangeAttackHalfExtant = Vector3.zero;
 
-    /// <summary>遠距離攻撃を発射する銃口</summary>
-    [SerializeField]
-    private GameObject _muzzle = default;
+    [SerializeField, Tooltip("攻撃パターンの数")] private int _attackPatternCount = 2;
     
-    [SerializeField, Tooltip("遠距離攻撃用のプレハブ")]
-    private PlayerArrowController _longRangePrefab = default;
+    /// <summary>現在のアタック入力回数</summary>
+    private int _currentAttackInput = 0;
 
-    /// <summary>現在近距離攻撃かどうか</summary>
-    private bool _isCloseRange = true;
-
-    /// <summary>現在近距離攻撃かどうか</summary>
-    public bool IsCloseRange
+    private Action<int> _onCurrentAttackInputChanged = default;
+    
+    public event Action<int> OnCurrentAttackInputChanged
     {
-        get => _isCloseRange;
-        private set
-        {
-            _onIsCloseRangeChanged?.Invoke(value);
-            _isCloseRange = value;
-        }
+        add => _onCurrentAttackInputChanged += value;
+        remove => _onCurrentAttackInputChanged -= value;
     }
 
-    /// <summary>IsCloseRangeが変更された際に呼ばれるAction</summary>
-    private Action<bool> _onIsCloseRangeChanged = default;
-    
-    /// <summary>IsCloseRangeが変更された際に呼ばれるAction</summary>
-    public event Action<bool> OnIsCloseRangeChanged
+    /// <summary>現在のアタックパターン</summary>
+    private int _currentAttackPattern = 0;
+
+    /// <summary>現在のアタックパターン</summary>
+    public int CurrentAttackPattern => _currentAttackPattern;
+
+    /// <summary>次のアタックパターンに進める</summary>
+    private void NextAttackPattern()
     {
-        add => _onIsCloseRangeChanged += value;
-        remove => _onIsCloseRangeChanged -= value;
+        _currentAttackPattern = (_currentAttackPattern + 1) % _attackPatternCount;
+        _onCurrentAttackPatternChanged?.Invoke(_currentAttackPattern);
     }
 
+    private void ResetAttackPattern()
+    {
+        _currentAttackPattern = 0;
+        _onCurrentAttackPatternChanged?.Invoke(_currentAttackPattern);
+    }
+
+    private Action<int> _onCurrentAttackPatternChanged = default;
+    
+    public event Action<int> OnCurrentAttackPatternChanged
+    {
+        add => _onCurrentAttackPatternChanged += value;
+        remove => _onCurrentAttackPatternChanged -= value;
+    }
+    
     /// <summary>現在攻撃のAnimation中かどうか</summary>
     private bool _isAttackAnimation = false;
 
@@ -62,14 +68,17 @@ public class PlayerAttackController : MonoBehaviour
         get => _isAttackAnimation;
         private set
         {
-            _onIsAttackAnimationChanged?.Invoke(value);
-            _isAttackAnimation = value;
+            if (_isAttackAnimation != value)
+            {
+                _onIsAttackAnimationChanged?.Invoke(value);
+                _isAttackAnimation = value;
+            }
         }
     }
-    
+
     /// <summary>IsAttackAnimationが変更された際に呼ばれるAction</summary>
     private Action<bool> _onIsAttackAnimationChanged = default;
-    
+
     /// <summary>IsAttackAnimationが変更された際に呼ばれるAction</summary>
     public event Action<bool> OnIsAttackAnimationChanged
     {
@@ -77,81 +86,74 @@ public class PlayerAttackController : MonoBehaviour
         remove => _onIsAttackAnimationChanged -= value;
     }
 
+    private void Start()
+    {
+        ResetAttackPattern();
+    }
+
     private void OnEnable()
     {
-        CustomInputManager.Instance.PlayerInputActions.Player.AttackChange.started += AttackRangeChange;
         CustomInputManager.Instance.PlayerInputActions.Player.Attack.started += Attack;
     }
 
     private void OnDisable()
     {
-        CustomInputManager.Instance.PlayerInputActions.Player.AttackChange.started -= AttackRangeChange;
         CustomInputManager.Instance.PlayerInputActions.Player.Attack.started -= Attack;
     }
 
-    /// <summary>攻撃のタイプを変更する</summary>
-    /// <param name="context">コールバック</param>
-    private void AttackRangeChange(InputAction.CallbackContext context)
-    {
-        // Animation中は切り替えない
-        if (IsAttackAnimation) return;
-        
-        // 近距離と遠距離を切り替える
-        IsCloseRange = !IsCloseRange;
-    }
-    
     /// <summary>攻撃をする処理</summary>
     /// <param name="context">コールバック</param>
     private void Attack(InputAction.CallbackContext context)
     {
-        // Animation中は攻撃できない
-        if (IsAttackAnimation) return;
-        
-        IsAttackAnimation = true;
-
-        if (!IsCloseRange)
+        if (_currentAttackInput < _attackPatternCount - 1)
         {
-            NormalAttack();
+            _currentAttackInput++;
+            _onCurrentAttackInputChanged?.Invoke(_currentAttackInput);
         }
+
+        IsAttackAnimation = true;
     }
 
     private void AttackEnd()
     {
-        IsAttackAnimation = false;
+        if (_currentAttackInput <= 0)
+        {
+            IsAttackAnimation = false;
+            ResetAttackPattern();
+        }
+        else
+        {
+            NextAttackPattern();
+        }
     }
 
     /// <summary>通常攻撃の当たり判定をとる</summary>
     public void NormalAttack()
     {
-        if (IsCloseRange)
+        if (_currentAttackInput > 0)
         {
-            CriAudioManager.Instance.SE.Play("Player", "SE_Player_Attack_Close");
-            _closeRangeEffect.SendEvent("OnPlay");
-            var colliders = Physics.OverlapBox(_closeAttackEreaCenter.position, _closeRangeAttackHalfExtant,
-                this.transform.rotation);
+            _currentAttackInput--;
+            _onCurrentAttackInputChanged?.Invoke(_currentAttackInput);
+        }
 
-            List<IDamage> targets = new List<IDamage>(colliders.Length);
+        CriAudioManager.Instance.SE.Play("Player", "SE_Player_Attack_Close");
+        _closeRangeEffect.SendEvent("OnPlay");
+        var colliders = Physics.OverlapBox(_closeAttackEreaCenter.position, _closeRangeAttackHalfExtant,
+            this.transform.rotation);
 
-            // とってきたものからダメージを与えられるものを探す
-            foreach (var collider in colliders)
+        List<IDamage> targets = new List<IDamage>(colliders.Length);
+
+        // とってきたものからダメージを与えられるものを探す
+        foreach (var collider in colliders)
+        {
+            if (collider.TryGetComponent(out IDamage target))
             {
-                if (collider.TryGetComponent(out IDamage target))
-                {
-                    targets.Add(target);
-                    Debug.Log(target);
-                }
+                targets.Add(target);
+                Debug.Log(target);
             }
+        }
 
-            Attack(targets, _closeRangeAttackDamage);
-        }
-        else
-        {
-            CriAudioManager.Instance.SE.Play("Player", "SE_Player_Attack_Far");
-            var temp = Instantiate(_longRangePrefab.gameObject);
-            temp.transform.position = _muzzle.transform.position;
-            temp.transform.rotation = this.transform.rotation;
-            temp.GetComponent<PlayerArrowController>().Damage = _longRangeDamage;
-        }
+        Attack(targets, _closeRangeAttackDamage);
     }
 
     /// <summary>攻撃のダメージ処理を行う関数</summary>
