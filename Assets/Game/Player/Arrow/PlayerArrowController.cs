@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class PlayerArrowController : MonoBehaviour
 {
-    [SerializeField, Tooltip("スピード")]
-    private float _speed = 1.0F;
-    
+    [SerializeField, Tooltip("スピード")] private float _speed = 1.0F;
+
     /// <summary>与えるダメージ</summary>
     public float Damage { private get; set; }
 

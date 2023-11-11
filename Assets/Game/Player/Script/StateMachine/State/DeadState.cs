@@ -4,17 +4,15 @@ using UnityEngine;
 
 namespace CustomStateMachine
 {
-    public class HitDamageState : AbstractStateBase
+    public class DeadState : AbstractStateBase
     {
-        /// <summary>ステート名</summary>
-        public const string STATE_NAME = "Damage";
-
-        public HitDamageState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
+        public const string STATE_NAME = "Dead";
+        
+        public DeadState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
         {
         }
 
         public override string StateName => STATE_NAME;
-
         public override void OnEntry()
         {
             throw new System.NotImplementedException();
@@ -22,7 +20,7 @@ namespace CustomStateMachine
 
         public override void OnUpdate()
         {
-            throw new System.NotImplementedException();
+            base.OnUpdate();
         }
 
         public override void OnLateUpdate()
@@ -37,7 +35,7 @@ namespace CustomStateMachine
 
         public override void OnExit()
         {
-            throw new System.NotImplementedException();
+            base.OnExit();
         }
     }
 }
