@@ -4,40 +4,47 @@ using UnityEngine;
 
 namespace CustomStateMachine
 {
-    public class HitDamageState : AbstractStateBase
+    public class CollectingState : AbstractStateBase
     {
         /// <summary>ステート名</summary>
-        public const string STATE_NAME = "Damage";
+        public const string STATE_NAME = "Collecting";
 
-        public HitDamageState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
+        public CollectingState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
         {
+            _conditions.Add(() =>
+            {
+                if (!_playerStateMachine.CollectController.IsCollecting)
+                {
+                    _nextStateName = IdleState.STATE_NAME;
+                    return true;
+                }
+
+                return false;
+            });
         }
 
         public override string StateName => STATE_NAME;
 
         public override void OnEntry()
         {
-            throw new System.NotImplementedException();
         }
 
         public override void OnUpdate()
         {
-            throw new System.NotImplementedException();
+            base.OnUpdate();
         }
 
         public override void OnLateUpdate()
         {
-            throw new System.NotImplementedException();
         }
 
         public override void OnFixedUpdate()
         {
-            throw new System.NotImplementedException();
         }
 
         public override void OnExit()
         {
-            throw new System.NotImplementedException();
+            base.OnExit();
         }
     }
 }

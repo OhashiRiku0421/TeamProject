@@ -1,30 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
-using CustomStateMachine;
 using UnityEngine;
 
 namespace CustomStateMachine
 {
-    public class LongRangeAttackState : AbstractStateBase
+    public class AvoidanceState : AbstractStateBase
     {
         /// <summary>ステート名</summary>
-        public const string STATE_NAME = "LongRangeAttack";
+        public const string STATE_NAME = "Avoidance";
         
-        public LongRangeAttackState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
+        public AvoidanceState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
         {
+            // アイドルに遷移
             _conditions.Add(() =>
             {
-                if (!_playerStateMachine.AttackController.IsAttackAnimation)
+                if (!_playerStateMachine.AvoidController.IsAvoiding)
                 {
                     _nextStateName = IdleState.STATE_NAME;
                     return true;
                 }
+
                 return false;
             });
         }
 
+        public override string StateName => STATE_NAME;
         public override void OnEntry()
         {
+            _playerStateMachine.AvoidController.OnSteteEntry();
         }
 
         public override void OnUpdate()
@@ -44,5 +47,5 @@ namespace CustomStateMachine
         {
             base.OnExit();
         }
-    }    
+    }
 }
