@@ -20,7 +20,7 @@ public class EnemyDamageState : IState
         //ダメージのAnimationを流す予定
         float distance = Vector3.Distance(_enemy.transform.position, _enemy.PlayerTransform.position);
         //移動範囲に入っていたら移動のステートに変更
-        if (distance > _enemy.MoveDistance)
+        if (distance > _enemy.EnemyMove.MoveDistance)
         {
             _enemy.StateMachine.ChangeState(_enemy.StateMachine.Idle);
         }
