@@ -630,12 +630,6 @@ Transform:
   - {fileID: 328205792}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 11.017, y: 0, z: 0}
---- !u!1 &625914101 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5138706403592457163, guid: 1ce9a718a34be8b4290611eb5cb0e35c,
-    type: 3}
-  m_PrefabInstance: {fileID: 1640639155}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &651617059 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4144804249582803891, guid: 85ce77bc1604d424d87487b79520f72b,
@@ -724,7 +718,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 755b8ab214a94d5429bad2a6f982e3e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  geji: {fileID: 223679330}
+  _collectTime: 2
+  _geji: {fileID: 223679330}
+  _pcone: {fileID: 1640639156}
 --- !u!114 &793352148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1358,6 +1354,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ce9a718a34be8b4290611eb5cb0e35c, type: 3}
+--- !u!1 &1640639156 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5138706403592457163, guid: 1ce9a718a34be8b4290611eb5cb0e35c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1640639155}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1703805725
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1707,8 +1709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e4648c589e63334d92eb6e67ed64445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saisyuCanvas: {fileID: 793352146}
-  pcone: {fileID: 625914101}
+  _saisyuCanvas: {fileID: 793352146}
 --- !u!1 &1988418852 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 603163881368253900, guid: 85ce77bc1604d424d87487b79520f72b,

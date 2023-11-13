@@ -8,10 +8,12 @@ namespace CustomStateMachine
     {
         /// <summary>ステート名</summary>
         public const string STATE_NAME = "Damage";
-        
+
         public HitDamageState(PlayerStateMachine playerStateMachine) : base(playerStateMachine)
         {
         }
+
+        public override string StateName => STATE_NAME;
 
         public override void OnEntry()
         {
@@ -37,5 +39,5 @@ namespace CustomStateMachine
         {
             throw new System.NotImplementedException();
         }
-    }    
+    }
 }

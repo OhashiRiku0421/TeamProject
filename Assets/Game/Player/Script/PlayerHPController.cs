@@ -5,11 +5,9 @@ using UnityEngine;
 
 public class PlayerHPController : MonoBehaviour, IDamage
 {
-    [SerializeField, Tooltip("ゴッドモード")]
-    private bool _isGodMode = false;
+    [SerializeField, Tooltip("ゴッドモード")] private bool _isGodMode = false;
 
-    [SerializeField, Tooltip("ゴッドモードHP")]
-    private float _godModeHP = 10000F;
+    [SerializeField, Tooltip("ゴッドモードHP")] private float _godModeHP = 10000F;
 
     /// <summary>現在のHP</summary>
     private float _currentHP = 0F;
@@ -27,7 +25,7 @@ public class PlayerHPController : MonoBehaviour, IDamage
             _currentHP = value;
         }
     }
-    
+
     /// <summary>CurrentHPが変更された際に呼ばれる</summary>
     public event Action<float> OnCurrentHpChanged
     {
@@ -37,14 +35,14 @@ public class PlayerHPController : MonoBehaviour, IDamage
 
     /// <summary>プレイヤーのHPが0になった際の処理</summary>
     private Action _onDeadEvent = default;
-    
+
     /// <summary>プレイヤーのHPが0になった際の処理</summary>
     public event Action OnDeadEvent
     {
         add => _onDeadEvent += value;
         remove => _onDeadEvent -= value;
     }
-    
+
     private void Start()
     {
         if (_isGodMode)
@@ -55,6 +53,8 @@ public class PlayerHPController : MonoBehaviour, IDamage
         {
             _currentHP = ExternalLifeManager.Life;
         }
+
+        Debug.Log(_currentHP);
     }
 
 

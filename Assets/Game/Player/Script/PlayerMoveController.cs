@@ -3,21 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class PlayerMoveController : MonoBehaviour
 {
-    [SerializeField, Tooltip("歩いているときのスピード")] 
-    private float _walkSpeed = 5F;
+    [FormerlySerializedAs("_walkSpeed")] [SerializeField, Tooltip("移動のスピード")]
+    private float _moveSpeed = 5F;
 
-    [SerializeField, Tooltip("走っているときのスピード")]
-    private float _runSpeed = 7F;
-    
-    [SerializeField, Tooltip("一回転かける秒数")] 
-    private float _turnTime = 1.0F;
-    
+    [SerializeField, Tooltip("一回転かける秒数")] private float _turnTime = 1.0F;
+
+    [SerializeField, Tooltip("ジャンプの力")] private float _jumpPower = 5.0f;
+
     /// <summary>現在の移動方向</summary>
     private Quaternion _currentMoveVector = default;
-    
+
     /// <summary>一個前の移動方向</summary>
     private Quaternion _lastMoveVector = default;
 
@@ -26,15 +25,18 @@ public class PlayerMoveController : MonoBehaviour
 
     /// <summary>タイマー</summary>
     private float _timer = 0.0F;
-    
+
     private Rigidbody _rb = default;
 
     /// <summary>入力された方向</summary>
     public Vector2 InputDir { get; private set; }
-    
-    
+
+
     /// <summary>現在のスピード</summary>
     private float _currentSqrtSpeed = 0;
+
+    /// <summary>メインカメラ</summary>
+    private Camera _mainCamera = default;
 
     /// <summary>現在のスピード</summary>
     public float CurrentSqrtSpeed
@@ -57,36 +59,40 @@ public class PlayerMoveController : MonoBehaviour
         remove => _onCurrentSqrtSpeedChanged -= value;
     }
 
+    /// <summary>ジャンプ中かどうか</summary>
+    private bool _isJumping = false;
 
-    /// <summary>現在走っているかどうか</summary>
-    private bool _isRunning = false;
-
-    /// <summary>現在走っているかどうか</summary>
-    public bool IsRunning
+    /// <summary>ジャンプ中かどうか</summary>
+    public bool IsJumping
     {
-        get => _isRunning;
+        get => _isJumping;
         private set
         {
-            _onIsRunningChanged?.Invoke(value);
-            _isRunning = value;
+            if (value != _isJumping)
+            {
+                _onIsJumpingChanged?.Invoke(value);
+                _isJumping = value;
+            }
         }
     }
 
-    /// <summary>IsRunningが変更された際に呼ばれるAction</summary>
-    private Action<bool> _onIsRunningChanged = default;
+    /// <summary>IsJumpingが変更された際に呼ばれるEvent</summary>
+    private Action<bool> _onIsJumpingChanged = default;
     
-    /// <summary>IsRunningが変更された際に呼ばれるAction</summary>
-    public event Action<bool> OnIsRunningChanged
+    /// <summary>IsJumpingが変更された際に呼ばれるEvent</summary>
+    public event Action<bool> OnIsJumpingChanged
     {
-        add => _onIsRunningChanged += value;
-        remove => _onIsRunningChanged -= value;
+        add => _onIsJumpingChanged += value;
+        remove => _onIsJumpingChanged -= value;
     }
-    
-    
-    
+
+    /// <summary>現在接地しているかどうか</summary>
+    private bool _isGround = true;
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _mainCamera = Camera.main;
     }
 
     private void OnEnable()
@@ -95,9 +101,9 @@ public class PlayerMoveController : MonoBehaviour
         CustomInputManager.Instance.PlayerInputActions.Player.Move.started += DirUpdate;
         CustomInputManager.Instance.PlayerInputActions.Player.Move.performed += DirUpdate;
         CustomInputManager.Instance.PlayerInputActions.Player.Move.canceled += DirUpdate;
-        // 走る関係
-        CustomInputManager.Instance.PlayerInputActions.Player.Run.started += StartRunning;
-        CustomInputManager.Instance.PlayerInputActions.Player.Run.canceled += EndRunning;
+
+        CustomInputManager.Instance.PlayerInputActions.Player.Jump.started += JumpInput;
+        CustomInputManager.Instance.PlayerInputActions.Player.Jump.canceled += CancelJumpInput;
     }
 
     private void OnDisable()
@@ -106,9 +112,9 @@ public class PlayerMoveController : MonoBehaviour
         CustomInputManager.Instance.PlayerInputActions.Player.Move.started -= DirUpdate;
         CustomInputManager.Instance.PlayerInputActions.Player.Move.performed -= DirUpdate;
         CustomInputManager.Instance.PlayerInputActions.Player.Move.canceled -= DirUpdate;
-        // 走る関係
-        CustomInputManager.Instance.PlayerInputActions.Player.Run.started -= StartRunning;
-        CustomInputManager.Instance.PlayerInputActions.Player.Run.canceled -= EndRunning;
+        
+        CustomInputManager.Instance.PlayerInputActions.Player.Jump.started -= JumpInput;
+        CustomInputManager.Instance.PlayerInputActions.Player.Jump.canceled -= CancelJumpInput;
     }
 
     /// <summary>FixedUpdate時に呼び出される</summary>
@@ -116,25 +122,19 @@ public class PlayerMoveController : MonoBehaviour
     {
         if (InputDir != Vector2.zero)
         {
-            var moveDir = Camera.main.transform.TransformDirection(new Vector3(InputDir.x, 0.0F, InputDir.y));
+            var moveDir = _mainCamera.transform.TransformDirection(new Vector3(InputDir.x, 0.0F, InputDir.y));
             moveDir = new Vector3(moveDir.x, 0, moveDir.z).normalized;
-            
+
             // 方向転換
             UpdatePlayerDir(moveDir);
 
-            if (IsRunning)
-            {
-                Move(_runSpeed, moveDir);
-            } // 走っているときの処理
-            else
-            {
-                Move(_walkSpeed, moveDir);
-            } // 歩いているときの処理
+            // 歩いているときの処理
+            Move(_moveSpeed, moveDir);
         }
-        
+
         Rotate();
     }
-    
+
     /// <summary>移動処理</summary>
     /// <param name="speed">スピード</param>
     private void Move(float speed, Vector3 moveDir)
@@ -143,13 +143,14 @@ public class PlayerMoveController : MonoBehaviour
         var playerForward = moveDir * speed;
         _rb.velocity = new Vector3(playerForward.x, _rb.velocity.y, playerForward.z);
     }
-    
+
     /// <summary>回転移動</summary>
     private void Rotate()
     {
         float tempTurnTime = _turnTime;
-        
-        this.transform.rotation = Quaternion.Slerp(_lastMoveVector, _currentMoveVector, Mathf.Clamp01(_timer / _rotateTimer));
+
+        this.transform.rotation =
+            Quaternion.Slerp(_lastMoveVector, _currentMoveVector, Mathf.Clamp01(_timer / _rotateTimer));
 
         _timer += Time.fixedDeltaTime;
     }
@@ -164,7 +165,7 @@ public class PlayerMoveController : MonoBehaviour
         _rotateTimer = (temp / 360.0F) * _turnTime;
 
         _timer = 0.0F;
-        
+
         Rotate();
     }
 
@@ -179,22 +180,48 @@ public class PlayerMoveController : MonoBehaviour
     private void DirUpdate(InputAction.CallbackContext callback)
     {
         InputDir = callback.ReadValue<Vector2>();
-        CurrentSqrtSpeed = InputDir.sqrMagnitude * (IsRunning ? _runSpeed : _walkSpeed);
+        CurrentSqrtSpeed = InputDir.sqrMagnitude;
+    }
+    
+    //--- ジャンプの処理 ---
+
+    /// <summary>ジャンプの入力があった際の処理</summary>
+    /// <param name="context">コールバック</param>
+    private void JumpInput(InputAction.CallbackContext context)
+    {
+        IsJumping = true;
     }
 
-    /// <summary>走り始めた処理</summary>
-    /// <param name="callback">コールバック</param>
-    private void StartRunning(InputAction.CallbackContext callback)
+    /// <summary>ジャンプの入力が解除された際の処理</summary>
+    /// <param name="context">コールバック</param>
+    private void CancelJumpInput(InputAction.CallbackContext context)
     {
-        IsRunning = true;
-        CurrentSqrtSpeed = InputDir.sqrMagnitude * (IsRunning ? _runSpeed : _walkSpeed);
+        if (_isGround)
+        {
+            IsJumping = false;
+        }
     }
 
-    /// <summary>走り終えた処理</summary>
-    /// <param name="callback">コールバック</param>
-    private void EndRunning(InputAction.CallbackContext callback)
+    /// <summary>ジャンプステートに入った際の処理</summary>
+    public void OnJumpStateEntry()
     {
-        IsRunning = false;
-        CurrentSqrtSpeed = CurrentSqrtSpeed = InputDir.sqrMagnitude * (IsRunning ? _runSpeed : _walkSpeed);
+        _rb.velocity = new Vector3(_rb.velocity.x, _jumpPower, _rb.velocity.z);
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            _isGround = false;
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            _isGround = true;
+            IsJumping = false;
+        }
     }
 }

@@ -22,6 +22,8 @@ namespace CustomStateMachine
             });
         }
 
+        public override string StateName => STATE_NAME;
+
         public override void OnEntry()
         {
         }
