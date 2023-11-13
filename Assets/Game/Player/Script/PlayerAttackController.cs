@@ -136,7 +136,7 @@ public class PlayerAttackController : MonoBehaviour
             _onCurrentAttackInputChanged?.Invoke(_currentAttackInput);
         }
 
-        CriAudioManager.Instance.SE.Play("Player", "SE_Player_Attack_Close");
+        CriAudioManager.Instance.SE.Play("SE", "SE_Player_Attack_01");
         _closeRangeEffect.SendEvent("OnPlay");
         var colliders = Physics.OverlapBox(_closeAttackEreaCenter.position, _closeRangeAttackHalfExtant,
             this.transform.rotation);

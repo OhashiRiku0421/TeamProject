@@ -9,6 +9,8 @@ public class PlayerCollectController : MonoBehaviour
     /// <summary>現在採取中かどうか</summary>
     private bool _isCollecting = false;
 
+    private SliderScripts _sliederController = null;
+    
     /// <summary>現在採取中かどうか</summary>
     public bool IsCollecting
     {
@@ -57,6 +59,12 @@ public class PlayerCollectController : MonoBehaviour
     {
         _isCollectInputting = true;
         UpdateIsCollecting();
+
+        if (IsCollecting && _sliederController is not null)
+        {
+            _sliederController.ItemGetCallback += GetCallback;
+            _sliederController.CollectStart();
+        }
     }
 
     /// <summary>採取の入力が終わった際に呼ばれる</summary>
@@ -64,6 +72,18 @@ public class PlayerCollectController : MonoBehaviour
     private void CancelCollect(InputAction.CallbackContext context)
     {
         _isCollectInputting = false;
+        UpdateIsCollecting();
+
+        if (!IsCollecting && _sliederController is not null)
+        {
+            _sliederController.ItemGetCallback -= GetCallback;
+            _sliederController.CollectEnd();
+        }
+    }
+
+    private void GetCallback()
+    {
+        _isCollectable = false;
         UpdateIsCollecting();
     }
 
@@ -73,18 +93,21 @@ public class PlayerCollectController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // TODO: 条件を採取可能なオブジェクトの作り方によって変える
-        if (other.gameObject.CompareTag("Collectable"))
+        if (other.gameObject.TryGetComponent(out SliderScripts sliderScripts))
         {
+            Debug.Log("Test");
             _isCollectable = true;
+            _sliederController = sliderScripts;
             UpdateIsCollecting();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Collectable"))
+        if (other.gameObject.TryGetComponent(out SliderScripts sliderScripts))
         {
             _isCollectable = false;
+            _sliederController = null;
             UpdateIsCollecting();
         }
     }

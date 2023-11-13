@@ -6,24 +6,28 @@ using UnityEngine.UI;
 
 public class SliderScripts : MonoBehaviour
 {
-    [SerializeField, Tooltip("‰ñŽû‚É‚©‚©‚éŽžŠÔ")]
+    [SerializeField] private InGameSystem _gameSystem = default;
+    
+    [SerializeField, Tooltip("ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½ï¿½éŽžï¿½ï¿½")]
     private float _collectTime = 2F;
 
     public Image _geji = null;
     public GameObject _pcone = null;
 
+    public event System.Action ItemGetCallback = default;
+    
     float max = 1f;
     float min = 0.1f;
 
     private float cup = 0.0f;
-    /// <summary>Œo‰ßŽžŠÔ</summary>
+    /// <summary>ï¿½oï¿½ßŽï¿½ï¿½ï¿½</summary>
     private float _elapsed = 0.0F;
 
     private bool _isCollecting = false;
 
     private void Start()
     {
-        _geji.fillAmount = 100f;
+        _geji.fillAmount = 1f;
     }
 
     public void CollectStart()
@@ -42,14 +46,17 @@ public class SliderScripts : MonoBehaviour
         {
 
             _elapsed += Time.deltaTime;
-            _geji.fillAmount = _elapsed / _collectTime;
+            _geji.fillAmount = 1 - (_elapsed / _collectTime);
 
             if (_elapsed > _collectTime)
             {
-                Destroy(_pcone.gameObject);
+                _gameSystem.ScoreSystem.GetItem();
+                
+                ItemGetCallback?.Invoke();
+                CriAudioManager.Instance.SE.Play("SE", "SE_System_Item_Get");
+                
+                Destroy(this.gameObject);
                 gameObject.SetActive(false);
-
-                CriAudioManager.Instance.SE.Play("UI", "SE_Item_Get");
             }
         }
         else
