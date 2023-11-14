@@ -16,21 +16,25 @@ public class EnemyDamageState : IState
 
     public void Enter()
     {
-        Debug.Log("Damage");
-        //ダメージのAnimationを流す予定
-        float distance = Vector3.Distance(_enemy.transform.position, _enemy.PlayerTransform.position);
-        //移動範囲に入っていたら移動のステートに変更
-        if (distance > _enemy.EnemyMove.MoveDistance)
-        {
-            _enemy.StateMachine.ChangeState(_enemy.StateMachine.Idle);
-        }
+        _enemy.Anim.SetTrigger("IsHit");
     }
 
     public void Update()
     {
+        if (!_enemy.Anim.GetCurrentAnimatorStateInfo(0).IsName("Damage"))
+        {
+            if (_enemy.EnemyType == EnemyType.Short)
+            {
+                _enemy.StateMachine.ChangeState(_enemy.StateMachine.ShortAttack);
+            }
+            else
+            {
+                _enemy.StateMachine.ChangeState(_enemy.StateMachine.LongAttack);
+            }
+        }
     }
 
-    public void Exit() { }
-
-
+    public void Exit() 
+    {
+    }
 }
