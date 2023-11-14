@@ -44,18 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f529aa944b914449d62b8c40f188fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acfFile: GSC_Team_E.acf
+  acfFile: ETeam.acf
   cueSheets:
-  - name: Player
-    acbFile: Player.acb
+  - name: SE
+    acbFile: SE.acb
     awbFile: 
     loaderStatus: 0
-  - name: Enemy
-    acbFile: Enemy.acb
-    awbFile: 
-    loaderStatus: 0
-  - name: UI
-    acbFile: UI.acb
+  - name: BGM
+    acbFile: BGM.acb
     awbFile: 
     loaderStatus: 0
   dspBusSetting: 
