@@ -19,7 +19,7 @@ public class EnemyLongAttackState : IState
     {
         Debug.Log("Attack");
         _enemy.Anim.SetBool("IsAttack", true);
-        _enemy.EnemyAttack.IntervalAsync().Forget();
+        _enemy.EnemyAttack.IntervalAsync();
     }
 
     public void Update()

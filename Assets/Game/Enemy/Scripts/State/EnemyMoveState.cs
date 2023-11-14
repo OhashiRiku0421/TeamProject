@@ -34,7 +34,6 @@ public class EnemyMoveState : IState
             }
             else
             {
-                Debug.Log("aaaa");
                 _enemy.StateMachine.ChangeState(_enemy.StateMachine.LongAttack);
             }
             return;

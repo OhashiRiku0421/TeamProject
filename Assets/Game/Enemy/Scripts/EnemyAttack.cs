@@ -73,7 +73,7 @@ public class EnemyAttack
             {
                 //エフェクトを生成
                 GameObject.Instantiate(_effect, hitInfo.collider.gameObject.transform.position, Quaternion.identity);
-
+                CriAudioManager.Instance.SE.Play("SE", "SE_Enemy02_Attack_01");
                 damage.SendDamage(_attackPower);
                 _isCancel = true;
             }
@@ -94,6 +94,7 @@ public class EnemyAttack
             if (collider.gameObject.TryGetComponent<IDamage>(out IDamage damage))
             {
                 GameObject.Instantiate(_effect, collider.gameObject.transform.position, Quaternion.identity);
+                CriAudioManager.Instance.SE.Play("SE", "SE_Enemy01_Attack_01");
                 damage.SendDamage(_attackPower);
                 _isCancel = true;
             }
@@ -107,7 +108,8 @@ public class EnemyAttack
     {
         _isAttack = true;
         _isCancel = false;
-        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));//攻撃の時間
+        //攻撃の時間
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: _cancell.Token);
         await IntervalAsync();
     }
 
@@ -117,13 +119,15 @@ public class EnemyAttack
         _anim.SetBool("IsLongAttack", false);
         _isAttack = true;
         _isCancel = true;
-        await UniTask.Delay(TimeSpan.FromSeconds(_awaitAttack));//攻撃のインターバル
+        //攻撃のインターバル
+        await UniTask.Delay(TimeSpan.FromSeconds(_awaitAttack), cancellationToken: _cancell.Token);
         _isAttack = false;
     }
 
     public void AttackExit()
     {
-        _cancell.Cancel();
+        _cancell?.Cancel();
+        _cancell = new();
         _isAttack = false;
         _isCancel = false;
     }

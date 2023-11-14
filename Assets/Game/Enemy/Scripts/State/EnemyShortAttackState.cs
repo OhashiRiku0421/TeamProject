@@ -33,7 +33,7 @@ public class EnemyShortAttackState : IState
         }
         else if (!_enemy.EnemyAttack.IsCancel)
         {
-            _enemy.EnemyAttack.LongAttack();
+            _enemy.EnemyAttack.ShortAttck();
         }
 
         //ちょっと遠くなったら移動のStateに変更
