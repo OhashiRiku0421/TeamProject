@@ -26,7 +26,7 @@ public class ScoreSystem
     /// <summary>
     /// リザルトの計算に必要なライフを保存しておく
     /// </summary>
-    public void SetLife(int playerLife, int betLife)
+    public static void SetLife(int playerLife, int betLife)
     {
         _playerLife = playerLife;
         _betLife = betLife;
