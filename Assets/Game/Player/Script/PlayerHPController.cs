@@ -66,6 +66,11 @@ public class PlayerHPController : MonoBehaviour, IDamage
         if (CurrentHP <= 0)
         {
             _onDeadEvent?.Invoke();
+            CriAudioManager.Instance.SE.Play("SE", "SE_Player_Dead");
+        }
+        else
+        {
+            CriAudioManager.Instance.SE.Play("SE", "SE_Player_Damage");
         }
     }
 }

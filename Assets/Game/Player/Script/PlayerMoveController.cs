@@ -182,6 +182,26 @@ public class PlayerMoveController : MonoBehaviour
         InputDir = callback.ReadValue<Vector2>();
         CurrentSqrtSpeed = InputDir.sqrMagnitude;
     }
+
+    private void PlayMoveSE()
+    {
+        if (_currentGround == CurrentGround.Mad)
+        {
+            CriAudioManager.Instance.SE.Play("SE", "SE_Player_Footstep_01");
+        }
+        else
+        {
+            CriAudioManager.Instance.SE.Play("SE", "SE_Player_Footstep_02");
+        }
+    }
+
+    private CurrentGround _currentGround = CurrentGround.Mad;
+    
+    private enum CurrentGround
+    {
+        Mad,
+        Stone,
+    }
     
     //--- ジャンプの処理 ---
 
@@ -206,6 +226,7 @@ public class PlayerMoveController : MonoBehaviour
     public void OnJumpStateEntry()
     {
         _rb.velocity = new Vector3(_rb.velocity.x, _jumpPower, _rb.velocity.z);
+        CriAudioManager.Instance.SE.Play("SE", "SE_Player_Jump_st");
     }
 
     private void OnCollisionExit(Collision other)
@@ -222,6 +243,8 @@ public class PlayerMoveController : MonoBehaviour
         {
             _isGround = true;
             IsJumping = false;
+            
+            CriAudioManager.Instance.SE.Play("SE", "SE_Player_Jump_ed");
         }
     }
 }
