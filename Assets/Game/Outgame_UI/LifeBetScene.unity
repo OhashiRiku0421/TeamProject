@@ -1052,7 +1052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAnyKeyPressed: 0
-  _sceneAsset: {fileID: 102900000, guid: 45eaa35a82ac7f146b2b3476e37609e3, type: 3}
+  _sceneAsset: {fileID: 102900000, guid: a9f502eb712738048af03686e4896e18, type: 3}
   _waitTime: 0.666
 --- !u!114 &1551720484
 MonoBehaviour:

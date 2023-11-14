@@ -28,6 +28,8 @@ public class InGameSystem : MonoBehaviour, IPause
     private void Start()
     {
         _timerSystem.Start();
+
+        CriAudioManager.Instance.BGM.Play("BGM", "BGM_Ingame_01");
     }
 
     private void Update()

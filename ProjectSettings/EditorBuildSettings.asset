@@ -6,12 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Game/Outgame_LifeManagement/Scene/TitleScene.unity
+    path: Assets/Game/Outgame_UI/TitleScene.unity
     guid: be7d292a85d783440af1a8a574b5c124
   - enabled: 1
-    path: Assets/Game/Outgame_LifeManagement/Scene/LifeBetScene.unity
+    path: Assets/Game/Outgame_UI/LifeBetScene.unity
     guid: 42fe5815ad6d89142af5336ef365a006
   - enabled: 1
-    path: Assets/Game/Outgame_LifeManagement/Scene/ResultScene.unity
+    path: Assets/Game/Outgame_UI/ResultScene.unity
     guid: 45eaa35a82ac7f146b2b3476e37609e3
+  - enabled: 1
+    path: Assets/Game/Alpha/AlphaScene.unity
+    guid: a9f502eb712738048af03686e4896e18
   m_configObjects: {}
