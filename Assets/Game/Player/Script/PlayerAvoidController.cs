@@ -79,5 +79,6 @@ public class PlayerAvoidController : MonoBehaviour
                 _isTweening = false;
                 IsAvoiding = false;
             });
+        CriAudioManager.Instance.SE.Play("SE", "SE_Player_Avoid");
     }
 }

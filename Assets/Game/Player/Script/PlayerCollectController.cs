@@ -9,6 +9,8 @@ public class PlayerCollectController : MonoBehaviour
     /// <summary>現在採取中かどうか</summary>
     private bool _isCollecting = false;
 
+    private int _seIndex = -1;
+    
     private SliderScripts _sliederController = null;
     
     /// <summary>現在採取中かどうか</summary>
@@ -64,6 +66,8 @@ public class PlayerCollectController : MonoBehaviour
         {
             _sliederController.ItemGetCallback += GetCallback;
             _sliederController.CollectStart();
+
+            _seIndex = CriAudioManager.Instance.SE.Play("SE", "SE_Player_Collecting");
         }
     }
 
@@ -78,6 +82,8 @@ public class PlayerCollectController : MonoBehaviour
         {
             _sliederController.ItemGetCallback -= GetCallback;
             _sliederController.CollectEnd();
+            
+            CriAudioManager.Instance.SE.Stop(_seIndex);
         }
     }
 
@@ -85,6 +91,8 @@ public class PlayerCollectController : MonoBehaviour
     {
         _isCollectable = false;
         UpdateIsCollecting();
+        
+        CriAudioManager.Instance.SE.Stop(_seIndex);
     }
 
     /// <summary>IsCollectingか判定する</summary>

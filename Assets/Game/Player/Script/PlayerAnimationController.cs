@@ -40,9 +40,12 @@ public class PlayerAnimationController : MonoBehaviour
     /// <summary>アニメーターのOnHitDamageパラメータのハッシュ</summary>
     private readonly int _onHitDamageParamHash = Animator.StringToHash("OnHitDamage");
     
+    /// <summary>アニメーターのOnHitDamageパラメータのハッシュ</summary>
+    private readonly int _isJumpingParamHash = Animator.StringToHash("IsJumping");
     private void OnEnable()
     {
         _moveController.OnCurrentSqrtSpeedChanged += AnimParamSpeedUpdate;
+        _moveController.OnIsJumpingChanged += AnimParamOnJumpingUpdate;
 
         _attackController.OnCurrentAttackInputChanged += AnimAttackInputUpdate;
         _attackController.OnCurrentAttackPatternChanged += AnimAttackPatternUpdate;
@@ -57,6 +60,7 @@ public class PlayerAnimationController : MonoBehaviour
     private void OnDisable()
     {
         _moveController.OnCurrentSqrtSpeedChanged -= AnimParamSpeedUpdate;
+        _moveController.OnIsJumpingChanged -= AnimParamOnJumpingUpdate;
         
         _attackController.OnCurrentAttackInputChanged -= AnimAttackInputUpdate;
         _attackController.OnCurrentAttackPatternChanged -= AnimAttackPatternUpdate;
@@ -91,4 +95,8 @@ public class PlayerAnimationController : MonoBehaviour
     /// <summary>AnimatorのOnHitDamageを更新する関数</summary>
     /// <param name="value"></param>
     private void AnimParamOnHitDamageUpdate(float value) => _animator.SetTrigger(_onHitDamageParamHash);
+
+    /// <summary>AnimatorのIsJumpingを更新する関数</summary>
+    /// <param name="value"></param>
+    private void AnimParamOnJumpingUpdate(bool value) => _animator.SetBool(_isJumpingParamHash, value);
 }
