@@ -3388,7 +3388,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8575188026927321327
 Transform:
   m_ObjectHideFlags: 0
@@ -5312,9 +5312,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adf5d29860dcc5d4c981938374387f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 1.5
+  _moveSpeed: 5
   _turnTime: 0.2
-  _jumpPower: 5
+  _jumpPower: 6
 --- !u!114 &5267612902945683703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5415,7 +5415,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &1713358737245884542
 CapsuleCollider:
