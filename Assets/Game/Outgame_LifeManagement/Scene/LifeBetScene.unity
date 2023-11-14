@@ -936,7 +936,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 1000
+  m_Text: 950
 --- !u!222 &1319742065
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1031,6 +1031,7 @@ GameObject:
   - component: {fileID: 1551720485}
   - component: {fileID: 1551720484}
   - component: {fileID: 1551720483}
+  - component: {fileID: 1551720486}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
@@ -1082,6 +1083,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1551720486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551720482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb49da94977593d429754ef16aed8344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bgmName: BGM_Outgame_01
 --- !u!1 &1713569844
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,12 +1179,24 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 1
-  m_MaxValue: 20
+  m_MaxValue: 19
   m_WholeNumbers: 1
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1551720486}
+        m_TargetAssemblyTypeName: BGMPlayer, Assembly-CSharp
+        m_MethodName: PlaySliderSE
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1765326634
 GameObject:
   m_ObjectHideFlags: 0

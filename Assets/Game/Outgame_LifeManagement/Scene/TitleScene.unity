@@ -372,6 +372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 887707520}
   - component: {fileID: 887707519}
+  - component: {fileID: 887707521}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
@@ -409,6 +410,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &887707521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887707518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb49da94977593d429754ef16aed8344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bgmName: BGM_Outgame_01
 --- !u!1 &1547096605
 GameObject:
   m_ObjectHideFlags: 0
@@ -996,6 +1010,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4250089984559953242, guid: 716b875c6611dde46873bd9128d2e30e,
+        type: 3}
+      propertyPath: acfFile
+      value: Eteam.acf
+      objectReference: {fileID: 0}
+    - target: {fileID: 4250089984559953242, guid: 716b875c6611dde46873bd9128d2e30e,
+        type: 3}
+      propertyPath: cueSheets.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4250089984559953242, guid: 716b875c6611dde46873bd9128d2e30e,
+        type: 3}
+      propertyPath: cueSheets.Array.data[0].name
+      value: BGM
+      objectReference: {fileID: 0}
+    - target: {fileID: 4250089984559953242, guid: 716b875c6611dde46873bd9128d2e30e,
+        type: 3}
+      propertyPath: cueSheets.Array.data[1].name
+      value: SE
+      objectReference: {fileID: 0}
+    - target: {fileID: 4250089984559953242, guid: 716b875c6611dde46873bd9128d2e30e,
+        type: 3}
+      propertyPath: cueSheets.Array.data[0].acbFile
+      value: BGM.acb
+      objectReference: {fileID: 0}
+    - target: {fileID: 4250089984559953242, guid: 716b875c6611dde46873bd9128d2e30e,
+        type: 3}
+      propertyPath: cueSheets.Array.data[0].awbFile
+      value: BGM.awb
+      objectReference: {fileID: 0}
+    - target: {fileID: 4250089984559953242, guid: 716b875c6611dde46873bd9128d2e30e,
+        type: 3}
+      propertyPath: cueSheets.Array.data[1].acbFile
+      value: SE.acb
+      objectReference: {fileID: 0}
     - target: {fileID: 8485393729401039993, guid: 716b875c6611dde46873bd9128d2e30e,
         type: 3}
       propertyPath: m_LocalPosition.x
