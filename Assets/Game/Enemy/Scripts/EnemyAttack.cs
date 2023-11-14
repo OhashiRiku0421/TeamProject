@@ -73,7 +73,7 @@ public class EnemyAttack
             {
                 //エフェクトを生成
                 GameObject.Instantiate(_effect, hitInfo.collider.gameObject.transform.position, Quaternion.identity);
-
+                CriAudioManager.Instance.SE.Play("SE", "SE_Enemy02_Attack_01");
                 damage.SendDamage(_attackPower);
                 _isCancel = true;
             }
@@ -94,6 +94,7 @@ public class EnemyAttack
             if (collider.gameObject.TryGetComponent<IDamage>(out IDamage damage))
             {
                 GameObject.Instantiate(_effect, collider.gameObject.transform.position, Quaternion.identity);
+                CriAudioManager.Instance.SE.Play("SE", "SE_Enemy01_Attack_01");
                 damage.SendDamage(_attackPower);
                 _isCancel = true;
             }

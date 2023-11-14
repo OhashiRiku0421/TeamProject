@@ -17,6 +17,7 @@ public class EnemyDamageState : IState
     public void Enter()
     {
         _enemy.Anim.SetTrigger("IsHit");
+        CriAudioManager.Instance.SE.Play("SE", "SE_EnemyAll_Damage");
     }
 
     public void Update()
