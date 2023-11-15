@@ -99,29 +99,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerTransform: {fileID: 0}
-  _enemyType: 1
+  _enemyType: 0
   _idleType: 1
-  _hp: 10
+  _hp: 20
   _targetLayer:
     serializedVersion: 2
     m_Bits: 64
   _enemyMove:
     _fanAngle: 42.21
     _moveSpeed: 5
-    _moveDistance: 20
-    _stopDistance: 6
+    _moveDistance: 10
+    _stopDistance: 2
     _patrolPoints:
-    - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
   _enemyAttack:
     _awaitAttack: 3
-    _attackPower: 1
+    _attackPower: 50
     _effect: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56, type: 3}
     _longAttackRange: 10
-    _shortAttackSize: {x: 1, y: 1, z: 1}
-    _shortAttackCenter: {x: 0, y: 0, z: 1.52}
+    _shortAttackSize: {x: 1.33, y: 1.28, z: 1.45}
+    _shortAttackCenter: {x: 0, y: 0.31, z: 1.75}
   _anim: {fileID: 590638875670899685}
 --- !u!195 &2567249014637812163
 NavMeshAgent:
