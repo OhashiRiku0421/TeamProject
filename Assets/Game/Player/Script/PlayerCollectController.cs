@@ -11,7 +11,7 @@ public class PlayerCollectController : MonoBehaviour
 
     private int _seIndex = -1;
     
-    private SliderScripts _sliederController = null;
+    private IngameItem _sliederController = null;
     
     /// <summary>現在採取中かどうか</summary>
     public bool IsCollecting
@@ -101,7 +101,7 @@ public class PlayerCollectController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // TODO: 条件を採取可能なオブジェクトの作り方によって変える
-        if (other.gameObject.TryGetComponent(out SliderScripts sliderScripts))
+        if (other.gameObject.TryGetComponent(out IngameItem sliderScripts))
         {
             Debug.Log("Test");
             _isCollectable = true;
@@ -112,7 +112,7 @@ public class PlayerCollectController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out SliderScripts sliderScripts))
+        if (other.gameObject.TryGetComponent(out IngameItem sliderScripts))
         {
             _isCollectable = false;
             _sliederController = null;
