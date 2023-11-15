@@ -229,7 +229,7 @@ public class PlayerMoveController : MonoBehaviour
         CriAudioManager.Instance.SE.Play("SE", "SE_Player_Jump_st");
     }
 
-    private void OnCollisionExit(Collision other)
+    private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
@@ -237,7 +237,7 @@ public class PlayerMoveController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
