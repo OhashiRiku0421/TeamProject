@@ -42,6 +42,10 @@ public class PlayerAnimationController : MonoBehaviour
     
     /// <summary>アニメーターのOnHitDamageパラメータのハッシュ</summary>
     private readonly int _isJumpingParamHash = Animator.StringToHash("IsJumping");
+
+    /// <summary>アニメーターのOnDeadパラメータのハッシュ</summary>
+    private readonly int _onDeadParamHash = Animator.StringToHash("OnDead");
+    
     private void OnEnable()
     {
         _moveController.OnCurrentSqrtSpeedChanged += AnimParamSpeedUpdate;
@@ -55,6 +59,7 @@ public class PlayerAnimationController : MonoBehaviour
         _avoidController.OnIsAvoidingChanged += AnimParamIsAvoidingUpdate;
 
         _hpController.OnCurrentHpChanged += AnimParamOnHitDamageUpdate;
+        _hpController.OnDeadEvent += AnimParamOnDeadUpdate;
     }
 
     private void OnDisable()
@@ -70,6 +75,7 @@ public class PlayerAnimationController : MonoBehaviour
         _avoidController.OnIsAvoidingChanged -= AnimParamIsAvoidingUpdate;
         
         _hpController.OnCurrentHpChanged -= AnimParamOnHitDamageUpdate;
+        _hpController.OnDeadEvent -= AnimParamOnDeadUpdate;
     }
 
     /// <summary>AttackInputCountを呼ぶ関数</summary>
@@ -99,4 +105,7 @@ public class PlayerAnimationController : MonoBehaviour
     /// <summary>AnimatorのIsJumpingを更新する関数</summary>
     /// <param name="value"></param>
     private void AnimParamOnJumpingUpdate(bool value) => _animator.SetBool(_isJumpingParamHash, value);
+
+    /// <summary>AnimatorのOnDeadを更新する関数</summary>
+    private void AnimParamOnDeadUpdate() => _animator.SetTrigger(_onDeadParamHash);
 }
