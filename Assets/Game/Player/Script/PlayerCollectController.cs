@@ -67,7 +67,7 @@ public class PlayerCollectController : MonoBehaviour
             _sliederController.ItemGetCallback += GetCallback;
             _sliederController.CollectStart();
 
-            _seIndex = CriAudioManager.Instance.SE.Play("SE", "SE_Player_Collecting");
+            //_seIndex = CriAudioManager.Instance.SE.Play("SE", "SE_Player_Collecting");
         }
     }
 

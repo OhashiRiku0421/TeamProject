@@ -52,8 +52,6 @@ public class PlayerStateMachine : AbstractStateMachineBase
         CurrentState = _stateCache[nextStateName];
         CurrentState.OnEntry();
 
-        Debug.Log($"現在のステートは{CurrentState.StateName}");
-
         // Actionを呼び出す
         _onStateChanged?.Invoke(CurrentState);
     }

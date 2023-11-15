@@ -54,6 +54,7 @@ public class PlayerHPController : MonoBehaviour, IDamage
             _currentHP = ExternalLifeManager.Life;
         }
 
+        _onCurrentHPChanged?.Invoke(_currentHP);
         Debug.Log(_currentHP);
     }
 
@@ -63,7 +64,7 @@ public class PlayerHPController : MonoBehaviour, IDamage
         CurrentHP -= damage;
 
         // 死んだ際の処理
-        if (CurrentHP <= 0)
+        if (_currentHP <= 0)
         {
             _onDeadEvent?.Invoke();
             CriAudioManager.Instance.SE.Play("SE", "SE_Player_Dead");
