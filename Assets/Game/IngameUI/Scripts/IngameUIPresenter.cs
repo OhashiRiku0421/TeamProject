@@ -37,6 +37,8 @@ public class IngameUIPresenter : MonoBehaviour
             return;
         }
 
+        _ingameUIView.PlayerLifeUI.SetLifeView(
+                       _playerHPController.CurrentHP);
         SubscribeUIEvent();
     }
 

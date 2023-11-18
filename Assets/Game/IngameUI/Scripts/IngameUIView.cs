@@ -6,7 +6,7 @@ using UnityEngine;
 public class IngameUIView : MonoBehaviour
 {
     [SerializeField]
-    private GameTimerUI _gameTimerUI;
+    public static readonly GameTimerUI _gameTimerUI;
     public GameTimerUI GameTimerUI => _gameTimerUI;
 
     [SerializeField]
