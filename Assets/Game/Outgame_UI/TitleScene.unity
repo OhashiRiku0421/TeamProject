@@ -393,7 +393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAnyKeyPressed: 1
-  _sceneName: LifeBetScene
+  _sceneAsset: {fileID: 102900000, guid: 42fe5815ad6d89142af5336ef365a006, type: 3}
   _waitTime: 0.666
 --- !u!4 &887707520
 Transform:
