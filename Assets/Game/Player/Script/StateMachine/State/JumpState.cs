@@ -42,6 +42,7 @@ namespace CustomStateMachine
 
         public override void OnFixedUpdate()
         {
+            _playerStateMachine.MoveController.OnFixedUpdateJumpState();
         }
 
         public override void OnExit()

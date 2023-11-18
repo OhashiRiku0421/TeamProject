@@ -86,7 +86,7 @@ namespace CustomStateMachine
 
         public override void OnFixedUpdate()
         {
-            _playerStateMachine.MoveController.OnFixedUpdate();
+            _playerStateMachine.MoveController.OnFixedUpdateMoveState();
         }
 
         public override void OnExit()
