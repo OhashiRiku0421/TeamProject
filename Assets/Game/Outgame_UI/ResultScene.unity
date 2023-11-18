@@ -904,7 +904,6 @@ GameObject:
   - component: {fileID: 1621032667}
   - component: {fileID: 1621032666}
   - component: {fileID: 1621032668}
-  - component: {fileID: 1621032669}
   - component: {fileID: 1621032670}
   m_Layer: 0
   m_Name: System
@@ -926,7 +925,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAnyKeyPressed: 0
-  _sceneAsset: {fileID: 102900000, guid: 42fe5815ad6d89142af5336ef365a006, type: 3}
+  _sceneName: LifeBetScene
   _waitTime: 0.666
 --- !u!4 &1621032667
 Transform:
@@ -957,18 +956,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _getLifeText: {fileID: 1652057489}
   _clearTimeText: {fileID: 117100824}
---- !u!114 &1621032669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1621032665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d343f960c2e01e49af706235815d3f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1621032670
 MonoBehaviour:
   m_ObjectHideFlags: 0
