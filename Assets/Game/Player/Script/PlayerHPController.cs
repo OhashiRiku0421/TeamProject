@@ -19,10 +19,13 @@ public class PlayerHPController : MonoBehaviour, IDamage
     public float CurrentHP
     {
         get => _currentHP;
-        set
+        private set
         {
-            _onCurrentHPChanged?.Invoke(value);
-            _currentHP = value;
+            if(_currentHP != value)
+            {
+                _onCurrentHPChanged?.Invoke(value);
+                _currentHP = value;
+            }
         }
     }
 
@@ -54,7 +57,6 @@ public class PlayerHPController : MonoBehaviour, IDamage
             _currentHP = ExternalLifeManager.Life;
         }
 
-        _onCurrentHPChanged?.Invoke(_currentHP);
         Debug.Log(_currentHP);
     }
 

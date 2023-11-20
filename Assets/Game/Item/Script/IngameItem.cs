@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class SliderScripts : MonoBehaviour
+public class IngameItem: MonoBehaviour
 {
     private InGameSystem _gameSystem = default;
 

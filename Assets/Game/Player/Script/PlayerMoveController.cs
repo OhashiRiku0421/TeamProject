@@ -7,8 +7,11 @@ using UnityEngine.Serialization;
 
 public class PlayerMoveController : MonoBehaviour
 {
-    [FormerlySerializedAs("_walkSpeed")] [SerializeField, Tooltip("移動のスピード")]
+    [SerializeField, Tooltip("通常時の移動のスピード")]
     private float _moveSpeed = 5F;
+
+    [SerializeField, Tooltip("空中にいる時の移動のスピード")]
+    private float _jumpMoveSpeed = 5F;
 
     [SerializeField, Tooltip("一回転かける秒数")] private float _turnTime = 1.0F;
 
@@ -78,7 +81,7 @@ public class PlayerMoveController : MonoBehaviour
 
     /// <summary>IsJumpingが変更された際に呼ばれるEvent</summary>
     private Action<bool> _onIsJumpingChanged = default;
-    
+
     /// <summary>IsJumpingが変更された際に呼ばれるEvent</summary>
     public event Action<bool> OnIsJumpingChanged
     {
@@ -112,13 +115,13 @@ public class PlayerMoveController : MonoBehaviour
         CustomInputManager.Instance.PlayerInputActions.Player.Move.started -= DirUpdate;
         CustomInputManager.Instance.PlayerInputActions.Player.Move.performed -= DirUpdate;
         CustomInputManager.Instance.PlayerInputActions.Player.Move.canceled -= DirUpdate;
-        
+
         CustomInputManager.Instance.PlayerInputActions.Player.Jump.started -= JumpInput;
         CustomInputManager.Instance.PlayerInputActions.Player.Jump.canceled -= CancelJumpInput;
     }
 
-    /// <summary>FixedUpdate時に呼び出される</summary>
-    public void OnFixedUpdate()
+    /// <summary>MoveStateのFixedUpdate時に呼び出される</summary>
+    public void OnFixedUpdateMoveState()
     {
         if (InputDir != Vector2.zero)
         {
@@ -129,19 +132,47 @@ public class PlayerMoveController : MonoBehaviour
             UpdatePlayerDir(moveDir);
 
             // 歩いているときの処理
-            Move(_moveSpeed, moveDir);
+            MoveVelocity(_moveSpeed, moveDir);
         }
 
         Rotate();
     }
 
-    /// <summary>移動処理</summary>
-    /// <param name="speed">スピード</param>
-    private void Move(float speed, Vector3 moveDir)
+    /// <summary>MoveStateのFixedUpdate時に呼び出される</summary>
+    public void OnFixedUpdateJumpState()
+    {
+        if (InputDir != Vector2.zero)
+        {
+            var moveDir = _mainCamera.transform.TransformDirection(new Vector3(InputDir.x, 0.0F, InputDir.y));
+            moveDir = new Vector3(moveDir.x, 0, moveDir.z).normalized;
+
+            // 方向転換
+            UpdatePlayerDir(moveDir);
+
+            // 歩いているときの処理
+            MoveAddForce(_jumpMoveSpeed, _moveSpeed, moveDir);
+        }
+
+        Rotate();
+    }
+
+    private void MoveVelocity(float speed, Vector3 moveDir)
     {
         // 移動
         var playerForward = moveDir * speed;
         _rb.velocity = new Vector3(playerForward.x, _rb.velocity.y, playerForward.z);
+    }
+
+    private void MoveAddForce(float speed, float limitSpeed, Vector3 moveDir)
+    {
+        var playerForward = moveDir * speed;
+        _rb.AddForce(playerForward, ForceMode.Force);
+
+        if (_rb.velocity.magnitude > limitSpeed)
+        {
+            var vec = _rb.velocity.normalized * limitSpeed;
+            _rb.velocity = new Vector3(vec.x, _rb.velocity.y, vec.z);
+        }
     }
 
     /// <summary>回転移動</summary>
@@ -196,13 +227,13 @@ public class PlayerMoveController : MonoBehaviour
     }
 
     private CurrentGround _currentGround = CurrentGround.Mad;
-    
+
     private enum CurrentGround
     {
         Mad,
         Stone,
     }
-    
+
     //--- ジャンプの処理 ---
 
     /// <summary>ジャンプの入力があった際の処理</summary>
@@ -229,7 +260,7 @@ public class PlayerMoveController : MonoBehaviour
         CriAudioManager.Instance.SE.Play("SE", "SE_Player_Jump_st");
     }
 
-    private void OnCollisionExit(Collision other)
+    private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
@@ -237,13 +268,13 @@ public class PlayerMoveController : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
             _isGround = true;
             IsJumping = false;
-            
+
             CriAudioManager.Instance.SE.Play("SE", "SE_Player_Jump_ed");
         }
     }

@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -8,8 +7,8 @@ public class SceneSwitcher : MonoBehaviour
     [SerializeField, Tooltip("任意のキーを入力したらシーンが変わるようにするフラグ")]
     private bool _isAnyKeyPressed = false;
 
-    [SerializeField, Tooltip("遷移したいシーンのシーンアセット")]
-    private SceneAsset _sceneAsset;
+    [SerializeField, Tooltip("遷移したいシーンの名前")]
+    private string _sceneName;
 
     [SerializeField, Tooltip("シーンが遷移するまでの時間")]
     private float _waitTime = 0.666f; // セレクトSEがなり終わるまでの時間を初期値として設定している
@@ -35,7 +34,7 @@ public class SceneSwitcher : MonoBehaviour
 
     private void SceneLoad()
     {
-        SceneManager.LoadScene(_sceneAsset.name);
+        SceneManager.LoadScene(_sceneName);
     }
 
     private void PlaySE()

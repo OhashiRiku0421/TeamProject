@@ -19,10 +19,23 @@ public class PlayerAttackController : MonoBehaviour
     [FormerlySerializedAs("_normalAttackHalfExtant")] [SerializeField, Tooltip("近距離攻撃の各軸に対する半径")]
     private Vector3 _closeRangeAttackHalfExtant = Vector3.zero;
 
-    [SerializeField, Tooltip("攻撃パターンの数")] private int _attackPatternCount = 2;
+    [SerializeField, Tooltip("入力可能な先行入力の数")] private int _attackBufferedInput = 1;
     
     /// <summary>現在のアタック入力回数</summary>
     private int _currentAttackInput = 0;
+
+    public int CurrentAttackInput 
+    {
+        get => _currentAttackInput;
+        private set
+        {
+            if(value != _currentAttackInput)
+            {
+                _onCurrentAttackInputChanged?.Invoke(value);
+                _currentAttackInput = value;
+            }
+        }
+    }
 
     private Action<int> _onCurrentAttackInputChanged = default;
     
@@ -41,7 +54,7 @@ public class PlayerAttackController : MonoBehaviour
     /// <summary>次のアタックパターンに進める</summary>
     private void NextAttackPattern()
     {
-        _currentAttackPattern = (_currentAttackPattern + 1) % _attackPatternCount;
+        _currentAttackPattern = (_currentAttackPattern + 1) % _attackBufferedInput;
         _onCurrentAttackPatternChanged?.Invoke(_currentAttackPattern);
     }
 
@@ -105,18 +118,19 @@ public class PlayerAttackController : MonoBehaviour
     /// <param name="context">コールバック</param>
     private void Attack(InputAction.CallbackContext context)
     {
-        if (_currentAttackInput < _attackPatternCount - 1)
+        if (CurrentAttackInput < _attackBufferedInput)
         {
-            _currentAttackInput++;
-            _onCurrentAttackInputChanged?.Invoke(_currentAttackInput);
+            CurrentAttackInput++;
+            _onCurrentAttackInputChanged?.Invoke(CurrentAttackInput);
         }
 
         IsAttackAnimation = true;
     }
 
+    //アニメーションイベントで呼んでいる
     private void AttackEnd()
     {
-        if (_currentAttackInput <= 0)
+        if (CurrentAttackInput <= 0)
         {
             IsAttackAnimation = false;
             ResetAttackPattern();
@@ -127,15 +141,19 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
+    //攻撃先行入力の受付を開始する
+    private void EnableBufferedInput()
+    {
+        if (CurrentAttackInput > 0)
+        {
+            CurrentAttackInput--;
+            _onCurrentAttackInputChanged?.Invoke(CurrentAttackInput);
+        }
+    }
+
     /// <summary>通常攻撃の当たり判定をとる</summary>
     public void NormalAttack()
     {
-        if (_currentAttackInput > 0)
-        {
-            _currentAttackInput--;
-            _onCurrentAttackInputChanged?.Invoke(_currentAttackInput);
-        }
-
         CriAudioManager.Instance.SE.Play("SE", "SE_Player_Attack_01");
         _closeRangeEffect.SendEvent("OnPlay");
         var colliders = Physics.OverlapBox(_closeAttackEreaCenter.position, _closeRangeAttackHalfExtant,
