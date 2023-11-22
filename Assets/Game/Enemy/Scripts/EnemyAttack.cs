@@ -30,9 +30,15 @@ public class EnemyAttack
     [SerializeField, Tooltip("近距離攻撃の当たり判定の中心")]
     private Vector3 _shortAttackCenter;
 
+    [SerializeField]
+    private BulletController _bullet;
+
+    [SerializeField]
+    private Transform _muzzel;
+
     private Transform _transform;
 
-    private LayerMask _targetLayer;
+    private Transform _player;
 
     private Animator _anim;
 
@@ -52,10 +58,10 @@ public class EnemyAttack
 
     public Vector3 ShortAttackCenter => _shortAttackCenter;
 
-    public void Init(Transform transform, LayerMask targetLayer, Animator anim)
+    public void Init(Transform transform, Transform player, Animator anim)
     {
         _transform = transform;
-        _targetLayer = targetLayer;
+        _player = player;
         _anim = anim;
     }
 
@@ -64,20 +70,10 @@ public class EnemyAttack
     /// </summary>
     public void LongAttack()
     {
-        RaycastHit hitInfo;
-        //光線に当たったら攻撃
-        if (Physics.Raycast(_transform.position,
-            _transform.forward, out hitInfo, _longAttackRange, _targetLayer))
-        {
-            if (hitInfo.collider.gameObject.TryGetComponent<IDamage>(out IDamage damage))
-            {
-                //エフェクトを生成
-                GameObject.Instantiate(_effect, hitInfo.collider.gameObject.transform.position, Quaternion.identity);
-                CriAudioManager.Instance.SE.Play("SE", "SE_Enemy02_Attack_01");
-                damage.SendDamage(_attackPower);
-                _isCancel = true;
-            }
-        }
+        BulletController bullet = UnityEngine.Object.Instantiate(_bullet, _muzzel.position, Quaternion.identity);
+        bullet.BulletShot(_transform.forward);
+        CriAudioManager.Instance.SE.Play("SE", "SE_Enemy02_Attack_01");
+        _isCancel = true;
     }
 
     /// <summary>
