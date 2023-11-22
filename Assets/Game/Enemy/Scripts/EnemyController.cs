@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour, IDamage
 {
@@ -6,64 +7,73 @@ public class EnemyController : MonoBehaviour, IDamage
     private EnemyStateMachine _stateMachine = new();
 
     [SerializeField, Tooltip("Playerの座標")]
-    private Transform _playerTransform = null;
-
-    [SerializeField, Tooltip("移動範囲")]
-    private float _moveDistance = 10;
-
-    [SerializeField, Tooltip("近づける距離")]
-    private float _stopDistance;
-
-    [SerializeField, Tooltip("近距離攻撃の当たり判定のサイズ")]
-    private Vector3 _attackSize;
-
-    [SerializeField, Tooltip("近距離攻撃の当たり判定の中心")]
-    private Vector3 _attackCenter;
+    private Transform _playerTransform;
 
     [SerializeField, Tooltip("敵のタイプ")]
     private EnemyType _enemyType = EnemyType.Short;
 
+    [SerializeField]
+    private IdleType _idleType = IdleType.Normal;
+
     [SerializeField, Tooltip("ヒットポイント")]
     private float _hp = 10f;
 
-    [SerializeField, Tooltip("遠距離攻撃の範囲")]
-    private float _attackRange = 10f;
+    [SerializeField, Tooltip("Playerのレイヤー")]
+    private LayerMask _targetLayer;
 
     [SerializeField]
-    private Vector3 _longAttackCenter;
+    private EnemyMove _enemyMove = new();
+
+    [SerializeField]
+    private EnemyAttack _enemyAttack = new();
+
+    [SerializeField]
+    private Animator _anim;
 
     private Rigidbody _rb;
+
+    private NavMeshAgent _agent;
 
     public EnemyStateMachine StateMachine => _stateMachine;
 
     public Transform PlayerTransform => _playerTransform;
 
-    public float MoveDistance => _moveDistance;
-
-    public float StopDistance => _stopDistance;
-
-    public Vector3 AttackSize => _attackSize;
-
-    public Vector3 AttackCenter => _attackCenter;
+    public LayerMask TargetLayer => _targetLayer;
 
     public EnemyType EnemyType => _enemyType;
 
-    public float AttackRange => _attackRange;
+    public IdleType IdleType => _idleType;
 
-    public Vector3 LongAttackCenter => _longAttackCenter;
+    public EnemyMove EnemyMove => _enemyMove;
 
-    public Rigidbody Rb { get => _rb; set => _rb = value; }
+    public EnemyAttack EnemyAttack => _enemyAttack;
+
+    public NavMeshAgent Agent => _agent;
+
+    //public Animator Anim => _anim;
+    public Animator Anim { get => _anim; set => _anim = value; }
+
 
     private void Awake()
     {
+        _rb = GetComponent<Rigidbody>();
+        _agent = GetComponent<NavMeshAgent>();
         _stateMachine.Set(this);
     }
 
     private void Start()
     {
-        //最初のステート
-        _stateMachine.StartState(_stateMachine.Idle);
-        _rb = GetComponent<Rigidbody>();
+        _enemyMove.Init(transform, _playerTransform, _rb, _agent, _anim);
+        _enemyAttack.Init(transform, _targetLayer, _anim);
+
+        if (_idleType == IdleType.Normal)
+        {
+            _stateMachine.StartState(_stateMachine.Idle);
+        }
+        else
+        {
+            _stateMachine.StartState(_stateMachine.Patrol);
+        }
     }
 
     private void Update()
@@ -78,9 +88,14 @@ public class EnemyController : MonoBehaviour, IDamage
         _hp -= damage;
         if(_hp <= 0)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
     }
+
+    //private void OnAttack()
+    //{
+    //    _enemyAttack.AttackAsync();
+    //}
 
     void OnDrawGizmos()
     {
@@ -88,13 +103,14 @@ public class EnemyController : MonoBehaviour, IDamage
         if (_enemyType == EnemyType.Short)
         {
             Gizmos.color = Color.red;
-            Gizmos.matrix = Matrix4x4.TRS(transform.TransformPoint(_attackCenter), transform.rotation, _attackSize);
-            Gizmos.DrawWireCube(Vector3.zero, _attackSize);
+            Gizmos.matrix = Matrix4x4.TRS(transform.TransformPoint(_enemyAttack.ShortAttackCenter),
+                transform.rotation, _enemyAttack.ShortAttackSize);
+            Gizmos.DrawWireCube(Vector3.zero, _enemyAttack.ShortAttackSize);
         }
         //遠距離用の攻撃範囲ギズモ
         else
         {
-            Gizmos.DrawRay(transform.position + _longAttackCenter, transform.forward * _attackRange);
+            Gizmos.DrawRay(transform.position, transform.forward * _enemyAttack.LongAttackRange);
         }
     }
 }
@@ -102,6 +118,12 @@ public class EnemyController : MonoBehaviour, IDamage
 public enum EnemyType
 {
     Short,
-    Long
+    Long,
+}
+
+public enum IdleType
+{
+    Normal,
+    Patrol,
 }
 

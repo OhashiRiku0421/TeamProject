@@ -19,6 +19,9 @@ namespace CustomStateMachine
         {
             _playerStateMachine = playerStateMachine;
         }
+        
+        /// <summary>ステート名</summary>
+        public abstract string StateName { get; }
 
         /// <summary>このステートに遷移した際に呼ばれる処理</summary>
         public abstract void OnEntry();

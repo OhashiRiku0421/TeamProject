@@ -24,6 +24,7 @@ public class CustomInputManager
 
     /// <summary>PlayerのInput周り</summary>
     private PlayerInputAction _playerInputActions;
+
     /// <summary>PlayerのInput周り</summary>
     public PlayerInputAction PlayerInputActions => _playerInputActions;
 }

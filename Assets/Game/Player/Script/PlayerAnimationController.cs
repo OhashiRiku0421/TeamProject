@@ -5,60 +5,107 @@ using UnityEngine;
 
 public class PlayerAnimationController : MonoBehaviour
 {
-    [SerializeField, Tooltip("アニメーター")]
-    private Animator _animator = default;
+    [SerializeField, Tooltip("アニメーター")] private Animator _animator = default;
+
     [SerializeField, Tooltip("PlayerのMoveコントローラー")]
     private PlayerMoveController _moveController = default;
 
     [SerializeField, Tooltip("PlayerのAttackコントローラー")]
     private PlayerAttackController _attackController = default;
 
+    [SerializeField, Tooltip("PlayerのAvoidコントローラー")]
+    private PlayerAvoidController _avoidController = default;
+
+    [SerializeField, Tooltip("PlayerのCollectコントローラー")]
+    private PlayerCollectController _collectController = default;
+
+    [SerializeField, Tooltip("PlayerのHPコントローラー")]
+    private PlayerHPController _hpController = default;
+    
     /// <summary>アニメーターのSpeedパラメータのハッシュ</summary>
     private readonly int _speedParamHash = Animator.StringToHash("Speed");
-    /// <summary>アニメーターのIsRunningパラメータのハッシュ</summary>
-    private readonly int _runningParamHash = Animator.StringToHash("IsRunning");
-    /// <summary>アニメーターのAttackパラメータのハッシュ</summary>
-    private readonly int _attackParamHash = Animator.StringToHash("Attack");
-    /// <summary>アニメーターのIsCloseRangeパラメータのハッシュ</summary>
-    private readonly int _isCloseRangeParamHash = Animator.StringToHash("IsCloseRange");
 
+    /// <summary>アニメーターのAttackInputCountパラメータのハッシュ</summary>
+    private readonly int _attackInputParamHash = Animator.StringToHash("AttackInputCount");
+
+    /// <summary>アニメーターのAttackPatternパラメータのハッシュ</summary>
+    private readonly int _attackPatternParamHash = Animator.StringToHash("AttackPattern");
+
+    /// <summary>アニメーターのIsCollectingパラメータのハッシュ</summary>
+    private readonly int _isCollectingParamHash = Animator.StringToHash("IsCollecting");
+
+    /// <summary>アニメーターのIsAvoidingパラメータのハッシュ</summary>
+    private readonly int _isAvoidingParamHash = Animator.StringToHash("IsAvoiding");
+
+    /// <summary>アニメーターのOnHitDamageパラメータのハッシュ</summary>
+    private readonly int _onHitDamageParamHash = Animator.StringToHash("OnHitDamage");
+    
+    /// <summary>アニメーターのOnHitDamageパラメータのハッシュ</summary>
+    private readonly int _isJumpingParamHash = Animator.StringToHash("IsJumping");
+
+    /// <summary>アニメーターのOnDeadパラメータのハッシュ</summary>
+    private readonly int _onDeadParamHash = Animator.StringToHash("OnDead");
+    
     private void OnEnable()
     {
         _moveController.OnCurrentSqrtSpeedChanged += AnimParamSpeedUpdate;
-        _moveController.OnIsRunningChanged += AnimParamIsRunningUpdate;
+        _moveController.OnIsJumpingChanged += AnimParamOnJumpingUpdate;
 
-        _attackController.OnIsCloseRangeChanged += AnimIsCloseRangeUpdate;
-        _attackController.OnIsAttackAnimationChanged += AnimAttackTriggerUpdate;
+        _attackController.OnCurrentAttackInputChanged += AnimAttackInputUpdate;
+        _attackController.OnCurrentAttackPatternChanged += AnimAttackPatternUpdate;
+
+        _collectController.OnIsCollectingChanged += AnimParamIsCollectingUpdate;
+
+        _avoidController.OnIsAvoidingChanged += AnimParamIsAvoidingUpdate;
+
+        _hpController.OnCurrentHpChanged += AnimParamOnHitDamageUpdate;
+        _hpController.OnDeadEvent += AnimParamOnDeadUpdate;
     }
 
     private void OnDisable()
     {
         _moveController.OnCurrentSqrtSpeedChanged -= AnimParamSpeedUpdate;
-        _moveController.OnIsRunningChanged -= AnimParamIsRunningUpdate;
+        _moveController.OnIsJumpingChanged -= AnimParamOnJumpingUpdate;
         
-        _attackController.OnIsCloseRangeChanged -= AnimIsCloseRangeUpdate;
-        _attackController.OnIsAttackAnimationChanged -= AnimAttackTriggerUpdate;
+        _attackController.OnCurrentAttackInputChanged -= AnimAttackInputUpdate;
+        _attackController.OnCurrentAttackPatternChanged -= AnimAttackPatternUpdate;
+        
+        _collectController.OnIsCollectingChanged -= AnimParamIsCollectingUpdate;
+        
+        _avoidController.OnIsAvoidingChanged -= AnimParamIsAvoidingUpdate;
+        
+        _hpController.OnCurrentHpChanged -= AnimParamOnHitDamageUpdate;
+        _hpController.OnDeadEvent -= AnimParamOnDeadUpdate;
     }
 
-    /// <summary>AttackTriggerを呼ぶ関数</summary>
+    /// <summary>AttackInputCountを呼ぶ関数</summary>
     /// <param name="value">value</param>
-    private void AnimAttackTriggerUpdate(bool value)
-    {
-        if (value)
-        {
-            _animator.SetTrigger(_attackParamHash);
-        }
-    }
+    private void AnimAttackInputUpdate(int value) => _animator.SetInteger(_attackInputParamHash, value);
 
-    /// <summary>AnimatorのIsCloseRangeを変更する</summary>
-    /// <param name="value">現在のIsCloseRange</param>
-    private void AnimIsCloseRangeUpdate(bool value) => _animator.SetBool(_isCloseRangeParamHash, value);
-    
+    /// <summary>AttackPatternを変更する関数</summary>
+    /// <param name="value">value</param>
+    private void AnimAttackPatternUpdate(int value) => _animator.SetInteger(_attackPatternParamHash, value);
+
     /// <summary>AnimatorのSpeedを変更する関数</summary>
     /// <param name="speed">現在のSpeed</param>
     private void AnimParamSpeedUpdate(float speed) => _animator.SetFloat(_speedParamHash, speed);
 
-    /// <summary>AnimatorのIsRunningを変更する関数</summary>
-    /// <param name="isRunning">現在走っているかどうか</param>
-    private void AnimParamIsRunningUpdate(bool isRunning) => _animator.SetBool(_runningParamHash, isRunning);
+    /// <summary>AnimatorのIsCollectingを更新する関数</summary>
+    /// <param name="value">現在のIsCollecting</param>
+    private void AnimParamIsCollectingUpdate(bool value) => _animator.SetBool(_isCollectingParamHash, value);
+
+    /// <summary>AnimatorのIsAvoidingを更新する関数</summary>
+    /// <param name="value">現在のIsAvoiding</param>
+    private void AnimParamIsAvoidingUpdate(bool value) => _animator.SetBool(_isAvoidingParamHash, value);
+
+    /// <summary>AnimatorのOnHitDamageを更新する関数</summary>
+    /// <param name="value"></param>
+    private void AnimParamOnHitDamageUpdate(float value) => _animator.SetTrigger(_onHitDamageParamHash);
+
+    /// <summary>AnimatorのIsJumpingを更新する関数</summary>
+    /// <param name="value"></param>
+    private void AnimParamOnJumpingUpdate(bool value) => _animator.SetBool(_isJumpingParamHash, value);
+
+    /// <summary>AnimatorのOnDeadを更新する関数</summary>
+    private void AnimParamOnDeadUpdate() => _animator.SetTrigger(_onDeadParamHash);
 }
