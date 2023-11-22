@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 254841819}
   - component: {fileID: 254841818}
   - component: {fileID: 254841817}
-  - component: {fileID: 254841821}
+  - component: {fileID: 254841823}
   m_Layer: 0
   m_Name: Ass
   m_TagString: Untagged
@@ -260,7 +260,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 254841815}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &254841821
+--- !u!114 &254841823
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -269,11 +269,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 254841815}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4052003c099f7546bf7a858f393c4ff, type: 3}
+  m_Script: {fileID: 11500000, guid: a0cd5b9c227c1544b94338d41b61be7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentObject: {fileID: 901994638}
-  moveSpeed: 1.3
+  target: {fileID: 2012733526}
+  followDistance: 1
+  followSpeed: 2
 --- !u!1 &466276238
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,7 +603,7 @@ MonoBehaviour:
   - {fileID: 1254733566}
   - {fileID: 104562477}
   - {fileID: 466276239}
-  moveSpeed: 1.9
+  moveSpeed: 2
 --- !u!1 &972164736
 GameObject:
   m_ObjectHideFlags: 0
@@ -798,6 +799,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5267612902945683703, guid: 5d98e7aecfa32f041b78941343ecbeea,
+        type: 3}
+      propertyPath: _longRangeDamage
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5267612902945683703, guid: 5d98e7aecfa32f041b78941343ecbeea,
+        type: 3}
+      propertyPath: _closeRangeAttackDamage
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5848494578800305293, guid: 5d98e7aecfa32f041b78941343ecbeea,
         type: 3}
       propertyPath: m_Name
@@ -969,7 +980,7 @@ GameObject:
   - component: {fileID: 1368470547}
   - component: {fileID: 1368470546}
   - component: {fileID: 1368470545}
-  - component: {fileID: 1368470549}
+  - component: {fileID: 1368470551}
   m_Layer: 0
   m_Name: Body1
   m_TagString: Untagged
@@ -1063,7 +1074,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1368470543}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1368470549
+--- !u!114 &1368470551
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1072,11 +1083,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1368470543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4052003c099f7546bf7a858f393c4ff, type: 3}
+  m_Script: {fileID: 11500000, guid: a0cd5b9c227c1544b94338d41b61be7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentObject: {fileID: 901994638}
-  moveSpeed: 1.7
+  target: {fileID: 901994639}
+  followDistance: 1
+  followSpeed: 2
 --- !u!1 &1794234611
 GameObject:
   m_ObjectHideFlags: 0
@@ -1086,6 +1098,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1794234612}
+  - component: {fileID: 1794234613}
   m_Layer: 0
   m_Name: Hana-chan
   m_TagString: Untagged
@@ -1112,6 +1125,20 @@ Transform:
   - {fileID: 254841816}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1794234613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794234611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 762617de27656a9429850185c0edde57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _damage: 10
+  _baseHP: 1000
 --- !u!1 &2005782838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1155,7 +1182,7 @@ GameObject:
   - component: {fileID: 2012733529}
   - component: {fileID: 2012733528}
   - component: {fileID: 2012733527}
-  - component: {fileID: 2012733531}
+  - component: {fileID: 2012733533}
   m_Layer: 0
   m_Name: Body2
   m_TagString: Untagged
@@ -1249,7 +1276,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2012733525}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &2012733531
+--- !u!114 &2012733533
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1258,11 +1285,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2012733525}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4052003c099f7546bf7a858f393c4ff, type: 3}
+  m_Script: {fileID: 11500000, guid: a0cd5b9c227c1544b94338d41b61be7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentObject: {fileID: 901994638}
-  moveSpeed: 1.5
+  target: {fileID: 1368470544}
+  followDistance: 1
+  followSpeed: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

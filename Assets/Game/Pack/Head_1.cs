@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Head_1 : MonoBehaviour
 {
+    [SerializeField, Tooltip("行く場所")]
     public Transform[] waypoints;
+    [SerializeField, Tooltip("動くスピード")]
     public float moveSpeed = 2f;
-    private int _damage = 10;
 
     private enum MovementState
     {
@@ -21,6 +22,11 @@ public class Head_1 : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
+        {
+            TogglePauseResume();
+        }
+
         switch (currentState)
         {
             case MovementState.Moving:
@@ -32,16 +38,33 @@ public class Head_1 : MonoBehaviour
         }
     }
 
+    void TogglePauseResume()
+    {
+        currentState = (currentState == MovementState.Moving) ? MovementState.Paused : MovementState.Moving;
+    }
+
     void Move()
     {
         if (waypoints.Length == 0)
         {
-            Debug.LogError("No waypoints assigned.  行き場が無い");
+            Debug.LogError("No waypoints assigned. 行き場が無い");
             return;
         }
 
         Transform currentWaypoint = waypoints[waypointIndex];
+
+        // Calculate the direction to the current waypoint
+        Vector3 directionToWaypoint = currentWaypoint.position - transform.position;
+
+        // Move towards the waypoint
         transform.position = Vector3.MoveTowards(transform.position, currentWaypoint.position, moveSpeed * Time.deltaTime);
+
+        // Rotate towards the waypoint without changing the base orientation
+        if (directionToWaypoint != Vector3.zero)
+        {
+            Quaternion rotationToWaypoint = Quaternion.LookRotation(directionToWaypoint, transform.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotationToWaypoint, Time.deltaTime * 5f);
+        }
 
         if (transform.position == currentWaypoint.position)
         {
