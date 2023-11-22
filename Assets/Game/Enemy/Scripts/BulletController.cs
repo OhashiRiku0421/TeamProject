@@ -28,7 +28,8 @@ public class BulletController : MonoBehaviour
 
     private async UniTask Interval()
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(5f));
+        var token = this.GetCancellationTokenOnDestroy();
+        await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken : token);
         Destroy(gameObject);
     }
 

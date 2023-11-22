@@ -64,7 +64,7 @@ public class EnemyController : MonoBehaviour, IDamage
     private void Start()
     {
         _enemyMove.Init(transform, _playerTransform, _rb, _agent, _anim);
-        _enemyAttack.Init(transform, _playerTransform, _anim);
+        _enemyAttack.Init(transform, _anim);
 
         if (_idleType == IdleType.Normal)
         {

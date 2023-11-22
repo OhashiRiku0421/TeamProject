@@ -38,8 +38,6 @@ public class EnemyAttack
 
     private Transform _transform;
 
-    private Transform _player;
-
     private Animator _anim;
 
     private bool _isAttack = false;
@@ -58,10 +56,9 @@ public class EnemyAttack
 
     public Vector3 ShortAttackCenter => _shortAttackCenter;
 
-    public void Init(Transform transform, Transform player, Animator anim)
+    public void Init(Transform transform, Animator anim)
     {
         _transform = transform;
-        _player = player;
         _anim = anim;
     }
 
