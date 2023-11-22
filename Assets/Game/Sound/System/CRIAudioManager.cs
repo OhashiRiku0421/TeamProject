@@ -52,11 +52,12 @@ public class CriAudioManager
     {
         /// <summary>再生中の音声のPlayback</summary>
         public CriAtomExPlayback Playback { get; set; }
+
         /// <summary>再生中のCueに関する情報</summary>
         public CriAtomEx.CueInfo CueInfo { get; set; }
-        
+
         public CriAtomEx3dSource Source { get; set; }
-        
+
         public float LastUpdateTime { get; set; }
 
         public bool IsLoop => CueInfo.length < 0;
@@ -68,7 +69,7 @@ public class CriAudioManager
         {
             //前回のアップデートからの経過時間
             var elapsed = Playback.GetTime() - LastUpdateTime;
-            
+
             //ポジションからベクトルを算出
             CriAtomEx.NativeVector nativePos = Source.GetPosition();
             Vector3 currentPos = new Vector3(nativePos.x, nativePos.y, nativePos.z);
@@ -80,6 +81,8 @@ public class CriAudioManager
             Source.SetVelocity(movedVec.x, movedVec.y, movedVec.z);
             Source.Update();
         }
+        
+        public CancellationTokenSource CancellationTokenSource { get; set; }
     }
 
     /// <summary>チャンネルを作るために必要な情報をまとめたクラス</summary>
@@ -99,10 +102,10 @@ public class CriAudioManager
 
         /// <summary>リスナー</summary>
         protected CriAtomEx3dListener _listener = default;
-        
+
         /// <summary>ボリューム</summary>
         protected Volume _volume = new Volume();
-        
+
         /// <summary>マスターボリューム</summary>
         protected Volume _masterVolume = null;
 
@@ -123,6 +126,12 @@ public class CriAudioManager
             _volume.OnVolumeChanged -= UpdateVolume;
             _masterVolume.OnVolumeChanged -= UpdateMasterVolume;
             _player.Dispose();
+
+            foreach (var VARIABLE in _cueData)
+            {
+                VARIABLE.Value.CancellationTokenSource.Cancel();
+                VARIABLE.Value.Source.Dispose();
+            }
         }
 
         private void UpdateVolume(float volume)
@@ -145,32 +154,81 @@ public class CriAudioManager
             }
         }
 
-        protected async void PlaybackDestroyWaitForPlayEnd(int index)
+        protected int CueDataAdd(CriPlayerData playerData)
         {
-            await Task.Delay((int)_cueData[index].CueInfo.length, _tokenSource.Token);
+            if (playerData.IsLoop)
+            {
+                if (_removedCueDataIndex.Count > 0)
+                {
+                    int tempIndex;
+                    if (_removedCueDataIndex.TryTake(out tempIndex))
+                    {
+                        _cueData.TryAdd(tempIndex, playerData);
+                    }
+
+                    return tempIndex;
+                }
+                else
+                {
+                    _currentMaxCount++;
+                    _cueData.TryAdd(_currentMaxCount, playerData);
+                    return _currentMaxCount;
+                }
+            }
+            else if (_removedCueDataIndex.Count > 0)
+            {
+                int tempIndex;
+                if (_removedCueDataIndex.TryTake(out tempIndex))
+                {
+                    _cueData.TryAdd(tempIndex, playerData);
+                }
+
+                PlaybackDestroyWaitForPlayEnd(tempIndex, playerData.CancellationTokenSource.Token);
+                return tempIndex;
+            }
+            else
+            {
+                _currentMaxCount++;
+                _cueData.TryAdd(_currentMaxCount, playerData);
+
+                PlaybackDestroyWaitForPlayEnd(_currentMaxCount, playerData.CancellationTokenSource.Token);
+                return _currentMaxCount;
+            }
+
+        }
+
+        protected async void PlaybackDestroyWaitForPlayEnd(int index, CancellationToken cancellationToken)
+        {
+            // ループしていたら抜ける
+            if (_cueData[index].IsLoop)
+            {
+                return;
+            }
+
+            await Task.Delay((int)_cueData[index].CueInfo.length, _cueData[index].CancellationTokenSource.Token);
 
             while (true)
             {
-                if (_cueData.TryRemove(index, out CriPlayerData outData))
+                if (_cueData[index].Playback.GetStatus() == CriAtomExPlayback.Status.Removed && _cueData.TryRemove(index, out CriPlayerData outData))
                 {
                     _removedCueDataIndex.Add(index);
-                    outData.Source.Dispose();
+                    outData.Source?.Dispose();
                     return;
                 }
                 else
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(0.05D), _tokenSource.Token);
+                    await Task.Delay(TimeSpan.FromSeconds(0.05D), _cueData[index].CancellationTokenSource.Token);
                 }
             }
         }
     }
-    
+
     /// <summary>音楽を管理するための機能を持ったInterface</summary>
     public interface ICustomChannel
     {
         /// <summary>ボリューム</summary>
         public IVolume Volume { get; }
-        
+
         /// <summary>音楽を流す関数</summary>
         /// <param name="cueSheetName">流したいキューシートの名前</param>
         /// <param name="cueName">流したいキューの名前</param>
@@ -227,7 +285,7 @@ public class CriAudioManager
 
         /// <summary>現在再生中のCueSheetName</summary>
         private string _currentCueName = "";
-        
+
         /// <summary>コンストラクタ－</summary>
         /// <param name="masterVolume">マスターボリューム</param>
         public CriSingleChannel(Volume masterVolume) : base(masterVolume)
@@ -237,7 +295,7 @@ public class CriAudioManager
         }
 
         public IVolume Volume => _volume;
-        
+
         public int Play(string cueSheetName, string cueName, float volume = 1.0F)
         {
             // CueSheetから情報を取得
@@ -251,7 +309,7 @@ public class CriAudioManager
             {
                 return _cueData.Count - 1;
             }
-            
+
             Stop(_cueData.Count - 1);
 
             // 情報をセットして再生
@@ -279,12 +337,12 @@ public class CriAudioManager
             {
                 return _cueData.Count - 1;
             }
-            
+
             Stop(_cueData.Count - 1);
 
             // 座標情報をセットして再生
             var temp3dData = new CriAtomEx3dSource();
-            
+
             temp3dData.SetPosition(playSoundWorldPos.x, playSoundWorldPos.y, playSoundWorldPos.z);
             // リスナーとソースを設定
             _player.Set3dListener(_listener);
@@ -294,7 +352,7 @@ public class CriAudioManager
             _player.SetVolume(_volume * _masterVolume * volume);
             _player.SetStartTime(0L);
             tempPlayerData.Playback = _player.Start();
-            
+
             _cueData[_cueData.Count - 1] = tempPlayerData;
 
             return _cueData.Count - 1;
@@ -310,21 +368,21 @@ public class CriAudioManager
         public void Pause(int index)
         {
             if (index <= -1) return;
-            
+
             _player.Pause();
         }
 
         public void Resume(int index)
         {
             if (index <= -1) return;
-            
+
             _player.Resume(CriAtomEx.ResumeMode.PausedPlayback);
         }
 
         public void Stop(int index)
         {
             if (index <= -1) return;
-            
+
             _player.Stop(false);
         }
 
@@ -347,7 +405,7 @@ public class CriAudioManager
         public void SetListener(CriAtomListener listener, int index)
         {
             if (_cueData[index].Playback.GetStatus() == CriAtomExPlayback.Status.Removed || index <= -1) return;
-            
+
             _player.Set3dListener(listener.nativeListener);
             _player.Update(_cueData[index].Playback);
         }
@@ -360,7 +418,7 @@ public class CriAudioManager
         }
 
         public IVolume Volume => _volume;
-        
+
         public int Play(string cueSheetName, string cueName, float volume)
         {
             if (cueName == "") return -1;
@@ -377,21 +435,9 @@ public class CriAudioManager
             _player.Set3dSource(null);
             _player.SetVolume(volume * _volume * _masterVolume);
             newAtomPlayer.Playback = _player.Start();
+            newAtomPlayer.CancellationTokenSource = new CancellationTokenSource();
 
-            if (_removedCueDataIndex.Count > 0)
-            {
-                int tempIndex;
-                if (_removedCueDataIndex.TryTake(out tempIndex))
-                {
-                    _cueData.TryAdd(tempIndex, newAtomPlayer);
-                }
-            }
-            else
-            {
-                _currentMaxCount++;
-                _cueData.TryAdd(_currentMaxCount, newAtomPlayer);
-            }
-            return _cueData.Count - 1;
+            return CueDataAdd(newAtomPlayer);
         }
 
         public int Play3D(Vector3 playSoundWorldPos, string cueSheetName, string cueName, float volume)
@@ -404,7 +450,7 @@ public class CriAudioManager
 
             // 座標情報をセットして再生
             var temp3dData = new CriAtomEx3dSource();
-            
+
             temp3dData.SetPosition(playSoundWorldPos.x, playSoundWorldPos.y, playSoundWorldPos.z);
             // リスナーとソースを設定
             _player.Set3dListener(_listener);
@@ -414,53 +460,83 @@ public class CriAudioManager
             _player.SetVolume(_volume * _masterVolume * volume);
             _player.SetStartTime(0L);
             tempPlayerData.Playback = _player.Start();
-            
-            _cueData[_cueData.Count - 1] = tempPlayerData;
+            tempPlayerData.CancellationTokenSource = new CancellationTokenSource();
 
-            return _cueData.Count - 1;
+            return CueDataAdd(tempPlayerData);
         }
 
         public void Update3DPos(Vector3 playSoundWorldPos, int index)
         {
             if (index <= -1 || _cueData[index].Source == null) return;
-            
+
             _cueData[index].UpdateCurrentVector(playSoundWorldPos);
         }
 
         public void Pause(int index)
         {
             if (index <= -1) return;
-            
+
             _cueData[index].Playback.Pause();
         }
 
         public void Resume(int index)
         {
             if (index <= -1) return;
-            
+
             _cueData[index].Playback.Resume(CriAtomEx.ResumeMode.AllPlayback);
         }
 
         public void Stop(int index)
         {
             if (index <= -1) return;
-            
+
             _cueData[index].Playback.Stop(false);
+            
+            if (_cueData.Remove(index, out CriPlayerData outData))
+            {
+                _removedCueDataIndex.Add(index);
+                outData.Playback.Stop(false);
+                outData.Source?.Dispose();
+                outData.CancellationTokenSource?.Cancel();
+            }
+            
         }
 
         public void StopAll()
         {
             _player.Stop(false);
+
+            foreach (var VARIABLE in _cueData)
+            {
+                VARIABLE.Value.CancellationTokenSource?.Cancel();
+                VARIABLE.Value.CancellationTokenSource?.Dispose();
+            }
+            
+            _cueData.Clear();
+            _removedCueDataIndex.Clear();
         }
 
         public void StopLoopCue()
         {
+            var indexList = new List<int>();
+            
             foreach (var n in _cueData)
             {
                 if (n.Value.IsLoop)
                 {
                     n.Value.Playback.Stop(false);
                 }
+                
+                indexList.Add(n.Key);
+            }
+
+            foreach (var VARIABLE in indexList)
+            {
+                if (_cueData.Remove(VARIABLE, out CriPlayerData outData))
+                {
+                    _removedCueDataIndex.Add(VARIABLE);
+                    outData.Source?.Dispose();
+                }   
             }
         }
 
@@ -478,13 +554,13 @@ public class CriAudioManager
             _player.Update(_cueData[index].Playback);
         }
     }
-    
+
     public interface IVolume
     {
         public event Action<float> OnVolumeChanged;
 
         public float Value { get; set; }
-        
+
         public static IVolume operator +(IVolume volume, IVolume volume2) => volume;
     }
 
@@ -493,7 +569,7 @@ public class CriAudioManager
     {
         /// <summary>ボリューム</summary>
         private float _value = 1.0F;
-        
+
         /// <summary>音量が変更された際の処理</summary>
         private event Action<float> _onVolumeChanged = default;
 
@@ -505,7 +581,7 @@ public class CriAudioManager
 
         /// <summary>イベントが呼ばれる際の基準の差</summary>
         private const float DIFF = 0.01F;
-        
+
         /// <summary>ボリューム</summary> 
         public float Value
         {
@@ -513,7 +589,7 @@ public class CriAudioManager
             set
             {
                 value = Mathf.Clamp01(value);
-                
+
                 if (_value + DIFF < value || _value - DIFF > value)
                 {
                     _onVolumeChanged?.Invoke(value);
@@ -521,7 +597,7 @@ public class CriAudioManager
                 }
             }
         }
-        
+
         public static implicit operator float(Volume volume) => volume.Value;
     }
 }
