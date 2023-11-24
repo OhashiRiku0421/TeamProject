@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RestOfNeed : MonoBehaviour, IDamage
@@ -6,6 +8,9 @@ public class RestOfNeed : MonoBehaviour, IDamage
     private int _damage = 100;
     [SerializeField, Tooltip("基本HP")]
     private float _baseHP = 1000F;
+    [SerializeField, Tooltip("パーティクル入れる場所")]
+    // Reference to the particle system prefab
+    public GameObject particleSystemPrefab;
 
     private float _hp;
     private StateMachine _stateMachine;
@@ -53,6 +58,7 @@ public class RestOfNeed : MonoBehaviour, IDamage
             return;
 
         _hp -= damage;
+        Debug.Log("attacked");
 
         if (_hp <= 0)
         {
@@ -70,6 +76,15 @@ public class RestOfNeed : MonoBehaviour, IDamage
         public void ChangeState(State newState)
         {
             CurrentState = newState;
+        }
+    }
+    void OnDestroy()
+    {
+        // Instantiate or activate the particle system when the object is destroyed
+        if (particleSystemPrefab != null)
+        {
+            Instantiate(particleSystemPrefab, transform.position, Quaternion.identity);
+            Debug.Log("play");
         }
     }
 }

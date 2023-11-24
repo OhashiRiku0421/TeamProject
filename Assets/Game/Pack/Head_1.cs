@@ -9,38 +9,22 @@ public class Head_1 : MonoBehaviour
     [SerializeField, Tooltip("動くスピード")]
     public float moveSpeed = 2f;
 
-    private enum MovementState
-    {
-        Moving,
-        Paused
-    }
-
-    private MovementState currentState = MovementState.Moving;
     private int waypointIndex = 0;
     private int movementDirection = 1;
     private int i = 1;
+    private bool isPaused = false;
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
         {
-            TogglePauseResume();
+            isPaused = !isPaused;
         }
 
-        switch (currentState)
+        if (!isPaused)
         {
-            case MovementState.Moving:
-                Move();
-                break;
-            case MovementState.Paused:
-                // Handle logic when movement is paused, if needed
-                break;
+            Move();
         }
-    }
-
-    void TogglePauseResume()
-    {
-        currentState = (currentState == MovementState.Moving) ? MovementState.Paused : MovementState.Moving;
     }
 
     void Move()
@@ -80,3 +64,4 @@ public class Head_1 : MonoBehaviour
         }
     }
 }
+

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SnakeSegment : MonoBehaviour
@@ -9,14 +11,7 @@ public class SnakeSegment : MonoBehaviour
     [SerializeField, Tooltip("付いていくスピード")]
     public float followSpeed = 5.0f; // The speed of the follower
 
-    private StateMachine _stateMachine;
-    private bool _isPaused = false;
-
-    void Start()
-    {
-        _stateMachine = new StateMachine();
-        _stateMachine.ChangeState(FollowState);
-    }
+    private bool isPaused = false;
 
     void Update()
     {
@@ -25,9 +20,9 @@ public class SnakeSegment : MonoBehaviour
             TogglePauseResume();
         }
 
-        if (!_isPaused)
+        if (!isPaused)
         {
-            _stateMachine.UpdateState();
+            FollowState();
         }
     }
 
@@ -53,37 +48,8 @@ public class SnakeSegment : MonoBehaviour
 
     private void TogglePauseResume()
     {
-        _isPaused = !_isPaused;
+        isPaused = !isPaused;
 
-        if (_isPaused)
-        {
-            _stateMachine.ChangeState(PauseState);
-        }
-        else
-        {
-            _stateMachine.ChangeState(FollowState);
-        }
-    }
-
-    private void PauseState()
-    {
-        // Handle logic for the pause state, if needed
-    }
-
-    private class StateMachine
-    {
-        public delegate void State();
-
-        private State _currentState;
-
-        public void ChangeState(State newState)
-        {
-            _currentState = newState;
-        }
-
-        public void UpdateState()
-        {
-            _currentState?.Invoke();
-        }
+        // Optionally, you can add logic to handle pause state here if needed
     }
 }
