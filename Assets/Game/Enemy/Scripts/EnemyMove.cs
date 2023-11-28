@@ -6,19 +6,6 @@ using UnityEngine.AI;
 [System.Serializable]
 public class EnemyMove
 {
-
-    [SerializeField, Tooltip("扇型の角度")]
-    private float _fanAngle = 90f;
-
-    [SerializeField, Tooltip("移動のスピード")]
-    private float _moveSpeed = 5;
-
-    [SerializeField, Tooltip("移動範囲")]
-    private float _moveDistance = 10;
-
-    [SerializeField, Tooltip("近づける距離")]
-    private float _stopDistance;
-
     [SerializeField]
     private Transform[] _patrolPoints;
 
@@ -30,24 +17,18 @@ public class EnemyMove
 
     private Transform _playerTransform;
 
-    private Rigidbody _rb;
-
     private Animator _anim;
 
-    public float FanAngle => _fanAngle;
+    private EnemyData _data;
 
-    public float MoveDistance => _moveDistance;
-
-    public float StopDistance => _stopDistance;
-
-    public void Init(Transform transform, Transform playerTransform, Rigidbody rb,
-        NavMeshAgent agent, Animator anim)
+    public void Init(Transform transform, Transform playerTransform,
+        NavMeshAgent agent, Animator anim, EnemyData data)
     {
         _transform = transform;
         _playerTransform = playerTransform;
-        _rb = rb;
         _agent = agent;
         _anim = anim;
+        _data = data;
     }
 
     /// <summary>
@@ -57,7 +38,7 @@ public class EnemyMove
     {
         float distance = Vector3.Distance(_transform.position, _playerTransform.position);
 
-        if (distance <= _moveDistance)
+        if (distance <= _data.MoveDistance)
         {
             // 扇型の中心から対象オブジェクトへの方向ベクトルを計算
             Vector3 direction = _playerTransform.position - _transform.position;
@@ -65,7 +46,7 @@ public class EnemyMove
             // 扇型の角度と方向ベクトルの角度を比較
             float angle = Vector3.Angle(_transform.forward, direction);
 
-            if (angle <= _fanAngle / 2)
+            if (angle <= _data.FanAngle / 2)
             {
                 //障害物が無いか判定
                 if (Physics.Raycast(_transform.position, direction, out RaycastHit hit))
@@ -111,5 +92,15 @@ public class EnemyMove
         _agent.destination = _patrolPoints[_destPoint].position;
 
         _destPoint = (_destPoint + 1) % _patrolPoints.Length;
+    }
+
+    public void SetMoveSpeed()
+    {
+        _agent.speed = _data.MoveSpeed;
+    }
+
+    public void SetPatrolSpeed()
+    {
+        _agent.speed = _data.PatrolSpeed;
     }
 }

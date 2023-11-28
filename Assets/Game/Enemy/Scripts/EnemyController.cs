@@ -30,6 +30,9 @@ public class EnemyController : MonoBehaviour, IDamage
     [SerializeField]
     private Animator _anim;
 
+    [SerializeField]
+    private EnemyData _data;
+
     private Rigidbody _rb;
 
     private NavMeshAgent _agent;
@@ -50,6 +53,8 @@ public class EnemyController : MonoBehaviour, IDamage
 
     public NavMeshAgent Agent => _agent;
 
+    public EnemyData Data => _data;
+
     //public Animator Anim => _anim;
     public Animator Anim { get => _anim; set => _anim = value; }
 
@@ -63,8 +68,8 @@ public class EnemyController : MonoBehaviour, IDamage
 
     private void Start()
     {
-        _enemyMove.Init(transform, _playerTransform, _rb, _agent, _anim);
-        _enemyAttack.Init(transform, _anim);
+        _enemyMove.Init(transform, _playerTransform, _agent, _anim, _data);
+        _enemyAttack.Init(transform, _anim, _data);
 
         if (_idleType == IdleType.Normal)
         {
@@ -98,14 +103,14 @@ public class EnemyController : MonoBehaviour, IDamage
         if (_enemyType == EnemyType.Short)
         {
             Gizmos.color = Color.red;
-            Gizmos.matrix = Matrix4x4.TRS(transform.TransformPoint(_enemyAttack.ShortAttackCenter),
-                transform.rotation, _enemyAttack.ShortAttackSize);
-            Gizmos.DrawWireCube(Vector3.zero, _enemyAttack.ShortAttackSize);
+            Gizmos.matrix = Matrix4x4.TRS(transform.TransformPoint(_data.ShortAttackCenter),
+                transform.rotation, _data.ShortAttackSize);
+            Gizmos.DrawWireCube(Vector3.zero, _data.ShortAttackSize);
         }
         //遠距離用の攻撃範囲ギズモ
         else
         {
-            Gizmos.DrawRay(transform.position, transform.forward * _enemyAttack.LongAttackRange);
+            Gizmos.DrawRay(transform.position, transform.forward * _data.LongAttackRange);
         }
     }
 }
