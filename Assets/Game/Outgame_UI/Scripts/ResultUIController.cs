@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class ResultUIController : MonoBehaviour
+public class ResultUIController : MonoBehaviour, IPause
 {
     [SerializeField]
     private GameObject[] _uiElements;
@@ -14,13 +14,16 @@ public class ResultUIController : MonoBehaviour
     private Text _itemCountText;
 
     [SerializeField, Tooltip("ベットしたライフを表示するテキスト")]
-    private Text _betValueText;
+    private Text _betLifeText;
 
     [SerializeField, Tooltip("手に入ったライフを表示するテキスト")]
     private Text _gainedLifeText;
 
-    [SerializeField, Tooltip("今までに手に入ったライフと、目標のライフを表示するテキスト")]
-    private Text _tortalLifeText;
+    [SerializeField, Tooltip("今までに手に入れたライフを表示するテキスト")]
+    private Text _lifeGainedSoFarText;
+
+    [SerializeField, Tooltip("目標のライフを表示するテキスト")]
+    private Text _lifeUntilClearText;
 
     [SerializeField, Tooltip("クリアした時間（分）")]
     private Text _clearTimeMin;
@@ -28,44 +31,44 @@ public class ResultUIController : MonoBehaviour
     [SerializeField, Tooltip("クリアした時間（秒）")]
     private Text _clearTimeSec;
 
-    [SerializeField, Tooltip("テキストのアニメーションが終わるまでの時間")]
+    [SerializeField, Tooltip("アニメーションが終わるまでの時間")]
     private float _durationTime = 1f;
 
     private List<(Text, int)> _textAndValue;
+    private float _clearTime;
 
     [SerializeField]
     private bool _isTest = false;
     void Start()
     {
         int itemCount = ScoreSystem.Score.ItemCount;
-        float clearTime = ScoreSystem.Score.ClearTime;
+        _clearTime = ScoreSystem.Score.ClearTime;
         int betLife = ScoreSystem.Score.BetLife;
         int playerLife = ScoreSystem.Score.PLayerLife;
+
         if (_isTest)
         {
-            itemCount = 20;
-            clearTime = 150;
-            betLife = 550;
+            itemCount = 5;
+            _clearTime = 900;
+            betLife = 500;
             playerLife = 200;
         }
 
         int gainedLife = betLife * itemCount + playerLife;
-        ExternalLifeManager.TortalLife = gainedLife;
+        ExternalLifeManager.TortalLife += gainedLife;
+        _lifeUntilClearText.text = 5000.ToString();
 
-        _tortalLifeText.text = $"{gainedLife} / 5000";
-
-        _textAndValue = new List<(Text, int)>() { (_itemCountText, itemCount), (_betValueText, betLife), (_gainedLifeText, gainedLife) };
-        UpdateTextValue(_itemCountText, itemCount);
-        UpdateTextValue(_betValueText, betLife);
-        UpdateTextValue(_gainedLifeText, gainedLife);
-
-        StartCoroutine(UpdateClearTime(clearTime));
+        _textAndValue = new List<(Text, int)>() { (_itemCountText, itemCount), (_betLifeText, betLife), (_gainedLifeText, gainedLife), (_lifeGainedSoFarText, ExternalLifeManager.TortalLife) };
+        UpdateTextValue(_textAndValue, 0);
     }
 
-    private void UpdateTextValue(Text text,  int value)
+    private void UpdateTextValue(List<(Text, int)> data, int index)
     {
+        if (data.Count == index) StartCoroutine(UpdateClearTime(_clearTime));
+        Text text = data[index].Item1;
+        int value = data[index].Item2;
         int temp = int.Parse(text.text);
-        text.DOCounter(temp, value, _durationTime);
+        text.DOCounter(temp, value, _durationTime).OnComplete(() => UpdateTextValue(data, ++index));
         text.text = value.ToString();
     }
 
@@ -88,10 +91,18 @@ public class ResultUIController : MonoBehaviour
                 sec = 0;
             }
 
-            yield return new WaitForSeconds(interval);
+            yield return null;
         }
 
         _clearTimeMin.text = (Math.Floor(clearTime / 60)).ToString("00");
         _clearTimeSec.text = (Math.Floor(clearTime % 60)).ToString("00");
+    }
+    public void Resume()
+    {
+
+    }
+    public void Pause()
+    {
+
     }
 }
