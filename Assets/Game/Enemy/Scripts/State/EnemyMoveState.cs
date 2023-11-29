@@ -26,7 +26,7 @@ public class EnemyMoveState : IState
         _enemy.EnemyMove.Rotation();
         _enemy.EnemyMove.Move();
 
-        if (distance <= _enemy.EnemyMove.StopDistance)
+        if (distance <= _enemy.Data.StopDistance)
         {
             if (_enemy.EnemyType == EnemyType.Short)
             {
@@ -40,7 +40,7 @@ public class EnemyMoveState : IState
         }
 
         //Playerが移動範囲外に出たらIdelステートに変更する
-        if (distance > _enemy.EnemyMove.MoveDistance)
+        if (distance > _enemy.Data.MoveDistance)
         {
             if(_enemy.IdleType == IdleType.Normal)
             {

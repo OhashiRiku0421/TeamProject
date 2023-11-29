@@ -138,25 +138,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _enemyMove:
-    _fanAngle: 42.21
-    _moveSpeed: 5
-    _moveDistance: 10
-    _stopDistance: 2
     _patrolPoints:
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
   _enemyAttack:
-    _awaitAttack: 3
-    _attackPower: 50
     _effect: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56, type: 3}
-    _longAttackRange: 10
-    _shortAttackSize: {x: 1.33, y: 1.28, z: 1.45}
-    _shortAttackCenter: {x: 0, y: 0.31, z: 1.75}
     _bullet: {fileID: 7126295828876753632, guid: 1afba745aac0981418ab405b0e85e830,
       type: 3}
     _muzzel: {fileID: 5513805140767821362}
   _anim: {fileID: 590638875670899685}
+  _data: {fileID: 11400000, guid: b9c8b818b1dc3bc43a76893dde6a5b2a, type: 2}
 --- !u!195 &2567249014637812163
 NavMeshAgent:
   m_ObjectHideFlags: 0
