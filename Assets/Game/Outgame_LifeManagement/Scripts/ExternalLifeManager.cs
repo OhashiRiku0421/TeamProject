@@ -2,6 +2,8 @@
 
 public class ExternalLifeManager
 {
-    /// <summary>シーン間でライフの受け渡しを行うためのプロパティ</summary>
+    /// <summary>ゲーム全体で使用するライフ</summary>
+    public static int TortalLife { get; set; }
+    /// <summary>シインゲームで使用するライフ</summary>
     public static int Life { get; set; }
 }
