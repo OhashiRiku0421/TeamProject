@@ -39,7 +39,7 @@ public class EnemyLongAttackState : IState
         }
 
         //ちょっと遠くなったら移動のStateに変更
-        if (distance >= _enemy.EnemyMove.StopDistance + 2)//仮
+        if (distance >= _enemy.Data.StopDistance + 2)//仮
         {
             _enemy.StateMachine.ChangeState(_enemy.StateMachine.Move);
         }

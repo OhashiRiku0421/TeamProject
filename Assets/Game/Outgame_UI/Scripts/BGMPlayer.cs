@@ -1,8 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BGMPlayer : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField, Tooltip("BGMの名前")]
     private string _bgmName;
     void Start()
     {
