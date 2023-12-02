@@ -22,6 +22,7 @@ public class SceneSwitcher : MonoBehaviour, IPause
         {
             _anyKeyAction = new InputAction("AnyKey", InputActionType.Button);
             _anyKeyAction.AddBinding("<mouse>/press");
+            _anyKeyAction.AddBinding("<mouse>/rightButton");
             _anyKeyAction.AddBinding("<Keyboard>/anyKey");
             _anyKeyAction.performed += OnAnyKeyPressed;
         }
@@ -29,8 +30,8 @@ public class SceneSwitcher : MonoBehaviour, IPause
 
     public void SceneLoaded()
     {
-        PlaySE();
         Invoke("SceneLoad", _waitTime);
+        PlaySE();
     }
 
     private void SceneLoad()

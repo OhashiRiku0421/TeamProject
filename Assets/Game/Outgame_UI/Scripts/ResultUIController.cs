@@ -4,6 +4,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.InputSystem;
 
 public class ResultUIController : MonoBehaviour, IPause
 {
@@ -37,8 +38,24 @@ public class ResultUIController : MonoBehaviour, IPause
     private List<(Text, int)> _textAndValue;
     private float _clearTime;
 
-    [SerializeField]
+    [SerializeField, Tooltip("テスト用の変数")]
     private bool _isTest = false;
+
+    private InputAction _keyPressAction;
+    [SerializeField]
+    private GameObject _button;
+    private bool _isSkip = false;
+    private bool _isPause = false;
+
+    private void Awake()
+    {
+        _keyPressAction = new InputAction("AnyKeyPress", InputActionType.Button);
+        _keyPressAction.AddBinding("<mouse>/press");
+        _keyPressAction.AddBinding("<mouse>/rightButton");
+        _keyPressAction.AddBinding("<Keyboard>/anyKey");
+        _keyPressAction.performed += OnKeyPressed;
+        _button.GetComponent<Button>().interactable = false;
+    }
     void Start()
     {
         int itemCount = ScoreSystem.Score.ItemCount;
@@ -64,11 +81,21 @@ public class ResultUIController : MonoBehaviour, IPause
 
     private void UpdateTextValue(List<(Text, int)> data, int index)
     {
+        // スコアの表示が終わったら時間の表示に移る
         if (data.Count == index) StartCoroutine(UpdateClearTime(_clearTime));
+
         Text text = data[index].Item1;
         int value = data[index].Item2;
+
         int temp = int.Parse(text.text);
         text.DOCounter(temp, value, _durationTime).OnComplete(() => UpdateTextValue(data, ++index));
+
+        if (DOTween.IsTweening(text) && _isSkip)
+        {
+            text.DOComplete();
+            UpdateTextValue(data, ++index);
+        }
+
         text.text = value.ToString();
     }
 
@@ -79,7 +106,7 @@ public class ResultUIController : MonoBehaviour, IPause
         int min = 0;
         float interval = _durationTime / clearTime; 
 
-        while (_durationTime >= count)
+        while (_durationTime >= count && !_isSkip)
         {
             count += interval;
             _clearTimeSec.text = sec++.ToString("00");
@@ -96,13 +123,30 @@ public class ResultUIController : MonoBehaviour, IPause
 
         _clearTimeMin.text = (Math.Floor(clearTime / 60)).ToString("00");
         _clearTimeSec.text = (Math.Floor(clearTime % 60)).ToString("00");
+        _button.GetComponent<Button>().interactable = true;
     }
+
+    public void OnKeyPressed(InputAction.CallbackContext context)
+    {
+        _isSkip = true;
+        Debug.Log("IsSkip");
+    }
+    private void OnEnable()
+    {
+        _keyPressAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _keyPressAction.Disable();
+    }
+
     public void Resume()
     {
-
+        _isPause = false;
     }
     public void Pause()
     {
-
+        _isPause = true;
     }
 }
