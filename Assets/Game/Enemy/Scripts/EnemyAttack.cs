@@ -8,27 +8,8 @@ using System.Threading;
 [Serializable]
 public class EnemyAttack
 {
-    [SerializeField, Tooltip("攻撃のインターバル")]
-    private float _awaitAttack = 3;
-
-    [SerializeField, Tooltip("攻撃力")]
-    private float _attackPower = 1;
-
     [SerializeField]
     private GameObject _effect;
-
-    [Header("遠距離攻撃")]
-
-    [SerializeField, Tooltip("遠距離攻撃の範囲")]
-    private float _longAttackRange = 10f;
-
-    [Header("近距離攻撃")]
-
-    [SerializeField, Tooltip("近距離攻撃の当たり判定のサイズ")]
-    private Vector3 _shortAttackSize;
-
-    [SerializeField, Tooltip("近距離攻撃の当たり判定の中心")]
-    private Vector3 _shortAttackCenter;
 
     [SerializeField]
     private BulletController _bullet;
@@ -46,20 +27,17 @@ public class EnemyAttack
 
     private CancellationTokenSource _cancell = new();
 
+    private EnemyData _data;
+
     public bool IsAttack { get => _isAttack; set => _isAttack = value; }
 
     public bool IsCancel { get => _isCancel; set => _isCancel = value; }
 
-    public float LongAttackRange => _longAttackRange;
-
-    public Vector3 ShortAttackSize => _shortAttackSize;
-
-    public Vector3 ShortAttackCenter => _shortAttackCenter;
-
-    public void Init(Transform transform, Animator anim)
+    public void Init(Transform transform, Animator anim, EnemyData data)
     {
         _transform = transform;
         _anim = anim;
+        _data = data;
     }
 
     /// <summary>
@@ -79,8 +57,8 @@ public class EnemyAttack
     public void ShortAttck()
     {
         //攻撃範囲
-        Collider[] colliders = Physics.OverlapBox(_transform.TransformPoint(_shortAttackCenter),
-        _shortAttackSize * 0.5f, _transform.rotation);
+        Collider[] colliders = Physics.OverlapBox(_transform.TransformPoint(_data.ShortAttackCenter),
+        _data.ShortAttackSize * 0.5f, _transform.rotation);
         //範囲に入ったら攻撃
         foreach (Collider collider in colliders)
         {
@@ -88,7 +66,7 @@ public class EnemyAttack
             {
                 GameObject.Instantiate(_effect, collider.gameObject.transform.position, Quaternion.identity);
                 CriAudioManager.Instance.SE.Play("SE", "SE_Enemy01_Attack_01");
-                damage.SendDamage(_attackPower);
+                damage.SendDamage(_data.AttackPower);
                 _isCancel = true;
             }
         }
@@ -113,7 +91,7 @@ public class EnemyAttack
         _isAttack = true;
         _isCancel = true;
         //攻撃のインターバル
-        await UniTask.Delay(TimeSpan.FromSeconds(_awaitAttack), cancellationToken: _cancell.Token);
+        await UniTask.Delay(TimeSpan.FromSeconds(_data.AwaitAttack), cancellationToken: _cancell.Token);
         _isAttack = false;
     }
 

@@ -9,10 +9,10 @@ public class FanEditor : Editor
         EnemyController enemyController = (EnemyController)target;
 
         // 扇型の扇形をギズモで表示
-        Vector3 from = Quaternion.Euler(0, -enemyController.EnemyMove.FanAngle / 2, 0) * enemyController.transform.forward;
+        Vector3 from = Quaternion.Euler(0, -enemyController.Data.FanAngle / 2, 0) * enemyController.transform.forward;
         Handles.color = new Color(1, 0, 0, 0.2f); // 半透明の赤色
         Handles.DrawSolidArc(enemyController.transform.position,
-            Vector3.up, from, enemyController.EnemyMove.FanAngle, enemyController.EnemyMove.MoveDistance);
+            Vector3.up, from, enemyController.Data.FanAngle, enemyController.Data.MoveDistance);
 
         // シーンビューでギズモを確認するための再描画
         if (GUI.changed)

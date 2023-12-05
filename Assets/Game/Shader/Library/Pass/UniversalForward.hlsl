@@ -22,7 +22,7 @@ Varyings vert(Attributes input)
 #endif
     
     output.normalWS = TransformObjectToWorldNormal(input.normalOS);
-    output.tangentWS = TransformObjectToWorldDir(input.tangentOS);
+    output.tangentWS = TransformObjectToWorldDir(input.tangentOS.xyz);
     output.bitangentWS = cross(output.normalWS, output.tangentWS) * input.tangentOS.w;
     OUTPUT_LIGHTMAP_UV(input.lightmapUV, unity_LightmapST, output.lightmapUV);
     OUTPUT_SH(output.normalWS, output.vertexSH);
