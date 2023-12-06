@@ -78,8 +78,45 @@ PrefabInstance:
       propertyPath: m_Name
       value: BgMD_Island_001g
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8cbe0bce15f81c447ba59b1b9307f387,
+        type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8cbe0bce15f81c447ba59b1b9307f387,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -186426232590020007}
   m_SourcePrefab: {fileID: 100100000, guid: 8cbe0bce15f81c447ba59b1b9307f387, type: 3}
+--- !u!1 &5795549563061846290 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8cbe0bce15f81c447ba59b1b9307f387,
+    type: 3}
+  m_PrefabInstance: {fileID: 6677857822261509187}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &-186426232590020007
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5795549563061846290}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -6644994233897480707, guid: 8cbe0bce15f81c447ba59b1b9307f387, type: 3}
