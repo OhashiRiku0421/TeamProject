@@ -55,6 +55,13 @@ public class ResultUIController : MonoBehaviour, IPause
         _keyPressAction.AddBinding("<Keyboard>/anyKey");
         _keyPressAction.performed += OnKeyPressed;
         _button.GetComponent<Button>().interactable = false;
+
+        //foreach (var obj in _uiElements)
+        //{
+        //    var c =  obj.GetComponent<Text>().color;
+        //    c.a = 0;
+        //    obj.
+        //}
     }
     void Start()
     {
@@ -76,7 +83,13 @@ public class ResultUIController : MonoBehaviour, IPause
         _lifeUntilClearText.text = 5000.ToString();
 
         _textAndValue = new List<(Text, int)>() { (_itemCountText, itemCount), (_betLifeText, betLife), (_gainedLifeText, gainedLife), (_lifeGainedSoFarText, ExternalLifeManager.TortalLife) };
+        
         UpdateTextValue(_textAndValue, 0);
+    }
+
+    private void FadeText(List<(Text, int)> data, int index)
+    {
+
     }
 
     private void UpdateTextValue(List<(Text, int)> data, int index)
@@ -104,7 +117,7 @@ public class ResultUIController : MonoBehaviour, IPause
         float count = 0;
         int sec = 0;
         int min = 0;
-        float interval = _durationTime / clearTime; 
+        float interval = _durationTime / clearTime;
 
         while (_durationTime >= count && !_isSkip)
         {
