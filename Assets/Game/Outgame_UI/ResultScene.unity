@@ -1710,7 +1710,7 @@ MonoBehaviour:
   _clearTimeMin: {fileID: 703289910}
   _clearTimeSec: {fileID: 372262685}
   _durationTime: 1
-  _isTest: 0
+  _isTest: 1
   _button: {fileID: 1997553241}
 --- !u!114 &1621032670
 MonoBehaviour:
@@ -2055,8 +2055,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -132, y: 36}
-  m_SizeDelta: {x: 161.2861, y: 41.7985}
+  m_AnchoredPosition: {x: -123.2, y: 55}
+  m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1997553243
 MonoBehaviour:
@@ -2134,7 +2134,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: deb90bc563b68d64681c434890517731, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
