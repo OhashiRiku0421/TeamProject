@@ -16,6 +16,9 @@ public class SceneSwitcher : MonoBehaviour, IPause
     private InputAction _anyKeyAction;
     private bool _isPause = false;
 
+    [SerializeField]
+    private int _min = 3;
+
     private void Awake()
     {
         if (_isAnyKeyPressed && !_isPause)
@@ -30,12 +33,19 @@ public class SceneSwitcher : MonoBehaviour, IPause
 
     public void SceneLoaded()
     {
+        if (_isPause) return;
         Invoke("SceneLoad", _waitTime);
         PlaySE();
     }
 
     private void SceneLoad()
     {
+        if (SceneManager.GetActiveScene().name == "LifeBetScene")
+        {
+            var r = Random.Range(_min, SceneManager.sceneCountInBuildSettings);
+            SceneManager.LoadScene(r);
+        }
+
         SceneManager.LoadScene(_sceneName);
     }
 

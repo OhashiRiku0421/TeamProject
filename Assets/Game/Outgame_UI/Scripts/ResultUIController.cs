@@ -8,8 +8,8 @@ using UnityEngine.InputSystem;
 
 public class ResultUIController : MonoBehaviour, IPause
 {
-    [SerializeField]
-    private GameObject[] _uiElements;
+    /// <summary>ゲーム全体の時間（秒）</summary>
+    private float _gameTime = 1200f;
 
     [SerializeField, Tooltip("手にいれたアイテムの数を表示するテキスト")]
     private Text _itemCountText;
@@ -55,13 +55,6 @@ public class ResultUIController : MonoBehaviour, IPause
         _keyPressAction.AddBinding("<Keyboard>/anyKey");
         _keyPressAction.performed += OnKeyPressed;
         _button.GetComponent<Button>().interactable = false;
-
-        //foreach (var obj in _uiElements)
-        //{
-        //    var c =  obj.GetComponent<Text>().color;
-        //    c.a = 0;
-        //    obj.
-        //}
     }
     void Start()
     {
@@ -73,35 +66,32 @@ public class ResultUIController : MonoBehaviour, IPause
         if (_isTest)
         {
             itemCount = 5;
-            _clearTime = 900;
-            betLife = 500;
+            _clearTime = 300;
+            betLife = 950;
             playerLife = 200;
         }
 
         int gainedLife = betLife * itemCount + playerLife;
-        ExternalLifeManager.TortalLife += gainedLife;
+        ExternalLifeManager.TotalLife += gainedLife;
         _lifeUntilClearText.text = 5000.ToString();
+        _clearTimeMin.text = (_gameTime / 60).ToString("00");
+        _clearTimeSec.text = (_gameTime % 60).ToString("00");
 
-        _textAndValue = new List<(Text, int)>() { (_itemCountText, itemCount), (_betLifeText, betLife), (_gainedLifeText, gainedLife), (_lifeGainedSoFarText, ExternalLifeManager.TortalLife) };
+        _textAndValue = new List<(Text, int)>() { (_itemCountText, itemCount), (_betLifeText, betLife), (_gainedLifeText, gainedLife), (_lifeGainedSoFarText, ExternalLifeManager.TotalLife) };
         
         UpdateTextValue(_textAndValue, 0);
-    }
-
-    private void FadeText(List<(Text, int)> data, int index)
-    {
-
     }
 
     private void UpdateTextValue(List<(Text, int)> data, int index)
     {
         // スコアの表示が終わったら時間の表示に移る
-        if (data.Count == index) StartCoroutine(UpdateClearTime(_clearTime));
+        if (data.Count == index) StartCoroutine(UpdateClearTime());
 
         Text text = data[index].Item1;
         int value = data[index].Item2;
 
         int temp = int.Parse(text.text);
-        text.DOCounter(temp, value, _durationTime).OnComplete(() => UpdateTextValue(data, ++index));
+        text.DOCounter(temp, value, _durationTime).SetEase(Ease.Linear).OnComplete(() => UpdateTextValue(data, ++index));
 
         if (DOTween.IsTweening(text) && _isSkip)
         {
@@ -112,30 +102,30 @@ public class ResultUIController : MonoBehaviour, IPause
         text.text = value.ToString();
     }
 
-    IEnumerator UpdateClearTime(float clearTime)
+    IEnumerator UpdateClearTime()
     {
         float count = 0;
-        int sec = 0;
-        int min = 0;
-        float interval = _durationTime / clearTime;
+        int sec = (int)Math.Floor(_gameTime % 60);
+        int min = (int)Math.Floor(_gameTime / 60);
+        float interval = _durationTime / (_gameTime - _clearTime);
 
         while (_durationTime >= count && !_isSkip)
         {
-            count += interval;
-            _clearTimeSec.text = sec++.ToString("00");
-
-            if (sec >= 60)
+            if (sec <= 0)
             {
-                min++;
-                _clearTimeMin.text = min.ToString("00");
-                sec = 0;
+                min--;
+                _clearTimeMin.text = (min).ToString("00");
+                sec = 60;
             }
+
+            count += interval;
+            _clearTimeSec.text = (sec--).ToString("00");
 
             yield return null;
         }
 
-        _clearTimeMin.text = (Math.Floor(clearTime / 60)).ToString("00");
-        _clearTimeSec.text = (Math.Floor(clearTime % 60)).ToString("00");
+        _clearTimeMin.text = (Math.Floor(_clearTime / 60)).ToString("00");
+        _clearTimeSec.text = (Math.Floor(_clearTime % 60)).ToString("00");
         _button.GetComponent<Button>().interactable = true;
     }
 
@@ -158,6 +148,7 @@ public class ResultUIController : MonoBehaviour, IPause
     {
         _isPause = false;
     }
+
     public void Pause()
     {
         _isPause = true;
