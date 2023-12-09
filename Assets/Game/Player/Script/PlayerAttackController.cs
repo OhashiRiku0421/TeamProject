@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.VFX;
 
-public class PlayerAttackController : MonoBehaviour
+public class PlayerAttackController : MonoBehaviour, IPause
 {
     [FormerlySerializedAs("_normalAttackDamage")] [SerializeField, Tooltip("近距離攻撃の攻撃力")]
     private float _closeRangeAttackDamage = 10F;
@@ -99,6 +99,8 @@ public class PlayerAttackController : MonoBehaviour
         remove => _onIsAttackAnimationChanged -= value;
     }
 
+    private bool _isPause = false;
+
     private void Start()
     {
         ResetAttackPattern();
@@ -106,11 +108,13 @@ public class PlayerAttackController : MonoBehaviour
 
     private void OnEnable()
     {
+        PauseSystem.Instance.Register(this);
         CustomInputManager.Instance.PlayerInputActions.Player.Attack.started += Attack;
     }
 
     private void OnDisable()
     {
+        PauseSystem.Instance.Unregister(this);
         CustomInputManager.Instance.PlayerInputActions.Player.Attack.started -= Attack;
     }
 
@@ -118,13 +122,16 @@ public class PlayerAttackController : MonoBehaviour
     /// <param name="context">コールバック</param>
     private void Attack(InputAction.CallbackContext context)
     {
-        if (CurrentAttackInput < _attackBufferedInput)
+        if(!_isPause)
         {
-            CurrentAttackInput++;
-            _onCurrentAttackInputChanged?.Invoke(CurrentAttackInput);
-        }
+            if (CurrentAttackInput < _attackBufferedInput)
+            {
+                CurrentAttackInput++;
+                _onCurrentAttackInputChanged?.Invoke(CurrentAttackInput);
+            }
 
-        IsAttackAnimation = true;
+            IsAttackAnimation = true;
+        }
     }
 
     //アニメーションイベントで呼んでいる
@@ -191,5 +198,15 @@ public class PlayerAttackController : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.matrix = _closeAttackEreaCenter.localToWorldMatrix;
         Gizmos.DrawWireCube(Vector3.zero, _closeRangeAttackHalfExtant * 2F);
+    }
+
+    public void Pause()
+    {
+        _isPause = true;
+    }
+
+    public void Resume()
+    {
+        _isPause = false;
     }
 }

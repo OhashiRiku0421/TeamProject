@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 
-public class PlayerAvoidController : MonoBehaviour
+public class PlayerAvoidController : MonoBehaviour, IPause
 {
     [SerializeField, Tooltip("回避距離")] private float _avoidDistance = 3.0F;
 
@@ -14,6 +14,8 @@ public class PlayerAvoidController : MonoBehaviour
     
     /// <summary>現在回避中かどうか</summary>
     private bool _isAvoiding = false;
+
+    private bool _isPause = false;
 
     /// <summary>現在回避中かどうか</summary>
     public bool IsAvoiding
@@ -44,12 +46,14 @@ public class PlayerAvoidController : MonoBehaviour
 
     private void OnEnable()
     {
+        PauseSystem.Instance.Register(this);
         CustomInputManager.Instance.PlayerInputActions.Player.Avoid.started += InputAvoiding;
         CustomInputManager.Instance.PlayerInputActions.Player.Avoid.canceled += CancelInputAvoiding;
     }
 
     private void OnDisable()
     {
+        PauseSystem.Instance.Unregister(this);
         CustomInputManager.Instance.PlayerInputActions.Player.Avoid.started -= InputAvoiding;
         CustomInputManager.Instance.PlayerInputActions.Player.Avoid.canceled -= CancelInputAvoiding;
     }
@@ -58,12 +62,15 @@ public class PlayerAvoidController : MonoBehaviour
     /// <param name="context">コールバック</param>
     private void InputAvoiding(InputAction.CallbackContext context)
     {
-        IsAvoiding = true;
+        if(!_isPause)
+        {
+            IsAvoiding = true;
+        }
     }
 
     private void CancelInputAvoiding(InputAction.CallbackContext context)
     {
-        if (!_isTweening)
+        if (!_isTweening && !_isPause)
         {
             IsAvoiding = false;
         }
@@ -80,5 +87,15 @@ public class PlayerAvoidController : MonoBehaviour
                 IsAvoiding = false;
             });
         CriAudioManager.Instance.SE.Play("SE", "SE_Player_Avoid");
+    }
+
+    public void Pause()
+    {
+        _isPause = true;
+    }
+
+    public void Resume()
+    {
+        _isPause = false;
     }
 }

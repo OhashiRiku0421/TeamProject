@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-public class PlayerMoveController : MonoBehaviour
+public class PlayerMoveController : MonoBehaviour, IPause
 {
     [SerializeField, Tooltip("通常時の移動のスピード")]
     private float _moveSpeed = 5F;
@@ -30,6 +30,12 @@ public class PlayerMoveController : MonoBehaviour
     private float _timer = 0.0F;
 
     private Rigidbody _rb = default;
+
+    private bool _isPause = false;
+
+    private Vector3 _velocity;
+
+    private Vector3 _angularVelocity;
 
     /// <summary>入力された方向</summary>
     public Vector2 InputDir { get; private set; }
@@ -107,6 +113,8 @@ public class PlayerMoveController : MonoBehaviour
 
         CustomInputManager.Instance.PlayerInputActions.Player.Jump.started += JumpInput;
         CustomInputManager.Instance.PlayerInputActions.Player.Jump.canceled += CancelJumpInput;
+
+        PauseSystem.Instance.Register(this);
     }
 
     private void OnDisable()
@@ -118,6 +126,8 @@ public class PlayerMoveController : MonoBehaviour
 
         CustomInputManager.Instance.PlayerInputActions.Player.Jump.started -= JumpInput;
         CustomInputManager.Instance.PlayerInputActions.Player.Jump.canceled -= CancelJumpInput;
+
+        PauseSystem.Instance.Unregister(this);
     }
 
     /// <summary>MoveStateのFixedUpdate時に呼び出される</summary>
@@ -210,8 +220,11 @@ public class PlayerMoveController : MonoBehaviour
     /// <param name="callback">コールバック</param>
     private void DirUpdate(InputAction.CallbackContext callback)
     {
-        InputDir = callback.ReadValue<Vector2>();
-        CurrentSqrtSpeed = InputDir.sqrMagnitude;
+        if(!_isPause)
+        {
+            InputDir = callback.ReadValue<Vector2>();
+            CurrentSqrtSpeed = InputDir.sqrMagnitude;
+        }
     }
 
     private void PlayMoveSE()
@@ -240,14 +253,14 @@ public class PlayerMoveController : MonoBehaviour
     /// <param name="context">コールバック</param>
     private void JumpInput(InputAction.CallbackContext context)
     {
-        IsJumping = true;
+        if(!_isPause) IsJumping = true;
     }
 
     /// <summary>ジャンプの入力が解除された際の処理</summary>
     /// <param name="context">コールバック</param>
     private void CancelJumpInput(InputAction.CallbackContext context)
     {
-        if (_isGround)
+        if (_isGround && !_isPause)
         {
             IsJumping = false;
         }
@@ -277,5 +290,21 @@ public class PlayerMoveController : MonoBehaviour
 
             CriAudioManager.Instance.SE.Play("SE", "SE_Player_Jump_ed");
         }
+    }
+
+    public void Pause()
+    {
+        _isPause = true;
+        _velocity = _rb.velocity;
+        _angularVelocity = _rb.angularVelocity;
+        _rb.isKinematic = true;
+    }
+
+    public void Resume()
+    {
+        _isPause = false;
+        _rb.isKinematic = false;
+        _rb.velocity = _velocity;
+        _rb.angularVelocity = _angularVelocity;
     }
 }
