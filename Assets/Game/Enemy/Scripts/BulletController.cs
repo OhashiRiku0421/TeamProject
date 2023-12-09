@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
-public class BulletController : MonoBehaviour
+public class BulletController : MonoBehaviour, IPause
 {
 
     [SerializeField]
@@ -15,8 +16,15 @@ public class BulletController : MonoBehaviour
 
     private Rigidbody _rb;
 
+    private CancellationTokenSource _cancell = new();
+
+    private Vector3 _velocity;
+
+    private Vector3 _angularVelocity;
+
     private void Start()
     {
+        PauseSystem.Instance.Register(this);
         Interval().Forget();
     }
 
@@ -28,8 +36,7 @@ public class BulletController : MonoBehaviour
 
     private async UniTask Interval()
     {
-        var token = this.GetCancellationTokenOnDestroy();
-        await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken : token);
+        await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken : _cancell.Token);
         Destroy(gameObject);
     }
 
@@ -40,5 +47,28 @@ public class BulletController : MonoBehaviour
             damage.SendDamage(_attackPower);
             Destroy(gameObject);
         }
+    }
+
+    private void OnDestroy()
+    {
+        PauseSystem.Instance.Unregister(this);
+        _cancell?.Cancel();
+    }
+
+    public void Pause()
+    {
+        _velocity = _rb.velocity;
+        _angularVelocity = _rb.angularVelocity;
+        _rb.isKinematic = true;
+        _cancell?.Cancel();
+        _cancell = new();
+    }
+
+    public void Resume()
+    {
+        _rb.isKinematic = false;
+        _rb.velocity = _velocity;
+        _rb.angularVelocity = _angularVelocity;
+        Interval().Forget();
     }
 }
