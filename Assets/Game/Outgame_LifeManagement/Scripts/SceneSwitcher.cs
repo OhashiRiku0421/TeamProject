@@ -2,7 +2,7 @@
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class SceneSwitcher : MonoBehaviour
+public class SceneSwitcher : MonoBehaviour, IPause
 {
     [SerializeField, Tooltip("任意のキーを入力したらシーンが変わるようにするフラグ")]
     private bool _isAnyKeyPressed = false;
@@ -14,13 +14,15 @@ public class SceneSwitcher : MonoBehaviour
     private float _waitTime = 0.666f; // セレクトSEがなり終わるまでの時間を初期値として設定している
 
     private InputAction _anyKeyAction;
+    private bool _isPause = false;
 
     private void Awake()
     {
-        if (_isAnyKeyPressed)
+        if (_isAnyKeyPressed && !_isPause)
         {
             _anyKeyAction = new InputAction("AnyKey", InputActionType.Button);
             _anyKeyAction.AddBinding("<mouse>/press");
+            _anyKeyAction.AddBinding("<mouse>/rightButton");
             _anyKeyAction.AddBinding("<Keyboard>/anyKey");
             _anyKeyAction.performed += OnAnyKeyPressed;
         }
@@ -28,8 +30,8 @@ public class SceneSwitcher : MonoBehaviour
 
     public void SceneLoaded()
     {
-        PlaySE();
         Invoke("SceneLoad", _waitTime);
+        PlaySE();
     }
 
     private void SceneLoad()
@@ -41,6 +43,17 @@ public class SceneSwitcher : MonoBehaviour
     {
         CriAudioManager.Instance.SE.Play("SE", "SE_System_Select");
     }
+
+    public void Pause()
+    {
+        _isPause = true;
+    }
+
+    public void Resume()
+    {
+        _isPause = false;
+    }
+
 
     private void OnAnyKeyPressed(InputAction.CallbackContext callback)
     {
