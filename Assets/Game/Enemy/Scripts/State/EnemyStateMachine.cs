@@ -36,8 +36,6 @@ public class EnemyStateMachine
 
     public EnemyPatrolState Patrol => _patrol;
 
-    public IState State => _state;
-
     public void Set(EnemyController enemyController)
     {
         _shortAttack.SetEnemy(enemyController);

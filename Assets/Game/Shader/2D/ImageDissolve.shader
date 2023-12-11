@@ -3,6 +3,16 @@ Shader "Custom/ImageDissolveOutline"
     Properties
     {
         [PerRendererData] _MainTex ("Texture", 2D) = "white" {}
+        [Space(20)]
+        [Header(Outline)]
+        _OutlineRange ("Range", Range(0.0, 1.0)) = 0.0
+        [HDR]_OutlineColor ("Color", Color) = (1, 1, 0, 1)
+        [Space(20)]
+        [Header(Dissolve)]
+        _DissolveTex ("Texture", 2D) = "white" {}
+        _DissolveAmount ("Amount", Range(0.0, 1.0)) = 0.2
+        [HDR]_DissolveColor ("Color", Color) = (1.2, 0, 1.2,1)
+        _ScrollSpeed("ScrollSpeed", Vector) = (1, 1, 0, 0)
     }
     SubShader
     {
@@ -11,6 +21,8 @@ Shader "Custom/ImageDissolveOutline"
 
         Pass
         {
+            Blend SrcAlpha OneMinusSrcAlpha
+            
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -32,6 +44,7 @@ Shader "Custom/ImageDissolveOutline"
             {
                 float4 positionHCS : SV_POSITION;
                 float2 texCoord : TEXCOORD0;
+                float2 dissolveTexcoord : TEXCOORD1;
                 half4 vertColor : COLOR;
             };
 
@@ -52,9 +65,10 @@ Shader "Custom/ImageDissolveOutline"
             half4 _OutlineColor;
             
             // Dissolve
+            float4 _DissolveTex_ST;
             float _DissolveAmount;
-            float _DissolveRange;
             half4 _DissolveColor;
+            half4 _ScrollSpeed;
             
             CBUFFER_END
 
@@ -64,6 +78,7 @@ Shader "Custom/ImageDissolveOutline"
 
                 output.positionHCS = TransformObjectToHClip(input.positionOS.xyz);
                 output.texCoord = TRANSFORM_TEX(input.texcoord, _MainTex);
+                output.dissolveTexcoord = TRANSFORM_TEX(input.texcoord, _DissolveTex) + _Time.xx * _ScrollSpeed.xy;
                 output.vertColor = input.vertColor;
 
                 return output;
@@ -71,7 +86,22 @@ Shader "Custom/ImageDissolveOutline"
 
             half4 frag (Varyings input) : SV_Target
             {
-                return _OutlineColor;
+                half alpha = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, float2(input.texCoord.x + _OutlineRange / 10, input.texCoord.y)).a +
+                    SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, float2(input.texCoord.x, input.texCoord.y + _OutlineRange / 10)).a +
+                    SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, float2(input.texCoord.x - _OutlineRange / 10, input.texCoord.y)).a +
+                    SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, float2(input.texCoord.x, input.texCoord.y - _OutlineRange / 10)).a;
+
+                alpha = saturate(alpha);
+
+                half dissolve = SAMPLE_TEXTURE2D(_DissolveTex, sampler_DissolveTex, input.dissolveTexcoord).r;
+
+                half4 col = dissolve < _DissolveAmount ? half4(_OutlineColor.rgb, alpha) : half4(_DissolveColor.rgb, alpha);
+
+                half4 overCol = (SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.texCoord) + _TextureSampleAdd) * input.vertColor;
+
+                col = overCol.a > 0.0 ? overCol : col;
+                
+                return col;
             }
             
             ENDHLSL

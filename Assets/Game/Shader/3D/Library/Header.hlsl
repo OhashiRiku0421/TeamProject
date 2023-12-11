@@ -146,6 +146,7 @@ float4 _NormalMap_ST;
 float _NormalMapScale;
 float _Metallic;
 float _Smoothness;
+half3 _EmissiveColor;
 
 // カーブ関係
 float _CurveOffset;
