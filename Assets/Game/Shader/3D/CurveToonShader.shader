@@ -7,6 +7,7 @@ Shader "Custom/CurveToonShader"
         [Normal] _NormalMap("Normal Map", 2D) = "bump" {}
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.0
+        [HDR]_EmissiveColor ("EmissiveColor", Color) = (0.0, 0.0, 0.0, 1.0)
         
         [Space(20)]
         [Header(Vertex Curve)]
@@ -24,7 +25,7 @@ Shader "Custom/CurveToonShader"
         [KeywordEnum(Normal_Used, Color_Used)] _Custom_Outline_Vertex("UseNormalType", Int) = 0
         [IntRange]_OutlineStencilRef ("Stencil Ref", Range(0, 255)) = 1
         [Header(Outline Param)]
-        [HDR] _OutlineColor ("Color", Color) = (0.1, 0.0, 0.0, 1)
+        [HDR] _OutlineColor ("Color", Color) = (0.0, 0.0, 0.0, 1)
         _OutlineWidth ("Width", Range(0.0, 0.1)) = 0.5
     }
     SubShader
