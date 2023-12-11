@@ -21,17 +21,14 @@ public class EnemyMove
 
     private EnemyData _data;
 
-    private IdleType _idleType;
-
     public void Init(Transform transform, Transform playerTransform,
-        NavMeshAgent agent, Animator anim, EnemyData data, IdleType idleType)
+        NavMeshAgent agent, Animator anim, EnemyData data)
     {
         _transform = transform;
         _playerTransform = playerTransform;
         _agent = agent;
         _anim = anim;
         _data = data;
-        _idleType = idleType;
     }
 
     /// <summary>
@@ -90,21 +87,11 @@ public class EnemyMove
 
     public void Patrol()
     {
-        if (_patrolPoints.Length == 0 || _patrolPoints[_destPoint] == null)
-        {
-            Debug.LogError("巡回するルートが見つかりません");
-            return;
-        }
-        _agent.destination = _patrolPoints[_destPoint].position;
-        _destPoint = (_destPoint + 1) % _patrolPoints.Length;
-    }
+        if (_patrolPoints.Length == 0) return;
 
-    public void ResumePatrol()
-    {
-        if(_idleType == IdleType.Patrol)
-        {
-            _agent.destination = _patrolPoints[_destPoint].position;
-        }
+        _agent.destination = _patrolPoints[_destPoint].position;
+
+        _destPoint = (_destPoint + 1) % _patrolPoints.Length;
     }
 
     public void SetMoveSpeed()
