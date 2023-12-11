@@ -42,7 +42,7 @@ half4 frag(Varyings input) : SV_Target
     half4 col = SAMPLE_TEXTURE2D(_BaseMap, CUSTOM_TOON_SAMPLER_STATE_LINEAR_REPEAT, mainTexUV) * _BaseColor;
     surfaceData.albedo = col.rgb;
     surfaceData.alpha = col.a;
-    surfaceData.emission = 0.0H;
+    surfaceData.emission = _EmissiveColor;
     surfaceData.metallic = _Metallic;
     surfaceData.occlusion = 1.0H;
     surfaceData.smoothness = _Smoothness;
