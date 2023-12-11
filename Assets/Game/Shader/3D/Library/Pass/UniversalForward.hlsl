@@ -5,6 +5,7 @@
 #include "../Include.hlsl"
 #include "../Header.hlsl"
 #include "../Macro.hlsl"
+#include "../ToonLighting.hlsl"
 
 Varyings vert(Attributes input)
 {
@@ -69,7 +70,7 @@ half4 frag(Varyings input) : SV_Target
     inputData.shadowCoord = float4(0, 0, 0, 0);
     #endif
 
-    half4 color = UniversalFragmentPBR(inputData, surfaceData);
+    half4 color = CustomToonFragmentLighting(inputData, surfaceData);
 
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     

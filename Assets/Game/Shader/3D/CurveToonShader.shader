@@ -10,6 +10,22 @@ Shader "Custom/CurveToonShader"
         [HDR]_EmissiveColor ("EmissiveColor", Color) = (0.0, 0.0, 0.0, 1.0)
         
         [Space(20)]
+        [Header(Shade1)]
+        _Shade1Color ("Color", Color) = (0.9, 0.9, 0.9, 1.0)
+        _Shade1Amount ("Amount", Range(0.0, 1.0)) = 0.5
+        
+        [Space(20)]
+        [Header(Shade2)]
+        _Shade2Color ("Color", Color) = (0.8, 0.8, 0.8, 1.0)
+        _Shade2Amount ("Amount", Range(0.0, 1.0)) = 0.5
+        
+        [Space(20)]
+        [Header(Rim)]
+        _RimPower ("Power", Range(0.01, 5.0)) = 1
+        _RimColor ("Color", Color) = (1.0, 1.0, 0.0, 1.0)
+        _RimStrength ("Strength", Range(0.0, 1.0)) = 0.5
+        
+        [Space(20)]
         [Header(Vertex Curve)]
         [Toggle(_CUSTOM_TOON_CURVED)] _CUSTOM_TOON_CURVED("Curve Enable", float) = 1
         _CurveOffset ("Curve Offset", float) = 5

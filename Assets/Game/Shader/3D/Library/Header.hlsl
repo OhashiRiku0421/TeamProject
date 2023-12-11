@@ -148,6 +148,18 @@ float _Metallic;
 float _Smoothness;
 half3 _EmissiveColor;
 
+// Shade1
+half4 _Shade1Color;
+float _Shade1Amount;
+// Shade2
+half4 _Shade2Color;
+float _Shade2Amount;
+
+// Rim
+float _RimPower;
+half4 _RimColor;
+float _RimStrength;
+
 // カーブ関係
 float _CurveOffset;
 float _CurveFactor;
