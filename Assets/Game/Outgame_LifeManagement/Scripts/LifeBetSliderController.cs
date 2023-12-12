@@ -9,15 +9,14 @@ public class LifeBetSliderController : MonoBehaviour, IPause
     [SerializeField, Tooltip("スライダーの値に掛ける数")]
     private int _betLife = 50;
 
-    [SerializeField, Tooltip("ライフの最大値")]
-    private int _maxLife = 1000;
+    [SerializeField, Tooltip("プレイヤーの最大ライフ値")]
+    private int _maxPlayerLife = 1000;
 
-    /// <summary>
-    /// 体力の最大数を1000としてベットしたライフの残りをプレイヤーのライフにし、プレイヤーとインゲームシステムに渡す</summary>
+    /// <summary>ベットしたライフの残りをプレイヤーのライフに設定し、残りをインゲームシステムに渡す</summary>
     public void UpdateLife()
     {
         int playerLife = (int)_betSlider.value * _betLife;
-        int betLife = _maxLife - playerLife;
+        int betLife = _maxPlayerLife - playerLife;
         ExternalLifeManager.Life = playerLife;
         ScoreSystem.SetLife(playerLife, betLife);
 

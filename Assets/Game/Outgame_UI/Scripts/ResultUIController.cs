@@ -42,10 +42,13 @@ public class ResultUIController : MonoBehaviour, IPause
     private bool _isTest = false;
 
     private InputAction _keyPressAction;
-    [SerializeField]
+
+    [SerializeField, Tooltip("ライフベットシーンに行くためのボタン")]
     private GameObject _button;
+
     private bool _isSkip = false;
     private bool _isPause = false;
+    Tweener _tweener;
 
     private void Awake()
     {
@@ -77,7 +80,13 @@ public class ResultUIController : MonoBehaviour, IPause
         _clearTimeMin.text = (_gameTime / 60).ToString("00");
         _clearTimeSec.text = (_gameTime % 60).ToString("00");
 
-        _textAndValue = new List<(Text, int)>() { (_itemCountText, itemCount), (_betLifeText, betLife), (_gainedLifeText, gainedLife), (_lifeGainedSoFarText, ExternalLifeManager.TotalLife) };
+        _textAndValue = new List<(Text, int)>() 
+        { 
+            (_itemCountText, itemCount), 
+            (_betLifeText, betLife), 
+            (_gainedLifeText, gainedLife), 
+            (_lifeGainedSoFarText, ExternalLifeManager.TotalLife)
+        };
         
         UpdateTextValue(_textAndValue, 0);
     }
@@ -85,21 +94,23 @@ public class ResultUIController : MonoBehaviour, IPause
     private void UpdateTextValue(List<(Text, int)> data, int index)
     {
         // スコアの表示が終わったら時間の表示に移る
-        if (data.Count == index) StartCoroutine(UpdateClearTime());
+        if (data.Count == index)
+        {
+            StartCoroutine(UpdateClearTime());
+            return;
+        }
 
         Text text = data[index].Item1;
         int value = data[index].Item2;
 
         int temp = int.Parse(text.text);
-        text.DOCounter(temp, value, _durationTime).SetEase(Ease.Linear).OnComplete(() => UpdateTextValue(data, ++index));
+        _tweener = text.DOCounter(temp, value, _durationTime).SetEase(Ease.Linear).OnComplete(() => UpdateTextValue(data, ++index));
 
         if (DOTween.IsTweening(text) && _isSkip)
         {
             text.DOComplete();
             UpdateTextValue(data, ++index);
         }
-
-        text.text = value.ToString();
     }
 
     IEnumerator UpdateClearTime()
@@ -109,29 +120,31 @@ public class ResultUIController : MonoBehaviour, IPause
         int min = (int)Math.Floor(_gameTime / 60);
         float interval = _durationTime / (_gameTime - _clearTime);
 
-        while (_durationTime >= count && !_isSkip)
+        while (_durationTime > count && !_isSkip)
         {
             if (sec <= 0)
             {
                 min--;
-                _clearTimeMin.text = (min).ToString("00");
-                sec = 60;
+                sec = 59;
             }
 
+            _clearTimeMin.text = min.ToString("00");
+            _clearTimeSec.text = sec.ToString("00");
+            sec--;
             count += interval;
-            _clearTimeSec.text = (sec--).ToString("00");
 
-            yield return null;
+            yield return new WaitUntil(() => { return _isPause ? false : true; });
         }
 
         _clearTimeMin.text = (Math.Floor(_clearTime / 60)).ToString("00");
         _clearTimeSec.text = (Math.Floor(_clearTime % 60)).ToString("00");
+
         _button.GetComponent<Button>().interactable = true;
     }
 
     public void OnKeyPressed(InputAction.CallbackContext context)
     {
-        _isSkip = true;
+        // _isSkip = true;
         Debug.Log("IsSkip");
     }
     private void OnEnable()
@@ -147,10 +160,12 @@ public class ResultUIController : MonoBehaviour, IPause
     public void Resume()
     {
         _isPause = false;
+        _tweener?.Play();
     }
 
     public void Pause()
     {
         _isPause = true;
+        _tweener?.Pause();
     }
 }

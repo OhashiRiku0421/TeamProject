@@ -1704,8 +1704,9 @@ MonoBehaviour:
   _clearTimeMin: {fileID: 703289910}
   _clearTimeSec: {fileID: 372262685}
   _durationTime: 1
-  _isTest: 0
+  _isTest: 1
   _button: {fileID: 1997553241}
+  _isPause: 0
 --- !u!114 &1621032670
 MonoBehaviour:
   m_ObjectHideFlags: 0

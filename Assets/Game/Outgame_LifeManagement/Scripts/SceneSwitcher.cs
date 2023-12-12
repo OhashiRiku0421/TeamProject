@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitcher : MonoBehaviour, IPause
 {
-    [SerializeField, Tooltip("任意のキーを入力したらシーンが変わるようにするフラグ")]
+    [SerializeField, Tooltip("任意のキーが入力されたらシーンが変わるようにするフラグ")]
     private bool _isAnyKeyPressed = false;
 
     [SerializeField, Tooltip("遷移したいシーンの名前")]
@@ -16,7 +16,7 @@ public class SceneSwitcher : MonoBehaviour, IPause
     private InputAction _anyKeyAction;
     private bool _isPause = false;
 
-    [SerializeField]
+    [SerializeField, Tooltip("インゲームシーンの最小インデックス")]
     private int _min = 3;
 
     private void Awake()
