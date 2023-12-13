@@ -54,6 +54,10 @@
 #endif
 
 #if defined(CUSTOM_TOON_PASS_UNIVERSAL_FORWARD)
+    #define CUSTOM_TOON_VARY_POSITION_SS_ON
+#endif
+
+#if defined(CUSTOM_TOON_PASS_UNIVERSAL_FORWARD)
     #define CUSTOM_TOON_VARY_LIGHTMAP_OR_SH_ON
 #endif
 
@@ -120,9 +124,12 @@ struct Varyings
 #if defined(CUSTOM_TOON_VARY_VERTEX_LIGHT_ON)
     half3 vertexLight : TEXCOORD6;
 #endif
-
+#if defined(CUSTOM_TOON_VARY_POSITION_SS_ON)
+    float4 positionSS : TEXCOORD7;
+#endif
+    
 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-    float4 shadowCoord : TEXCOORD7;
+    float4 shadowCoord : TEXCOORD8;
 #endif
 #if defined(CUSTOM_TOON_VARY_LIGHTMAP_OR_SH_ON)
     DECLARE_LIGHTMAP_OR_SH(lightmapUV, vertexSH, 9);

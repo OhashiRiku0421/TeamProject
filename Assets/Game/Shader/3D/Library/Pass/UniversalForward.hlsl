@@ -29,6 +29,7 @@ Varyings vert(Attributes input)
     OUTPUT_SH(output.normalWS, output.vertexSH);
     output.fogFactor = ComputeFogFactor(output.positionHCS.z);
     output.vertexLight = VertexLighting(output.positionWS, output.normalWS);
+    output.positionSS = ComputeScreenPos(output.positionHCS);
     
     return output;
 }
@@ -51,6 +52,10 @@ half4 frag(Varyings input) : SV_Target
     surfaceData.clearCoatMask = 0.0H;
     surfaceData.clearCoatSmoothness = 0.0H;
 
+//#if defined(_CUSTOM_TOON_DITHER_ON)
+    DitherTest(input.positionSS, col.a);
+//#endif
+    
     // InputDataを作成
     InputData inputData = (InputData)0;
     inputData.positionWS = input.positionWS;
