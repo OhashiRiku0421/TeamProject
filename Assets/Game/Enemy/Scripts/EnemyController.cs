@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour, IDamage, IPause
+public class EnemyController : MonoBehaviour, IDamage
 {
     [SerializeField]
     private EnemyStateMachine _stateMachine = new();
@@ -37,10 +37,6 @@ public class EnemyController : MonoBehaviour, IDamage, IPause
 
     private NavMeshAgent _agent;
 
-    private float _animSpeed;
-
-    private bool _isPause = false;
-
     public EnemyStateMachine StateMachine => _stateMachine;
 
     public Transform PlayerTransform => _playerTransform;
@@ -59,6 +55,7 @@ public class EnemyController : MonoBehaviour, IDamage, IPause
 
     public EnemyData Data => _data;
 
+    //public Animator Anim => _anim;
     public Animator Anim { get => _anim; set => _anim = value; }
 
 
@@ -67,12 +64,11 @@ public class EnemyController : MonoBehaviour, IDamage, IPause
         _rb = GetComponent<Rigidbody>();
         _agent = GetComponent<NavMeshAgent>();
         _stateMachine.Set(this);
-        PauseSystem.Instance.Register(this);
     }
 
     private void Start()
     {
-        _enemyMove.Init(transform, _playerTransform, _agent, _anim, _data, _idleType);
+        _enemyMove.Init(transform, _playerTransform, _agent, _anim, _data);
         _enemyAttack.Init(transform, _anim, _data);
 
         if (_idleType == IdleType.Normal)
@@ -87,15 +83,7 @@ public class EnemyController : MonoBehaviour, IDamage, IPause
 
     private void Update()
     {
-        if(!_isPause)
-        {
-            _stateMachine.Update();
-        }
-    }
-
-    private void OnDestroy()
-    {
-        PauseSystem.Instance.Unregister(this);
+        _stateMachine.Update();
     }
 
     public void SendDamage(float damage)
@@ -123,24 +111,6 @@ public class EnemyController : MonoBehaviour, IDamage, IPause
         else
         {
             Gizmos.DrawRay(transform.position, transform.forward * _data.LongAttackRange);
-        }
-    }
-
-    public void Pause()
-    {
-        _animSpeed = _anim.speed;
-        _anim.speed = 0;
-        _isPause = true;
-        _enemyMove.MoveStop();
-    }
-
-    public void Resume()
-    {
-        _anim.speed = _animSpeed;
-        _isPause = false;
-        if (_stateMachine.State == _stateMachine.Patrol)
-        {
-            _enemyMove.ResumePatrol();
         }
     }
 }

@@ -3,7 +3,22 @@ guid: 90abb6e4f32f08640bde86f1c78c1bf8
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ChMT_Eye_01
+    second: {fileID: 2100000, guid: cd8f0ea3acb750f458fcac8a4818887f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ChMT_basebody_01
+    second: {fileID: 2100000, guid: 985de90e05005484bacae4c2de02b217, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ChTX_basebody_02
+    second: {fileID: 2100000, guid: fc0c8cda99bca154f83be9c741276a64, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

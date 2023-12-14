@@ -10,6 +10,27 @@ Shader "Custom/CurveToonShader"
         [HDR]_EmissiveColor ("EmissiveColor", Color) = (0.0, 0.0, 0.0, 1.0)
         
         [Space(20)]
+        [Header(Dithering)]
+        [Toggle(_CUSTOM_TOON_DITHER_ON)] _CUSTOM_TOON_DITHER_ON("Dithering Enable", float) = 1
+        
+        
+        [Space(20)]
+        [Header(Shade1)]
+        _Shade1Color ("Color", Color) = (0.9, 0.9, 0.9, 1.0)
+        _Shade1Amount ("Amount", Range(0.0, 1.0)) = 0.5
+        
+        [Space(20)]
+        [Header(Shade2)]
+        _Shade2Color ("Color", Color) = (0.8, 0.8, 0.8, 1.0)
+        _Shade2Amount ("Amount", Range(0.0, 1.0)) = 0.5
+        
+        [Space(20)]
+        [Header(Rim)]
+        _RimPower ("Power", Range(0.01, 5.0)) = 1
+        _RimColor ("Color", Color) = (1.0, 1.0, 0.0, 1.0)
+        _RimStrength ("Strength", Range(0.0, 1.0)) = 0.5
+        
+        [Space(20)]
         [Header(Vertex Curve)]
         [Toggle(_CUSTOM_TOON_CURVED)] _CUSTOM_TOON_CURVED("Curve Enable", float) = 1
         _CurveOffset ("Curve Offset", float) = 5
@@ -30,7 +51,6 @@ Shader "Custom/CurveToonShader"
     }
     SubShader
     {
-        // TODO: とりあえずPBRで作ってToonに変更する
         Tags
         {
             "RenderType" = "Opaque"
@@ -76,6 +96,7 @@ Shader "Custom/CurveToonShader"
 
             // Custom Keyword
             #pragma multi_compile _ _CUSTOM_TOON_CURVED
+            #pragma multi_compile _ _CUSTOM_TOON_DITHER_ON;
             #define CUSTOM_TOON_PASS_UNIVERSAL_FORWARD
 
             #include "Library/Pass/UniversalForward.hlsl"
@@ -145,6 +166,7 @@ Shader "Custom/CurveToonShader"
             // Custom Keyword
             #pragma multi_compile _ _CUSTOM_TOON_CURVED
             #pragma multi_compile _CUSTOM_OUTLINE_VERTEX_NORMAL_USED _CUSTOM_OUTLINE_VERTEX_COLOR_USED
+            #pragma multi_compile _ _CUSTOM_TOON_DITHER_ON;
             #define CUSTOM_TOON_PASS_OUTLINE
 
             #include "Library/Pass/Outline.hlsl"

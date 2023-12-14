@@ -1,8 +1,11 @@
-Shader "Unlit/ImageTwirl"
+Shader "Custom/ImageTwirl"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        [PerRendererData]_MainTex ("Texture", 2D) = "white" {}
+        [Space(20)]
+        [Header(Twirl)]
+        _TwirlStrength ("Strength", Float) = 1
     }
     SubShader
     {
@@ -11,46 +14,59 @@ Shader "Unlit/ImageTwirl"
 
         Pass
         {
+            Blend SrcAlpha OneMinusSrcAlpha
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             // make fog work
             #pragma multi_compile_fog
 
-            #include "UnityCG.cginc"
-
-            struct appdata
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Library/Twirl.hlsl"
+            
+            struct Attributes
             {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
+                float4 positionOS : POSITION;
+                float2 texcoord : TEXCOORD0;
+                half4 vertColor : COLOR;
             };
 
-            struct v2f
+            struct Varyings
             {
-                float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
-                float4 vertex : SV_POSITION;
+                float4 positionHCS : SV_POSITION;
+                float2 texcoord : TEXCOORD0;
+                half4 vertColor : COLOR;
             };
 
-            sampler2D _MainTex;
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+
+            CBUFFER_START(UnityPerMaterial)
             float4 _MainTex_ST;
+            half4 _TextureSampleAdd;
 
-            v2f vert (appdata v)
+            // TwirlParam
+            float _TwirlStrength;
+            
+            CBUFFER_END
+
+            Varyings vert (Attributes input)
             {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
-                return o;
+                Varyings output = (Varyings)0;
+
+                output.positionHCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.texcoord = TRANSFORM_TEX(input.texcoord, _MainTex);
+                output.vertColor = input.vertColor;
+                
+                return output;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            half4 frag (Varyings input) : SV_Target
             {
-                // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
-                // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, col);
-                return col;
+                float2 uv = Twirl(input.texcoord, float2(0.5F, 0.5F), _TwirlStrength, 0);
+                
+                half4 color = (SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv) + _TextureSampleAdd) * input.vertColor;
+                return color;
             }
             ENDHLSL
         }

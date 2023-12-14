@@ -20,4 +20,9 @@
     #include "VertexCurve.hlsl"
 #endif
 
+//#if defined(_CUSTOM_TOON_DITHER_ON)
+    #include "Dithering.hlsl"
+//#endif
+
+
 #endif
