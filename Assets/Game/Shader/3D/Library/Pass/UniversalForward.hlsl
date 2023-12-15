@@ -5,6 +5,7 @@
 #include "../Include.hlsl"
 #include "../Header.hlsl"
 #include "../Macro.hlsl"
+#include "../ToonLighting.hlsl"
 
 Varyings vert(Attributes input)
 {
@@ -28,6 +29,7 @@ Varyings vert(Attributes input)
     OUTPUT_SH(output.normalWS, output.vertexSH);
     output.fogFactor = ComputeFogFactor(output.positionHCS.z);
     output.vertexLight = VertexLighting(output.positionWS, output.normalWS);
+    output.positionSS = ComputeScreenPos(output.positionHCS);
     
     return output;
 }
@@ -50,6 +52,10 @@ half4 frag(Varyings input) : SV_Target
     surfaceData.clearCoatMask = 0.0H;
     surfaceData.clearCoatSmoothness = 0.0H;
 
+//#if defined(_CUSTOM_TOON_DITHER_ON)
+    DitherTest(input.positionSS, col.a);
+//#endif
+    
     // InputDataを作成
     InputData inputData = (InputData)0;
     inputData.positionWS = input.positionWS;
@@ -69,7 +75,7 @@ half4 frag(Varyings input) : SV_Target
     inputData.shadowCoord = float4(0, 0, 0, 0);
     #endif
 
-    half4 color = UniversalFragmentPBR(inputData, surfaceData);
+    half4 color = CustomToonFragmentLighting(inputData, surfaceData);
 
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     

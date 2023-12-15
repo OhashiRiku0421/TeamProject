@@ -20,4 +20,14 @@
 #define Scalar3 half3
 #define Scalar4 half4
 
+inline half Remap (half value, half inMin, half inMax, half outMin, half outMax)
+{
+    return (value - inMin) * ((outMax - outMin) / (inMax - inMin)) + outMin;
+}
+
+inline float Remap (float value, float inMin, float inMax, float outMin, float outMax)
+{
+    return (value - inMin) * ((outMax - outMin) / (inMax - inMin)) + outMin;
+}
+
 #endif
