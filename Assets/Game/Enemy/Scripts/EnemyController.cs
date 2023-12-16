@@ -15,9 +15,6 @@ public class EnemyController : MonoBehaviour, IDamage
     [SerializeField]
     private IdleType _idleType = IdleType.Normal;
 
-    [SerializeField, Tooltip("ヒットポイント")]
-    private float _hp = 10f;
-
     [SerializeField, Tooltip("Playerのレイヤー")]
     private LayerMask _targetLayer;
 
@@ -32,6 +29,9 @@ public class EnemyController : MonoBehaviour, IDamage
 
     [SerializeField]
     private EnemyData _data;
+
+    [SerializeField]
+    private float _life = 30f;
 
     private Rigidbody _rb;
 
@@ -90,8 +90,8 @@ public class EnemyController : MonoBehaviour, IDamage
     {
         //ダメージのステートに変更
         _stateMachine.ChangeState(_stateMachine.Damage);
-        _hp -= damage;
-        if(_hp <= 0)
+        _life -= damage;
+        if(_life <= 0)
         {
             Destroy(gameObject);
         }

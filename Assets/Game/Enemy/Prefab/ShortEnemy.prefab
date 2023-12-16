@@ -116,7 +116,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 116
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &9181472920773165300
 MonoBehaviour:
@@ -132,8 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerTransform: {fileID: 0}
   _enemyType: 0
-  _idleType: 1
-  _hp: 20
+  _idleType: 0
   _targetLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -149,6 +148,7 @@ MonoBehaviour:
     _muzzel: {fileID: 5513805140767821362}
   _anim: {fileID: 0}
   _data: {fileID: 11400000, guid: b9c8b818b1dc3bc43a76893dde6a5b2a, type: 2}
+  _life: 30
 --- !u!195 &2567249014637812163
 NavMeshAgent:
   m_ObjectHideFlags: 0
