@@ -88,13 +88,20 @@ public class EnemyController : MonoBehaviour, IDamage
 
     public void SendDamage(float damage)
     {
-        //ダメージのステートに変更
-        _stateMachine.ChangeState(_stateMachine.Damage);
-        _life -= damage;
-        if(_life <= 0)
+        if(_life > 0)
         {
-            Destroy(gameObject);
+            _life -= damage;
+            if (_life <= 0)
+            {
+                _stateMachine.ChangeState(_stateMachine.Death);
+            }
+            else
+            {
+                //ダメージのステートに変更
+                _stateMachine.ChangeState(_stateMachine.Damage);
+            }
         }
+
     }
 
     void OnDrawGizmos()

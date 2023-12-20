@@ -11,4 +11,21 @@ public class EnemyAnimationEvent : MonoBehaviour
     {
         _enemyController.EnemyAttack.AttackAsync();
     }
+
+    private void OnDeath()
+    {
+        Destroy(gameObject);
+    }
+
+    private void PlayLongMoveSE()
+    {
+        CriAudioManager.Instance.SE.Play3D(transform.position, "SE", "SE_Enemy02_Footstep_01");
+        //CriAudioManager.Instance.SE.Play3D(transform.position,"SE", "SE_Enemy02_Footstep_02");
+    }
+
+    private void PlayShortMoveSE()
+    {
+        CriAudioManager.Instance.SE.Play3D(transform.position, "SE", "SE_Enemy01_Footstep_01");
+        //CriAudioManager.Instance.SE.Play3D(transform.position,"SE", "SE_Enemy01_Footstep_02");
+    }
 }

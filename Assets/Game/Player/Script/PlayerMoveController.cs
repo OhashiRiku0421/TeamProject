@@ -283,7 +283,7 @@ public class PlayerMoveController : MonoBehaviour, IPause
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Ground"))
+        if (other.gameObject.CompareTag("Ground") && !_isGround)
         {
             _isGround = true;
             IsJumping = false;

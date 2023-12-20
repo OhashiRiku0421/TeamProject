@@ -47,7 +47,8 @@ public class EnemyAttack
     {
         BulletController bullet = UnityEngine.Object.Instantiate(_bullet, _muzzel.position, Quaternion.identity);
         bullet.BulletShot(_transform.forward);
-        CriAudioManager.Instance.SE.Play("SE", "SE_Enemy02_Attack_01");
+        CriAudioManager.Instance.SE.Play3D(_transform.position, "SE", "SE_Enemy02_Voice_02");
+        CriAudioManager.Instance.SE.Play3D(_transform.position, "SE", "SE_Enemy02_Attack_01");
         _isCancel = true;
     }
 
@@ -59,13 +60,14 @@ public class EnemyAttack
         //攻撃範囲
         Collider[] colliders = Physics.OverlapBox(_transform.TransformPoint(_data.ShortAttackCenter),
         _data.ShortAttackSize * 0.5f, _transform.rotation);
+        CriAudioManager.Instance.SE.Play3D(_transform.position, "SE", "SE_Enemy01_Voice_02");
+        CriAudioManager.Instance.SE.Play3D(_transform.position, "SE", "SE_Enemy01_Attack_01");
         //範囲に入ったら攻撃
         foreach (Collider collider in colliders)
         {
             if (collider.gameObject.TryGetComponent<IDamage>(out IDamage damage))
             {
                 GameObject.Instantiate(_effect, collider.gameObject.transform.position, Quaternion.identity);
-                CriAudioManager.Instance.SE.Play("SE", "SE_Enemy01_Attack_01");
                 damage.SendDamage(_data.AttackPower);
                 _isCancel = true;
             }

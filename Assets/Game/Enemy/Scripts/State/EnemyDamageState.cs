@@ -17,7 +17,18 @@ public class EnemyDamageState : IState
     public void Enter()
     {
         _enemy.Anim.SetTrigger("IsHit");
-        CriAudioManager.Instance.SE.Play("SE", "SE_EnemyAll_Damage");
+        CriAudioManager.Instance.SE.Play3D(_enemy.gameObject.transform.position,
+            "SE", "SE_EnemyAll_Damage");
+        if (_enemy.EnemyType == EnemyType.Short)
+        {
+            CriAudioManager.Instance.SE.Play3D(_enemy.gameObject.transform.position,
+                "SE", "SE_Enemy01_Voice_03");
+        }
+        else
+        {
+            CriAudioManager.Instance.SE.Play3D(_enemy.gameObject.transform.position,
+                "SE", "SE_Enemy02_Voice_03");
+        }
     }
 
     public void Update()
@@ -35,7 +46,7 @@ public class EnemyDamageState : IState
         }
     }
 
-    public void Exit() 
+    public void Exit()
     {
     }
 }
