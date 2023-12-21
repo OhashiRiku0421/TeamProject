@@ -53,8 +53,12 @@
     #define CUSTOM_TOON_VARY_VERTEX_LIGHT_ON
 #endif
 
-#if defined(CUSTOM_TOON_PASS_UNIVERSAL_FORWARD)
+#if defined(CUSTOM_TOON_PASS_UNIVERSAL_FORWARD) || defined(CUSTOM_TOON_PASS_OUTLINE)
     #define CUSTOM_TOON_VARY_POSITION_SS_ON
+#endif
+
+#if defined(_CUSTOM_TOON_DITHER_ON)
+    #define CUSTOM_TOON_VARY_DITHERING_FACTOR_ON
 #endif
 
 #if defined(CUSTOM_TOON_PASS_UNIVERSAL_FORWARD)
@@ -127,12 +131,15 @@ struct Varyings
 #if defined(CUSTOM_TOON_VARY_POSITION_SS_ON)
     float4 positionSS : TEXCOORD7;
 #endif
+#if defined(CUSTOM_TOON_VARY_DITHERING_FACTOR_ON)
+    float4 ditheringFactor : TEXCOORD8;
+#endif
     
 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-    float4 shadowCoord : TEXCOORD8;
+    float4 shadowCoord : TEXCOORD9;
 #endif
 #if defined(CUSTOM_TOON_VARY_LIGHTMAP_OR_SH_ON)
-    DECLARE_LIGHTMAP_OR_SH(lightmapUV, vertexSH, 9);
+    DECLARE_LIGHTMAP_OR_SH(lightmapUV, vertexSH, 10);
 #endif
 };
 
@@ -142,6 +149,7 @@ static float2 mainTexUV = float2(0, 0);
 // uniform
 TEXTURE2D(_BaseMap);
 TEXTURE2D(_NormalMap);
+TEXTURE2D(_EmissionMap);
 
 SAMPLER(CUSTOM_TOON_SAMPLER_STATE_LINEAR_REPEAT);
 
@@ -153,7 +161,13 @@ float4 _NormalMap_ST;
 float _NormalMapScale;
 float _Metallic;
 float _Smoothness;
+
+// Emissive
 half3 _EmissiveColor;
+
+// Dither
+float _DitheringStart;
+float _DitheringEnd;
 
 // Shade1
 half4 _Shade1Color;
