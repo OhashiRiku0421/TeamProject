@@ -48,8 +48,11 @@ half4 CalcFinalDiffuse(ToonLightingData lightingData, InputData inputData, Surfa
             color.rgb *= _Shade2Color.rgb;
         }
     }
+
+    color += RimLight(inputData);
+    color.rgb += surfaceData.emission;
     
-    return color + RimLight(inputData);
+    return color;
 }
 
 half4 CustomToonFragmentLighting(InputData inputData, SurfaceData surfaceData)
