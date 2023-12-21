@@ -30,6 +30,10 @@ Varyings vert(Attributes input)
     output.fogFactor = ComputeFogFactor(output.positionHCS.z);
     output.vertexLight = VertexLighting(output.positionWS, output.normalWS);
     output.positionSS = ComputeScreenPos(output.positionHCS);
+
+#if defined(_CUSTOM_TOON_DITHER_ON)
+    output.ditheringFactor = ComputeDitheringFactor(output.positionWS.xyz);
+#endif
     
     return output;
 }
@@ -44,7 +48,7 @@ half4 frag(Varyings input) : SV_Target
     half4 col = SAMPLE_TEXTURE2D(_BaseMap, CUSTOM_TOON_SAMPLER_STATE_LINEAR_REPEAT, mainTexUV) * _BaseColor;
     surfaceData.albedo = col.rgb;
     surfaceData.alpha = col.a;
-    surfaceData.emission = _EmissiveColor;
+    surfaceData.emission = SAMPLE_TEXTURE2D(_EmissionMap, CUSTOM_TOON_SAMPLER_STATE_LINEAR_REPEAT, mainTexUV).r * _EmissiveColor;
     surfaceData.metallic = _Metallic;
     surfaceData.occlusion = 1.0H;
     surfaceData.smoothness = _Smoothness;
@@ -52,9 +56,9 @@ half4 frag(Varyings input) : SV_Target
     surfaceData.clearCoatMask = 0.0H;
     surfaceData.clearCoatSmoothness = 0.0H;
 
-//#if defined(_CUSTOM_TOON_DITHER_ON)
-    DitherTest(input.positionSS, col.a);
-//#endif
+#if defined(_CUSTOM_TOON_DITHER_ON)
+    DitherTest(input.positionSS, input.ditheringFactor);
+#endif
     
     // InputDataを作成
     InputData inputData = (InputData)0;

@@ -25,4 +25,15 @@ void DitherTest(float4 positionSS, float ditherAmount)
     clip(ditherAmount - dither);
 }
 
+float ComputeDitheringFactor(float3 positionWS)
+{
+    float dist = distance(GetCameraPositionWS(), positionWS);
+    float diff = _DitheringEnd - _DitheringStart;
+
+    dist -= _DitheringStart;
+    float value = saturate(dist / diff);
+
+    return value;
+}
+
 #endif
