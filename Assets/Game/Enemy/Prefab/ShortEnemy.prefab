@@ -151,6 +151,7 @@ MonoBehaviour:
   _anim: {fileID: 3756910745846145598}
   _data: {fileID: 11400000, guid: b9c8b818b1dc3bc43a76893dde6a5b2a, type: 2}
   _life: 30
+  _item: {fileID: 2495853154811126689, guid: 92e79fea5545e27439aaf249e1a988ac, type: 3}
 --- !u!195 &2567249014637812163
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -275,11 +276,6 @@ PrefabInstance:
       propertyPath: m_Avatar
       value: 
       objectReference: {fileID: 9000000, guid: a9bd70ed89fbd2b4b911178bb6e58ad1, type: 3}
-    - target: {fileID: 8412146690851756608, guid: 6d9c68962aaeee746b0824bf784981b7,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 1785c25fbcc34f2468cb52ff8b279863, type: 2}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 6d9c68962aaeee746b0824bf784981b7, type: 3}
     m_RemovedGameObjects: []

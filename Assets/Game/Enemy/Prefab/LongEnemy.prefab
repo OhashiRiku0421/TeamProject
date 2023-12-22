@@ -128,6 +128,7 @@ MonoBehaviour:
   _anim: {fileID: 3966456489655974433}
   _data: {fileID: 11400000, guid: b9c8b818b1dc3bc43a76893dde6a5b2a, type: 2}
   _life: 30
+  _item: {fileID: 2495853154811126689, guid: 92e79fea5545e27439aaf249e1a988ac, type: 3}
 --- !u!195 &2567249014637812163
 NavMeshAgent:
   m_ObjectHideFlags: 0
