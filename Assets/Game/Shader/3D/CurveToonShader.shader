@@ -9,6 +9,7 @@ Shader "Custom/CurveToonShader"
         _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.0
         [NoScaleOffset]_EmissionMap ("EmissionMap", 2D) = "white" {}
         [HDR]_EmissiveColor ("EmissiveColor", Color) = (0.0, 0.0, 0.0, 1.0)
+        [Enum(UnityEngine.Rendering.CullMode)] _ForwardCullMode("Culling Mode", Float) = 2
         
         [Space(20)]
         [Header(Dithering)]
@@ -53,18 +54,22 @@ Shader "Custom/CurveToonShader"
     }
     SubShader
     {
+        
         Tags
         {
-            "RenderType" = "Opaque"
+            "RenderType" = "Transparent"
             "RenderPipeline" = "UniversalPipeline"
             "UniversalMaterialType" = "Lit"
             "IgnoreProjector" = "True"
-            "Queue" = "Geometry"
+            "Queue" = "Transparent"
         }
         
         // ForwardPass
         Pass
         {
+            Blend SrcAlpha OneMinusSrcAlpha
+            Cull [_ForwardCullMode]
+            
             Tags
             {
                 "LightMode" = "UniversalForward"
