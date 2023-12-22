@@ -1,16 +1,23 @@
 ﻿using UnityEngine;
 
-public class BGMPlayer : MonoBehaviour
+public class BGMPlayer : MonoBehaviour, IPause
 {
     [SerializeField, Tooltip("BGMの名前")]
     private string _bgmName;
+
+    private int _bgmIndex;
     void Start()
     {
-        CriAudioManager.Instance.BGM.Play("BGM", _bgmName);
+        _bgmIndex = CriAudioManager.Instance.BGM.Play("BGM", _bgmName);
     }
 
-    public void PlaySliderSE()
+    public void Pause()
     {
-        CriAudioManager.Instance.SE.Play("SE", "SE_System_Slider");
+        CriAudioManager.Instance.BGM.Pause(_bgmIndex);
+    }
+
+    public void Resume()
+    {
+        CriAudioManager.Instance.BGM.Resume(_bgmIndex);
     }
 }

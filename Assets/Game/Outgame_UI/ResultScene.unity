@@ -412,7 +412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.3137255}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1668,6 +1668,7 @@ MonoBehaviour:
   _isAnyKeyPressed: 0
   _sceneName: LifeBetScene
   _waitTime: 0.666
+  _min: 3
 --- !u!4 &1621032667
 Transform:
   m_ObjectHideFlags: 0
@@ -1695,13 +1696,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f141a1c1271ea647928e91fede04ea5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiElements:
-  - {fileID: 591031473}
-  - {fileID: 1039822706}
-  - {fileID: 1721245005}
-  - {fileID: 1152260658}
-  - {fileID: 1959676620}
-  - {fileID: 1997553241}
   _itemCountText: {fileID: 99511094}
   _betLifeText: {fileID: 180908608}
   _gainedLifeText: {fileID: 1721245007}
@@ -1710,8 +1704,9 @@ MonoBehaviour:
   _clearTimeMin: {fileID: 703289910}
   _clearTimeSec: {fileID: 372262685}
   _durationTime: 1
-  _isTest: 0
+  _isTest: 1
   _button: {fileID: 1997553241}
+  _isPause: 0
 --- !u!114 &1621032670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2055,8 +2050,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -132, y: 36}
-  m_SizeDelta: {x: 161.2861, y: 41.7985}
+  m_AnchoredPosition: {x: -128.11856, y: 55}
+  m_SizeDelta: {x: 209.837, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1997553243
 MonoBehaviour:
@@ -2134,7 +2129,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: b6095f88ec397134f8eae0eb42682637, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
