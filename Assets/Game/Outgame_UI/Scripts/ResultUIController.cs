@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 public class ResultUIController : MonoBehaviour, IPause
 {
-    /// <summary>ゲーム全体の時間（秒）</summary>
+    /// <summary>ゲーム全体の時間（秒単位）</summary>
     private float _gameTime = 1200f;
 
     [SerializeField, Tooltip("手にいれたアイテムの数を表示するテキスト")]
@@ -35,6 +35,9 @@ public class ResultUIController : MonoBehaviour, IPause
     [SerializeField, Tooltip("アニメーションが終わるまでの時間")]
     private float _durationTime = 1f;
 
+    [SerializeField, Tooltip("クリアに必要なライフの数")]
+    private int _clearLife = 5000;
+
     private List<(Text, int)> _textAndValue;
     private float _clearTime;
 
@@ -46,9 +49,19 @@ public class ResultUIController : MonoBehaviour, IPause
     [SerializeField, Tooltip("ライフベットシーンに行くためのボタン")]
     private GameObject _button;
 
+    [SerializeField]
+    private ResultVoicePlayer _cvPlayer;
+
     private bool _isSkip = false;
     private bool _isPause = false;
     Tweener _tweener;
+
+    [SerializeField]
+    private ScreenFader _screenFader;
+
+    private bool _isCompleted = false;
+
+    private ClearState _clearState = ClearState.None;
 
     private void Awake()
     {
@@ -73,9 +86,13 @@ public class ResultUIController : MonoBehaviour, IPause
 
         int gainedLife = betLife * itemCount + playerLife;
         ExternalLifeManager.TotalLife += gainedLife;
-        _lifeUntilClearText.text = 5000.ToString();
+        _lifeUntilClearText.text = _clearLife.ToString();
         _clearTimeMin.text = (_gameTime / 60).ToString("00");
         _clearTimeSec.text = (_gameTime % 60).ToString("00");
+
+        if (ExternalLifeManager.TotalLife >= _clearLife) _clearState = ClearState.Clear;
+        else if (ExternalLifeManager.TotalLife > _clearLife - 500) _clearState = ClearState.Near;
+        else _clearState = ClearState.Normal;
 
         _textAndValue = new List<(Text, int)>()
         {
@@ -88,7 +105,7 @@ public class ResultUIController : MonoBehaviour, IPause
     void Start()
     {
         CriAudioManager.Instance.BGM.Play("BGM", "BGM_Result_01");
-        StartCoroutine(UpdateTextValue(_textAndValue, 0));
+        _screenFader.FadeOut(_durationTime).onComplete += () => StartCoroutine(UpdateTextValue(_textAndValue, 0));
     }
 
     private IEnumerator UpdateTextValue(List<(Text, int)> data, int index)
@@ -155,12 +172,14 @@ public class ResultUIController : MonoBehaviour, IPause
         _clearTimeMin.text = (Math.Floor(_clearTime / 60)).ToString("00");
         _clearTimeSec.text = (Math.Floor(_clearTime % 60)).ToString("00");
         CriAudioManager.Instance.SE.Play("SE", "SE_System_Score_Active");
-
+        _cvPlayer.PlayVoice(_clearState);
         _button.GetComponent<Button>().interactable = true;
+        _isCompleted = true;
     }
 
     public void OnKeyPressed(InputAction.CallbackContext context)
     {
+        if (_isCompleted) return;
         _isSkip = true;
         CriAudioManager.Instance.SE.Play("SE", "SE_System_Select");
         Debug.Log("IsSkip");
