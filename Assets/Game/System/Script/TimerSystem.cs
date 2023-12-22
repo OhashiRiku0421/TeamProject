@@ -6,22 +6,28 @@ using UniRx;
 [System.Serializable]
 public class TimerSystem
 {
-    [SerializeField, Tooltip("タイマーの初期値")]
-    private float _maxTime = 60;
+    [SerializeField]
+    private SceneSwitcher _sceneSwitcher;
 
-    private ReactiveProperty<float> _timer = new();
+    public static float Timer = 1200;
 
-    public IReactiveProperty<float> Timer => _timer;
+    private Subject<Unit> _gameOver = new();
 
     public void Start()
     {
-        _timer.Value = _maxTime;
-        _timer.FirstOrDefault(x => x <= 0f).Subscribe(_ => Debug.Log("GameOver"));
+        _gameOver.Take(1).Subscribe(_ => _sceneSwitcher.SceneSwitch());
     }
 
     public void Update()
     {
-        _timer.Value -= Time.deltaTime;
+        if(Timer <= 0)
+        {
+            _gameOver.OnNext(Unit.Default);
+        }
+        else
+        {
+            Timer -= Time.deltaTime;
+        }
     }
 
 }

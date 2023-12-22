@@ -319,6 +319,7 @@ public class CriAudioManager
             _player.SetStartTime(0L);
             tempPlayerData.Playback = _player.Start();
 
+
             _cueData[_cueData.Count - 1] = tempPlayerData;
 
             return _cueData.Count - 1;
