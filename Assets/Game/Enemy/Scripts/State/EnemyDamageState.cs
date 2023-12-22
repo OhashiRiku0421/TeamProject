@@ -16,7 +16,12 @@ public class EnemyDamageState : IState
 
     public void Enter()
     {
-        _enemy.Anim.SetTrigger("IsHit");
+        if(!_enemy.Anim.GetCurrentAnimatorStateInfo(0).IsName("LongAttack")
+            || !_enemy.Anim.GetCurrentAnimatorStateInfo(0).IsName("ShortAttack"))
+        {
+            _enemy.Anim.SetTrigger("IsHit");
+        }
+
         CriAudioManager.Instance.SE.Play3D(_enemy.gameObject.transform.position,
             "SE", "SE_EnemyAll_Damage");
         if (_enemy.EnemyType == EnemyType.Short)

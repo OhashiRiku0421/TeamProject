@@ -65,6 +65,7 @@ public class PlayerCollectController : MonoBehaviour, IPause
     {
         if(!_isPause)
         {
+            CriAudioManager.Instance.SE.Play("VOICE", "VC_Player_Collecting_st");
             _isCollectInputting = true;
             UpdateIsCollecting();
 
@@ -84,9 +85,9 @@ public class PlayerCollectController : MonoBehaviour, IPause
     {
         if(!_isPause)
         {
-            _isCollectInputting = false;
+            CriAudioManager.Instance.SE.Play("VOICE", "VC_Player_Collecting_ed");
+            _isCollectInputting = false; 
             UpdateIsCollecting();
-
             if (!IsCollecting && _sliederController is not null)
             {
                 _sliederController.ItemGetCallback -= GetCallback;

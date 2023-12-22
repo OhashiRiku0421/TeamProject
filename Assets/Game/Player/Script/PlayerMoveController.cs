@@ -274,7 +274,9 @@ public class PlayerMoveController : MonoBehaviour, IPause
     public void OnJumpStateEntry()
     {
         _rb.velocity = new Vector3(_rb.velocity.x, _jumpPower, _rb.velocity.z);
-        CriAudioManager.Instance.SE.Play("SE", "SE_Player_Jump_st");
+        CriAudioManager.Instance.SE.Play("SE", "SE_Player_Jump_st"); 
+                    CriAudioManager.Instance.SE.Play("VOICE", "VC_Player_Jump"); 
+
     }
     private void Update()
     {

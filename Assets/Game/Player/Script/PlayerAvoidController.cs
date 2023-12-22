@@ -99,6 +99,7 @@ public class PlayerAvoidController : MonoBehaviour, IPause
         _rb.AddForce(transform.forward * _avoidSpeed, ForceMode.Impulse);
         StartCoroutine(AvoidAsync());
         CriAudioManager.Instance.SE.Play("SE", "SE_Player_Avoid");
+        CriAudioManager.Instance.SE.Play("VOICE", "VC_Player_Avoid");
     }
 
     IEnumerator AvoidAsync()

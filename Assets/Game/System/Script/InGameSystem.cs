@@ -36,6 +36,15 @@ public class InGameSystem : MonoBehaviour, IPause
         GameStart();
         _timerSystem.Start();
         CriAudioManager.Instance.BGM.Play("BGM", "BGM_Ingame_01");
+        StartCoroutine(PlayVoice());
+    }
+
+    IEnumerator PlayVoice()
+    {
+        yield return new WaitForSeconds(1); 
+        CriAudioManager.Instance.SE.Play("VOICE", "VC_Robe_Ingame_Start");
+        yield return new WaitForSeconds(2.3f);
+        CriAudioManager.Instance.SE.Play("VOICE", "VC_Player_Ingame_Start");
     }
 
     private void Update()
