@@ -82,8 +82,12 @@ half4 frag(Varyings input) : SV_Target
     half4 color = CustomToonFragmentLighting(inputData, surfaceData);
 
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
+
+#if defined(_USE_ALPHA_CLIP_ON)
+    AlphaClip(col.a);
+#endif
     
-    return color;
+    return half4(color.rgb, col.a);
 }
 
 
