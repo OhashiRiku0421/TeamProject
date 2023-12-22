@@ -162,6 +162,7 @@ public class PlayerAttackController : MonoBehaviour, IPause
     public void NormalAttack()
     {
         CriAudioManager.Instance.SE.Play("SE", "SE_Player_Attack_01");
+        CriAudioManager.Instance.SE.Play("VOICE", "VC_Player_Attack");
         _closeRangeEffect.SendEvent("OnPlay");
         var colliders = Physics.OverlapBox(_closeAttackEreaCenter.position, _closeRangeAttackHalfExtant,
             this.transform.rotation);

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: TestData
   m_EditorClassIdentifier: 
   _awaitAttack: 1
-  _attackPower: 1
+  _attackPower: 25
   _longAttackRange: 10
   _shortAttackSize: {x: 1, y: 1, z: 1}
   _shortAttackCenter: {x: 0, y: 0, z: 1.16}
-  _fanAngle: 90
+  _fanAngle: 120
   _moveSpeed: 5
   _patrolSpeed: 3
   _moveDistance: 10
