@@ -29,7 +29,7 @@
     #define CUSTOM_TOON_VARY_NORMAL_WS_ON
 #endif
 
-#if defined(CUSTOM_TOON_PASS_UNIVERSAL_FORWARD) || defined(CUSTOM_TOON_PASS_UNIVERSAL_SHADOW_CASTER)
+#if defined(CUSTOM_TOON_PASS_UNIVERSAL_FORWARD) || defined(CUSTOM_TOON_PASS_UNIVERSAL_SHADOW_CASTER) || defined(CUSTOM_TOON_PASS_UNIVERSAL_DEPTH_ONLY)
     #define CUSTOM_TOON_VARY_TEXCOORD0_ON
 #endif
 
@@ -86,7 +86,7 @@ struct Attributes
 #if defined(CUSTOM_TOON_ATTR_COLOR_ON)
     float4 vertexColor : COLOR;
 #endif
-#if defined(CUSTOM_TOON_ATTR_TEXCOORD0_ON)
+#if defined(CUSTOM_TOON_ATTR_TEXCOORD0_ON) || defined(CUSTOM_TOON_PASS_UNIVERSAL_DEPTH_ONLY)
     float2 texcoord : TEXCOORD0;
 #endif
 #if defined(CUSTOM_TOON_ATTR_LIGHTMAP_TEXCOORD_ON)
@@ -161,6 +161,9 @@ float4 _NormalMap_ST;
 float _NormalMapScale;
 float _Metallic;
 float _Smoothness;
+
+// AlphaClip
+float _AlphaThreshold;
 
 // Emissive
 half3 _EmissiveColor;
