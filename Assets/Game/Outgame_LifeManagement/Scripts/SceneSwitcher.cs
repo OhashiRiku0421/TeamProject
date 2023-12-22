@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -19,6 +20,8 @@ public class SceneSwitcher : MonoBehaviour, IPause
     [SerializeField, Tooltip("インゲームシーンの最小インデックス")]
     private int _min = 3;
 
+    private ScreenFader _screenFader = null;
+
     private void Awake()
     {
         if (_isAnyKeyPressed && !_isPause)
@@ -29,12 +32,21 @@ public class SceneSwitcher : MonoBehaviour, IPause
             _anyKeyAction.AddBinding("<Keyboard>/anyKey");
             _anyKeyAction.performed += OnAnyKeyPressed;
         }
+
+        _screenFader = FindAnyObjectByType<ScreenFader>();
     }
 
-    public void SceneLoaded()
+    public void SceneSwitch()
     {
         if (_isPause) return;
-        Invoke("SceneLoad", _waitTime);
+        if (_screenFader is not null)
+        {
+            _screenFader.FadeIn(_waitTime).OnComplete(() => SceneLoad());
+        }
+        else
+        {
+            Invoke("SceneLoad", _waitTime);
+        }
         PlaySE();
     }
 
@@ -44,6 +56,11 @@ public class SceneSwitcher : MonoBehaviour, IPause
         {
             var r = Random.Range(_min, SceneManager.sceneCountInBuildSettings);
             SceneManager.LoadScene(r);
+            return;
+        }
+        else if (_sceneName == "")
+        {
+            Debug.Log("シーン名が入力されていない");
         }
 
         SceneManager.LoadScene(_sceneName);
@@ -51,7 +68,7 @@ public class SceneSwitcher : MonoBehaviour, IPause
 
     private void PlaySE()
     {
-        CriAudioManager.Instance.SE.Play("SE", "SE_System_Select");
+        CriAudioManager.Instance.SE.Play("SE", "SE_System_Decide");
     }
 
     public void Pause()
@@ -67,7 +84,7 @@ public class SceneSwitcher : MonoBehaviour, IPause
 
     private void OnAnyKeyPressed(InputAction.CallbackContext callback)
     {
-        SceneLoaded();
+        SceneSwitch();
     }
     private void OnEnable()
     {

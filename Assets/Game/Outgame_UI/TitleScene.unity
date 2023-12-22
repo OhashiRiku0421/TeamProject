@@ -249,7 +249,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -203.14114, y: -157}
+  m_AnchoredPosition: {x: -162, y: -157}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &605058205
@@ -392,7 +392,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -232, y: -109}
+  m_AnchoredPosition: {x: -144, y: -109}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &629800685
@@ -498,7 +498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb49da94977593d429754ef16aed8344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bgmName: BGM_Outgame_01
+  _bgmName: BGM_Title_01
 --- !u!1001 &915751891
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -766,7 +766,7 @@ GameObject:
   - component: {fileID: 1706282450}
   - component: {fileID: 1706282449}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: TitleUICanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
