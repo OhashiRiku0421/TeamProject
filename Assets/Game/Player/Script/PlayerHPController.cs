@@ -48,7 +48,7 @@ public class PlayerHPController : MonoBehaviour, IDamage
 
     private void Start()
     {
-        if (_isGodMode)
+        if (_isGodMode || ExternalLifeManager.Life == 0)
         {
             _currentHP = _godModeHP;
         }

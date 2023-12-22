@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimationController : MonoBehaviour
+public class PlayerAnimationController : MonoBehaviour, IPause
 {
     [SerializeField, Tooltip("アニメーター")] private Animator _animator = default;
 
@@ -21,6 +21,8 @@ public class PlayerAnimationController : MonoBehaviour
 
     [SerializeField, Tooltip("PlayerのHPコントローラー")]
     private PlayerHPController _hpController = default;
+
+    private float _animSpeed;
     
     /// <summary>アニメーターのSpeedパラメータのハッシュ</summary>
     private readonly int _speedParamHash = Animator.StringToHash("Speed");
@@ -48,6 +50,7 @@ public class PlayerAnimationController : MonoBehaviour
     
     private void OnEnable()
     {
+        PauseSystem.Instance.Register(this);
         _moveController.OnCurrentSqrtSpeedChanged += AnimParamSpeedUpdate;
         _moveController.OnIsJumpingChanged += AnimParamOnJumpingUpdate;
 
@@ -64,6 +67,7 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void OnDisable()
     {
+        PauseSystem.Instance.Unregister(this);
         _moveController.OnCurrentSqrtSpeedChanged -= AnimParamSpeedUpdate;
         _moveController.OnIsJumpingChanged -= AnimParamOnJumpingUpdate;
         
@@ -108,4 +112,15 @@ public class PlayerAnimationController : MonoBehaviour
 
     /// <summary>AnimatorのOnDeadを更新する関数</summary>
     private void AnimParamOnDeadUpdate() => _animator.SetTrigger(_onDeadParamHash);
+
+    public void Pause()
+    {
+        _animSpeed = _animator.speed;
+        _animator.speed = 0;
+    }
+
+    public void Resume()
+    {
+        _animator.speed = _animSpeed;
+    }
 }

@@ -24,6 +24,9 @@ public class EnemyStateMachine
     [SerializeField]
     private EnemyPatrolState _patrol = new();
 
+    [SerializeField]
+    private EnemyDeathState _death = new();
+
     public EnemyShortAttackState ShortAttack => _shortAttack;
 
     public EnemyLongAttackState LongAttack => _longAttack;
@@ -36,6 +39,8 @@ public class EnemyStateMachine
 
     public EnemyPatrolState Patrol => _patrol;
 
+    public EnemyDeathState Death => _death;
+
     public void Set(EnemyController enemyController)
     {
         _shortAttack.SetEnemy(enemyController);
@@ -44,6 +49,7 @@ public class EnemyStateMachine
         _idle.SetEnemy(enemyController);
         _damage.SetEnemy(enemyController);
         _patrol.SetEnemy(enemyController);
+        _death.SetEnemy(enemyController);
     }
 
     /// <summary>

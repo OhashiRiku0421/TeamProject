@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerCollectController : MonoBehaviour
+public class PlayerCollectController : MonoBehaviour, IPause
 {
     /// <summary>現在採取中かどうか</summary>
     private bool _isCollecting = false;
@@ -12,6 +12,8 @@ public class PlayerCollectController : MonoBehaviour
     private int _seIndex = -1;
     
     private IngameItem _sliederController = null;
+
+    private bool _isPause = false;
     
     /// <summary>現在採取中かどうか</summary>
     public bool IsCollecting
@@ -45,12 +47,14 @@ public class PlayerCollectController : MonoBehaviour
 
     private void OnEnable()
     {
+        PauseSystem.Instance.Register(this);
         CustomInputManager.Instance.PlayerInputActions.Player.Collect.started += StartCollect;
         CustomInputManager.Instance.PlayerInputActions.Player.Collect.canceled += CancelCollect;
     }
 
     private void OnDisable()
     {
+        PauseSystem.Instance.Unregister(this);
         CustomInputManager.Instance.PlayerInputActions.Player.Collect.started -= StartCollect;
         CustomInputManager.Instance.PlayerInputActions.Player.Collect.canceled -= CancelCollect;
     }
@@ -59,15 +63,18 @@ public class PlayerCollectController : MonoBehaviour
     /// <param name="context">コールバック</param>
     private void StartCollect(InputAction.CallbackContext context)
     {
-        _isCollectInputting = true;
-        UpdateIsCollecting();
-
-        if (IsCollecting && _sliederController is not null)
+        if(!_isPause)
         {
-            _sliederController.ItemGetCallback += GetCallback;
-            _sliederController.CollectStart();
+            _isCollectInputting = true;
+            UpdateIsCollecting();
 
-            //_seIndex = CriAudioManager.Instance.SE.Play("SE", "SE_Player_Collecting");
+            if (IsCollecting && _sliederController is not null)
+            {
+                _sliederController.ItemGetCallback += GetCallback;
+                _sliederController.CollectStart();
+
+                //_seIndex = CriAudioManager.Instance.SE.Play("SE", "SE_Player_Collecting");
+            }
         }
     }
 
@@ -75,15 +82,18 @@ public class PlayerCollectController : MonoBehaviour
     /// <param name="context">コールバック</param>
     private void CancelCollect(InputAction.CallbackContext context)
     {
-        _isCollectInputting = false;
-        UpdateIsCollecting();
-
-        if (!IsCollecting && _sliederController is not null)
+        if(!_isPause)
         {
-            _sliederController.ItemGetCallback -= GetCallback;
-            _sliederController.CollectEnd();
-            
-            CriAudioManager.Instance.SE.Stop(_seIndex);
+            _isCollectInputting = false;
+            UpdateIsCollecting();
+
+            if (!IsCollecting && _sliederController is not null)
+            {
+                _sliederController.ItemGetCallback -= GetCallback;
+                _sliederController.CollectEnd();
+
+                CriAudioManager.Instance.SE.Stop(_seIndex);
+            }
         }
     }
 
@@ -118,5 +128,15 @@ public class PlayerCollectController : MonoBehaviour
             _sliederController = null;
             UpdateIsCollecting();
         }
+    }
+
+    public void Pause()
+    {
+        _isPause = true;
+    }
+
+    public void Resume()
+    {
+        _isPause = false;
     }
 }
