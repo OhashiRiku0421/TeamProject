@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 public class GoalController : MonoBehaviour
 {
     private InGameSystem _inGameSystem;
-
+    private SceneSwitcher _sceneSwitcher;
     private void Start()
     {
         _inGameSystem = FindObjectOfType<InGameSystem>();
-        if(_inGameSystem == null)
+        _sceneSwitcher = _inGameSystem.GetComponent<SceneSwitcher>();
+        if (_inGameSystem == null)
         {
             Debug.LogError("InGameSystemがないです");
         }
@@ -18,11 +19,10 @@ public class GoalController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //時間ないですごめんなさい
         if(other.gameObject.tag == "Player")
         {
-            _inGameSystem.ScoreSystem.GameResult();
-            SceneManager.LoadScene("ResultScene");
+            _inGameSystem.ScoreSystem.GameResult(TimerSystem.Timer);
+            _sceneSwitcher.SceneSwitch();
         }
     }
 }

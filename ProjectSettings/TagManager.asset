@@ -9,6 +9,7 @@ TagManager:
   - pCone
   - Ground
   - Collectable
+  - Fall
   layers:
   - Default
   - TransparentFX

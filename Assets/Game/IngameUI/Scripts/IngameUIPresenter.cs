@@ -13,18 +13,14 @@ public class IngameUIPresenter : MonoBehaviour
 
     private PlayerHPController _playerHPController;
 
-
-    private void Start()
+    private void Awake()
     {
-        _ingameUIView.Intialized();
-
-        // InGameSystemを取得する
-        _inGameSystem = 
-            FindObjectOfType<InGameSystem>().GetComponent<InGameSystem>();
-
         // PlayerHPControllerを取得する
         _playerHPController =
             FindObjectOfType<PlayerHPController>().GetComponent<PlayerHPController>();
+        // InGameSystemを取得する
+        _inGameSystem =
+            FindObjectOfType<InGameSystem>().GetComponent<InGameSystem>();
 
         if (_inGameSystem == null)
         {
@@ -36,7 +32,7 @@ public class IngameUIPresenter : MonoBehaviour
             Debug.LogError("PlayerHPControllerが見つかりませんでした");
             return;
         }
-
+        _ingameUIView.Intialized();
         SubscribeUIEvent();
     }
 
@@ -63,11 +59,7 @@ public class IngameUIPresenter : MonoBehaviour
         // InGameSystemのTimerSystemのTimerにGameTimerUIのSetTimeViewを登録する
         _ingameUIView
             .GameTimerUI
-            .SetTimerView(
-                _inGameSystem
-                .TimerSystem
-                .Timer
-                .Value);
+            .SetTimerView(TimerSystem.Timer);
     }
 
     private void OnDestroy()

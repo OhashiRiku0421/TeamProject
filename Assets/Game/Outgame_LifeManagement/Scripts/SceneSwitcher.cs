@@ -33,7 +33,7 @@ public class SceneSwitcher : MonoBehaviour, IPause
             _anyKeyAction.performed += OnAnyKeyPressed;
         }
 
-        _screenFader = FindAnyObjectByType<ScreenFader>();
+        _screenFader = FindObjectOfType<ScreenFader>().GetComponent<ScreenFader>();
     }
 
     public void SceneSwitch()
@@ -54,8 +54,8 @@ public class SceneSwitcher : MonoBehaviour, IPause
     {
         if (SceneManager.GetActiveScene().name == "LifeBetScene")
         {
-            var r = Random.Range(_min, SceneManager.sceneCountInBuildSettings);
-            SceneManager.LoadScene(r);
+            //var r = Random.Range(_min, SceneManager.sceneCountInBuildSettings);
+            SceneManager.LoadScene("GroundStage");
             return;
         }
         else if (_sceneName == "")

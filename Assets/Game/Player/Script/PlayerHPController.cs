@@ -21,7 +21,7 @@ public class PlayerHPController : MonoBehaviour, IDamage
         get => _currentHP;
         private set
         {
-            if(_currentHP != value)
+            if (_currentHP != value)
             {
                 _onCurrentHPChanged?.Invoke(value);
                 _currentHP = value;
@@ -48,16 +48,15 @@ public class PlayerHPController : MonoBehaviour, IDamage
 
     private void Start()
     {
-        if (_isGodMode || ExternalLifeManager.Life == 0)
+        if (_isGodMode)
         {
-            _currentHP = _godModeHP;
+            CurrentHP = _godModeHP;
         }
         else
         {
-            _currentHP = ExternalLifeManager.Life;
+            CurrentHP = ExternalLifeManager.Life;
         }
-
-        Debug.Log(_currentHP);
+        Debug.Log(ExternalLifeManager.Life);
     }
 
 

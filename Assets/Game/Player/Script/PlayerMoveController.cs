@@ -29,6 +29,8 @@ public class PlayerMoveController : MonoBehaviour, IPause
     /// <summary>タイマー</summary>
     private float _timer = 0.0F;
 
+    private float _cashedTimer = 0.0F;
+
     private Rigidbody _rb = default;
 
     private bool _isPause = false;
@@ -46,6 +48,8 @@ public class PlayerMoveController : MonoBehaviour, IPause
 
     /// <summary>メインカメラ</summary>
     private Camera _mainCamera = default;
+
+    private Vector3 _cashedPosition = default;
 
     /// <summary>現在のスピード</summary>
     public float CurrentSqrtSpeed
@@ -272,6 +276,22 @@ public class PlayerMoveController : MonoBehaviour, IPause
         _rb.velocity = new Vector3(_rb.velocity.x, _jumpPower, _rb.velocity.z);
         CriAudioManager.Instance.SE.Play("SE", "SE_Player_Jump_st");
     }
+    private void Update()
+    {
+        CashedPosition();
+    }
+    public void CashedPosition()
+    {
+        _cashedTimer += Time.deltaTime;
+        if(_cashedTimer >= 2)
+        {
+            if (_isGround)
+            {
+                _cashedPosition = transform.position;
+            }
+            _cashedTimer = 0;
+        }
+    }
 
     private void OnTriggerExit(Collider other)
     {
@@ -289,6 +309,12 @@ public class PlayerMoveController : MonoBehaviour, IPause
             IsJumping = false;
 
             CriAudioManager.Instance.SE.Play("SE", "SE_Player_Jump_ed");
+        }
+
+        if(other.gameObject.CompareTag("Fall"))
+        {
+            Debug.Log("Fall");
+            transform.position = _cashedPosition;
         }
     }
 
