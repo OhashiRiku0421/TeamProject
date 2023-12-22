@@ -65,6 +65,8 @@ Shader "Custom/CurveToonShader"
         // ForwardPass
         Pass
         {
+            Blend SrcAlpha OneMinusSrcAlpha
+            
             Tags
             {
                 "LightMode" = "UniversalForward"
