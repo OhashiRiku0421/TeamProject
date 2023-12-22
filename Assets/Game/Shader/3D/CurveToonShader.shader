@@ -12,6 +12,11 @@ Shader "Custom/CurveToonShader"
         [Enum(UnityEngine.Rendering.CullMode)] _ForwardCullMode("Culling Mode", Float) = 2
         
         [Space(20)]
+        [Header(AlphaClip)]
+        [Toggle(_USE_ALPHA_CLIP_ON)] _USE_ALPHA_CLIP_ON("AlphaClip Enable", Float) = 1
+        _AlphaThreshold ("Threshold", Range(0.0, 1.0)) = 0
+        
+        [Space(20)]
         [Header(Dithering)]
         [Toggle(_CUSTOM_TOON_DITHER_ON)] _CUSTOM_TOON_DITHER_ON("Dithering Enable", float) = 1
         _DitheringStart ("Start", Float) = 1.0
@@ -61,7 +66,7 @@ Shader "Custom/CurveToonShader"
             "RenderPipeline" = "UniversalPipeline"
             "UniversalMaterialType" = "Lit"
             "IgnoreProjector" = "True"
-            "Queue" = "Transparent"
+            "Queue" = "Overlay"
         }
         
         // ForwardPass
@@ -104,6 +109,7 @@ Shader "Custom/CurveToonShader"
             // Custom Keyword
             #pragma multi_compile _ _CUSTOM_TOON_CURVED
             #pragma multi_compile _ _CUSTOM_TOON_DITHER_ON
+            #pragma multi_compile _ _USE_ALPHA_CLIP_ON
             #define CUSTOM_TOON_PASS_UNIVERSAL_FORWARD
 
             #include "Library/Pass/UniversalForward.hlsl"
@@ -141,6 +147,44 @@ Shader "Custom/CurveToonShader"
             #define CUSTOM_TOON_PASS_UNIVERSAL_SHADOW_CASTER
 
             #include "Library/Pass/ShadowCaster.hlsl"
+            ENDHLSL
+        }
+        
+        // DepthOnlyPass
+        Pass
+        {
+            Tags
+            {
+                "LightMode" = "DepthOnly"
+            }
+            
+            Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite On
+            ColorMask R
+            Cull[_ForwardCullMode]
+            
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            
+            // Material Keywords
+            #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+
+            // Unity defined keywords
+            #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
+
+            // GPU Instancing
+            #pragma multi_compile_instancing
+
+            // Custom keywords
+            #pragma multi_compile _ _CUSTOM_TOON_CURVED
+            #pragma multi_compile _ _CUSTOM_TOON_DITHER_ON
+            #pragma multi_compile _ _USE_ALPHA_CLIP_ON
+            #define CUSTOM_TOON_PASS_UNIVERSAL_DEPTH_ONLY
+
+            #include "Library/Pass/DepthOnly.hlsl"
+            
             ENDHLSL
         }
         

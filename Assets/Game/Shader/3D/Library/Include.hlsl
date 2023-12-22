@@ -19,6 +19,9 @@
 #if defined(_CUSTOM_TOON_CURVED)
     #include "VertexCurve.hlsl"
 #endif
+#if defined(_USE_ALPHA_CLIP_ON)
+    #include "AlphaClip.hlsl"
+#endif
 
 //#if defined(_CUSTOM_TOON_DITHER_ON)
     #include "Dithering.hlsl"
