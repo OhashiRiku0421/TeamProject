@@ -54,8 +54,15 @@ public class SceneSwitcher : MonoBehaviour, IPause
     {
         if (SceneManager.GetActiveScene().name == "LifeBetScene")
         {
-            //var r = Random.Range(_min, SceneManager.sceneCountInBuildSettings);
-            SceneManager.LoadScene("GroundStage");
+            var r = Random.Range(0, 2);
+            if(r == 0)
+            {
+                SceneManager.LoadScene("ArialStage_masterup");
+            }
+            else
+            {
+                SceneManager.LoadScene("GroundStage_masterup");
+            }
             return;
         }
         else if (_sceneName == "")

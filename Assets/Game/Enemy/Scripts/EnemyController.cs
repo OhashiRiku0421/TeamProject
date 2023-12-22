@@ -33,6 +33,9 @@ public class EnemyController : MonoBehaviour, IDamage
     [SerializeField]
     private float _life = 30f;
 
+    [SerializeField]
+    private GameObject _item;
+
     private Rigidbody _rb;
 
     private NavMeshAgent _agent;
@@ -102,6 +105,13 @@ public class EnemyController : MonoBehaviour, IDamage
             }
         }
 
+    }
+    public void OnDestroy()
+    {
+        if(_life <= 0)
+        {
+            Instantiate(_item, transform.position, Quaternion.identity);
+        }
     }
 
     void OnDrawGizmos()

@@ -23,10 +23,12 @@ public class IngameItem: MonoBehaviour
         if (_geji != null)
             _geji.fillAmount = 1f;
 
-        _gameSystem = FindObjectOfType<InGameSystem>().GetComponent<InGameSystem>();
+        _gameSystem = FindObjectOfType<InGameSystem>();
 
         if (_gameSystem == null)
+        {
             Debug.LogError("InGameSystemが見つかりませんでした");
+        }
     }
 
     public void CollectStart()

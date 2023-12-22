@@ -35,9 +35,9 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent<IDamage>(out IDamage damage))
+        if(other.TryGetComponent<PlayerHPController>(out PlayerHPController player))
         {
-            damage.SendDamage(_attackPower);
+            player.SendDamage(_attackPower);
             Destroy(gameObject);
         }
     }
