@@ -18,9 +18,9 @@ public class ScoreSystem
     /// <summary>
     /// リザルトに必要なライフを静的な変数に保存しておく
     /// </summary>
-    public void GameResult()
+    public void GameResult(float clearTime)
     {
-        Score = new(_clearTime, _playerLife, _itemCount.Value, _betLife);
+        Score = new(clearTime, _playerLife, _itemCount.Value, _betLife);
     }
 
     /// <summary>

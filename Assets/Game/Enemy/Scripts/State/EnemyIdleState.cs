@@ -14,7 +14,6 @@ public class EnemyIdleState : IState
 
     public void Enter()
     {
-        Debug.Log("Idle");
         _enemy.Anim.SetBool("IsPatrol", false);
     }
 
