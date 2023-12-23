@@ -59,6 +59,12 @@ public class ResultUIController : MonoBehaviour, IPause
     [SerializeField]
     private ScreenFader _screenFader;
 
+    [SerializeField]
+    private SceneSwitcher _clearSwitcher;
+
+    [SerializeField]
+    private SceneSwitcher _sceneSwitcher;
+
     private bool _isCompleted = false;
 
     private ClearState _clearState = ClearState.None;
@@ -183,6 +189,18 @@ public class ResultUIController : MonoBehaviour, IPause
         _isSkip = true;
         CriAudioManager.Instance.SE.Play("SE", "SE_System_Select");
         Debug.Log("IsSkip");
+    }
+
+    public void Clear()
+    {
+        if(_clearState == ClearState.Clear)
+        {
+            _clearSwitcher.SceneSwitch();
+        }
+        else
+        {
+            _sceneSwitcher.SceneSwitch();
+        }
     }
     private void OnEnable()
     {

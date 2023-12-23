@@ -10,6 +10,9 @@ public class PlayerHPController : MonoBehaviour, IDamage
 
     [SerializeField, Tooltip("ゴッドモードHP")] private float _godModeHP = 10000F;
 
+    [SerializeField]
+    private SceneSwitcher _sceneSwitcher;
+
     /// <summary>現在のHP</summary>
     private float _currentHP = 0F;
 
@@ -79,8 +82,10 @@ public class PlayerHPController : MonoBehaviour, IDamage
         if (_currentHP <= 0)
         {
             _onDeadEvent?.Invoke();
+            PauseSystem.Instance.Pause();
             CriAudioManager.Instance.SE.Play("VOICE", "VC_Player_Dead");
             CriAudioManager.Instance.SE.Play("SE", "SE_Player_Dead");
+            StartCoroutine(Dead());
         }
         else
         {
@@ -88,5 +93,11 @@ public class PlayerHPController : MonoBehaviour, IDamage
             CriAudioManager.Instance.SE.Play("SE", "SE_Player_Damage");
             _hitVoice.OnNext(Unit.Default);
         }
+    }
+
+    IEnumerator Dead()
+    {
+        yield return new WaitForSeconds(2.5f);
+        _sceneSwitcher.SceneSwitch();
     }
 }
