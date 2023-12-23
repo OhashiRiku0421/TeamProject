@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour, IDamage
+public class EnemyController : MonoBehaviour, IDamage, IPause
 {
     [SerializeField]
     private EnemyStateMachine _stateMachine = new();
@@ -39,6 +39,8 @@ public class EnemyController : MonoBehaviour, IDamage
     private Rigidbody _rb;
 
     private NavMeshAgent _agent;
+    private float _animSpeed;
+    private bool _isPause = false;
 
     public EnemyStateMachine StateMachine => _stateMachine;
 
@@ -71,7 +73,7 @@ public class EnemyController : MonoBehaviour, IDamage
 
     private void Start()
     {
-        _enemyMove.Init(transform, _playerTransform, _agent, _anim, _data);
+        _enemyMove.Init(transform, _playerTransform, _agent, _anim, _data, _idleType);
         _enemyAttack.Init(transform, _anim, _data);
 
         if (_idleType == IdleType.Normal)
@@ -82,11 +84,15 @@ public class EnemyController : MonoBehaviour, IDamage
         {
             _stateMachine.StartState(_stateMachine.Patrol);
         }
+        PauseSystem.Instance.Register(this);
     }
 
     private void Update()
     {
-        _stateMachine.Update();
+        if (!_isPause)
+        {
+            _stateMachine.Update();
+        }
     }
 
     public void SendDamage(float damage)
@@ -106,12 +112,31 @@ public class EnemyController : MonoBehaviour, IDamage
         }
 
     }
+
+    public void Pause()
+    {
+        _animSpeed = _anim.speed;
+        _anim.speed = 0;
+        _isPause = true;
+        _enemyMove.MoveStop();
+    }
+
+    public void Resume()
+    {
+        _anim.speed = _animSpeed;
+        _isPause = false;
+        if (_stateMachine.State == _stateMachine.Patrol)
+        {
+            _enemyMove.ResumePatrol();
+        }
+    }
     public void OnDestroy()
     {
         if(_life <= 0)
         {
             Instantiate(_item, transform.position, Quaternion.identity);
         }
+        PauseSystem.Instance.Unregister(this);
     }
 
     void OnDrawGizmos()

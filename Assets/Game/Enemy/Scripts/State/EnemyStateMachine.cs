@@ -41,6 +41,8 @@ public class EnemyStateMachine
 
     public EnemyDeathState Death => _death;
 
+    public IState State => _state;
+
     public void Set(EnemyController enemyController)
     {
         _shortAttack.SetEnemy(enemyController);
