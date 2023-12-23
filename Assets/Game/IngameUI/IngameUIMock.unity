@@ -454,6 +454,36 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 516436433327604800, guid: a9a2009b2102bd24fbbe54b5d1081b69,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: e42c23f26a34a744881df3327363459d,
+        type: 3}
+    - target: {fileID: 605520729868508230, guid: a9a2009b2102bd24fbbe54b5d1081b69,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: e42c23f26a34a744881df3327363459d,
+        type: 3}
+    - target: {fileID: 959641226116838229, guid: a9a2009b2102bd24fbbe54b5d1081b69,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: e42c23f26a34a744881df3327363459d,
+        type: 3}
+    - target: {fileID: 1151029030812416033, guid: a9a2009b2102bd24fbbe54b5d1081b69,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: e42c23f26a34a744881df3327363459d,
+        type: 3}
+    - target: {fileID: 1594361906280935988, guid: a9a2009b2102bd24fbbe54b5d1081b69,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: e42c23f26a34a744881df3327363459d,
+        type: 3}
     - target: {fileID: 2291005874598040876, guid: a9a2009b2102bd24fbbe54b5d1081b69,
         type: 3}
       propertyPath: m_Name
@@ -558,6 +588,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6218920692521008335, guid: a9a2009b2102bd24fbbe54b5d1081b69,
+        type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: e42c23f26a34a744881df3327363459d,
+        type: 3}
+    - target: {fileID: 7327286098231327579, guid: a9a2009b2102bd24fbbe54b5d1081b69,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
