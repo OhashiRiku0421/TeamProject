@@ -6,27 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Game/Outgame_UI/TitleScene.unity
-    guid: be7d292a85d783440af1a8a574b5c124
+    path: Assets/Game/Master/MAP_master/Title.unity
+    guid: 883e2ea065c5a2f4ca43061e1b75c311
   - enabled: 1
-    path: Assets/Game/Outgame_UI/LifeBetScene.unity
-    guid: 42fe5815ad6d89142af5336ef365a006
+    path: Assets/Game/Master/MAP_master/LifeBet.unity
+    guid: 677bccc5aef14174184b4a7c4dbe01bf
   - enabled: 1
-    path: Assets/Game/Master/InGame_addObj/InGame_01/GroundStage.unity
-    guid: 177fb3a1c9dbd484095983d71a3f83a8
-  - enabled: 1
-    path: Assets/Game/Master/InGame_addObj/InGame_02/AerialStage.unity
-    guid: fdd32b1639326e54e990c4d851b5f9b6
-  - enabled: 1
-    path: Assets/Game/Outgame_UI/ResultScene.unity
-    guid: 45eaa35a82ac7f146b2b3476e37609e3
-  - enabled: 1
-    path: Assets/Game/Outgame_UI/GameOverScene.unity
-    guid: c620a94f5c0d1b24482ffe8a0302ae93
+    path: Assets/Game/Master/MAP_master/ArialStage_masterup.unity
+    guid: bbac22cc58534c84eb727badc72341f9
   - enabled: 1
     path: Assets/Game/Master/MAP_master/GroundStage_masterup.unity
     guid: cb0fbecf53acb014ca903318446daa73
   - enabled: 1
-    path: Assets/Game/Master/MAP_master/ArialStage_masterup.unity
-    guid: bbac22cc58534c84eb727badc72341f9
+    path: Assets/Game/Master/MAP_master/Result.unity
+    guid: 73b045ae7a1b2fa4fb44f31ead8f5a7a
   m_configObjects: {}

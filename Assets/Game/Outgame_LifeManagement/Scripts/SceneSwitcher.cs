@@ -52,7 +52,7 @@ public class SceneSwitcher : MonoBehaviour, IPause
 
     private void SceneLoad()
     {
-        if (SceneManager.GetActiveScene().name == "LifeBetScene")
+        if (SceneManager.GetActiveScene().name == "LifeBet")
         {
             var r = Random.Range(0, 2);
             if(r == 0)
