@@ -32285,7 +32285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAnyKeyPressed: 0
-  _sceneName: GameOverScene
+  _sceneName: TitleScene
   _waitTime: 0.666
   _min: 3
 --- !u!4 &692152276
@@ -93815,6 +93815,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8531886135959083252, guid: 23168ca75269d7e4fa12b270c36c35a4,
+        type: 3}
+      propertyPath: _sceneSwitcher
+      value: 
+      objectReference: {fileID: 692152275}
     - target: {fileID: 9155714779487513351, guid: 23168ca75269d7e4fa12b270c36c35a4,
         type: 3}
       propertyPath: m_LocalPosition.x

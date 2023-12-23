@@ -23,4 +23,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Game/Outgame_UI/GameOverScene.unity
     guid: c620a94f5c0d1b24482ffe8a0302ae93
+  - enabled: 1
+    path: Assets/Game/Master/MAP_master/GroundStage_masterup.unity
+    guid: cb0fbecf53acb014ca903318446daa73
+  - enabled: 1
+    path: Assets/Game/Master/MAP_master/ArialStage_masterup.unity
+    guid: bbac22cc58534c84eb727badc72341f9
   m_configObjects: {}

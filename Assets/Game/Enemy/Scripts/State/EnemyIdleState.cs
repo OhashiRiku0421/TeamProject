@@ -27,7 +27,14 @@ public class EnemyIdleState : IState
 
     public void Exit() 
     {
-        CriAudioManager.Instance.SE.Play3D(_enemy.transform.position, "SE", "SE_Enemy02_Voice_01");
+        if (_enemy.EnemyType == EnemyType.Short)
+        {
+            CriAudioManager.Instance.SE.Play3D(_enemy.transform.position, "SE", "SE_Enemy01_Voice_01");
+        }
+        else
+        {
+            CriAudioManager.Instance.SE.Play3D(_enemy.transform.position, "SE", "SE_Enemy02_Voice_01");
+        }
     }
 
 

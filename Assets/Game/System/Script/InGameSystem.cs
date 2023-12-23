@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InGameSystem : MonoBehaviour, IPause
 {
@@ -35,7 +36,14 @@ public class InGameSystem : MonoBehaviour, IPause
         _playerTransform = FindObjectOfType<PlayerHPController>().gameObject.transform;
         GameStart();
         _timerSystem.Start();
-        CriAudioManager.Instance.BGM.Play("BGM", "BGM_Ingame_01");
+        if (SceneManager.GetActiveScene().name == "GroundStage_masterup")
+        {
+            CriAudioManager.Instance.BGM.Play("BGM", "BGM_Ingame_01");
+        }
+        else
+        {
+            CriAudioManager.Instance.BGM.Play("BGM", "BGM_Ingame_02");
+        }
         StartCoroutine(PlayVoice());
     }
 
