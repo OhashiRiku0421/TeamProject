@@ -4263,6 +4263,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6367041508995189141, guid: b889f83bdca472d45a02469a547d73e7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 534
+      objectReference: {fileID: 0}
     - target: {fileID: 8280030155379750900, guid: b889f83bdca472d45a02469a547d73e7,
         type: 3}
       propertyPath: m_Name
@@ -32353,7 +32358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAnyKeyPressed: 0
-  _sceneName: TitleScene
+  _sceneName: Title
   _waitTime: 0.666
   _min: 3
 --- !u!4 &692152276
@@ -87415,6 +87420,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: FLOOR FOG _Middle
       objectReference: {fileID: 0}
+    - target: {fileID: 3862272131216023607, guid: 8e3fa89e571f85d4ba78af398f1b9d90,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 255.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5060717359175341130, guid: 8e3fa89e571f85d4ba78af398f1b9d90,
+        type: 3}
+      propertyPath: MultiQuadCHeights.x
+      value: 255.9
+      objectReference: {fileID: 0}
     - target: {fileID: 7256054083426402162, guid: 8e3fa89e571f85d4ba78af398f1b9d90,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -90722,6 +90737,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 681760819237590082, guid: f0fe077b90409c245b523b8f18a68aa3,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 653.2
+      objectReference: {fileID: 0}
     - target: {fileID: 2016072128922781410, guid: f0fe077b90409c245b523b8f18a68aa3,
         type: 3}
       propertyPath: m_Name

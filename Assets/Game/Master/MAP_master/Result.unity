@@ -47425,7 +47425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isAnyKeyPressed: 0
-  _sceneName: TitleScene
+  _sceneName: Title
   _waitTime: 0.666
   _min: 3
 --- !u!4 &971830822
