@@ -2,9 +2,6 @@
 
 public class ScoreSystem
 {
-
-    private float _clearTime;
-
     private static int _playerLife;
 
     private static int _betLife;

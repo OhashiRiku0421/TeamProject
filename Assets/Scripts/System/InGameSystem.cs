@@ -66,7 +66,6 @@ public class InGameSystem : MonoBehaviour, IPause
     private void GameStart()
     {
         int index = Random.Range(0, _starts.Length);
-        Debug.Log(index);
         _playerTransform.position = _starts[index].position;
     }
 }
